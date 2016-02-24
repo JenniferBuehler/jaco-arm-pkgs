@@ -6,7 +6,6 @@ project(jaco_on_table)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   xacro
-  sensors_description
 )
 
 ## System dependencies are found with CMake's conventions
