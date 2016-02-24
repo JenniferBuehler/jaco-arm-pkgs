@@ -66,7 +66,7 @@
                 <material name="orange"/>
             </visual>
         </link>
-        <xacro:include filename="$(find sensors_description)/urdf/sensors/xtion_xtended_stand.urdf.xacro" /> 
+        <xacro:include filename="$(find common_sensors)/urdf/sensors/xtion_xtended_stand.urdf.xacro" /> 
         <xacro:xtion_stand parent="xtion_base"/>
     </xacro:if>
 </xacro:macro>

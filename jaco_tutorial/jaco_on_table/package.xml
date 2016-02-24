@@ -40,7 +40,7 @@
   <run_depend>jaco_description</run_depend>
   <build_depend>xacro</build_depend>
   
-  <run_depend>sensors_description</run_depend> 
+  <run_depend>common_sensors</run_depend> 
   
   <run_depend>xacro</run_depend>
   <run_depend>jaco_description</run_depend>
