@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find jaco_on_table_moveit)/launch/jaco_on_table_moveit.launch"/>
+    <include file="$(find jaco_on_table_moveit)/launch/jaco_on_table_rviz.launch"/>
+</launch>

@@ -1,0 +1,20 @@
+<!-- 
+    Launch file for the Jaco Robot to load the right ROS Parameters on the parameter server for 
+    use of moveit_controller_multidof controller manager 
+-->
+<launch>
+   <!-- FollowJointTrajectoryAction action topic name -->
+   <!--param name="joint_trajectory_action_topic" value="jaco/joint_trajectory_action" /-->
+ 
+   <arg name="moveit_controller_manager" default="moveit_controller_multidof/MultiDOFControllerManager"/>
+   <param name="moveit_controller_manager" value="$(arg moveit_controller_manager)"/>
+   
+   <rosparam file="$(find jaco_moveit)/config/moveit_multidof_controllers.yaml"/>
+
+   <!--arg name="controller_manager_name" default="moveit_controller_multidof/multidof_controller_manager" />
+   <param name="controller_manager_name" value="$(arg controller_manager_name)" /-->
+
+   <!--arg name="use_controller_manager" default="true" />
+   <param name="use_controller_manager" value="$(arg use_controller_manager)" /-->
+
+</launch>

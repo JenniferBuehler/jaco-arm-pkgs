@@ -1,0 +1,53 @@
+<launch>
+
+  <arg name="config_file" default="$(find jaco_gazebo)/config/JacoControl.yaml"/>
+
+  <arg name="load_position_controllers" default="true"/>
+  <arg name="load_velocity_controllers" default="false"/>
+
+  <arg name="load_joint_state_controller" default="true"/>
+  
+  # if set to false, will only initialize parameter server
+  <arg name="load_controllers" default="true"/>
+  
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(arg config_file)" command="load"/>
+
+  <param name="gazebo/load_velocity_controllers" value="$(arg load_velocity_controllers)"/>
+
+  <arg if="$(arg load_position_controllers)"
+       name="position_controllers" value=
+          "arm_0_joint_position_controller 
+          arm_1_joint_position_controller 
+          arm_2_joint_position_controller 
+          arm_3_joint_position_controller
+          arm_4_joint_position_controller 
+          arm_5_joint_position_controller
+          finger_joint_0_position_controller
+          finger_joint_2_position_controller
+          finger_joint_4_position_controller"/>
+  <arg unless="$(arg load_position_controllers)"
+       name="position_controllers" value=""/>
+  
+  <arg if="$(arg load_velocity_controllers)"
+       name="velocity_controllers" value=
+          "arm_0_joint_velocity_controller 
+          arm_1_joint_velocity_controller 
+          arm_2_joint_velocity_controller 
+          arm_3_joint_velocity_controller
+          arm_4_joint_velocity_controller 
+          arm_5_joint_velocity_controller
+          finger_joint_0_velocity_controller
+          finger_joint_2_velocity_controller
+          finger_joint_4_velocity_controller"/>
+  <arg unless="$(arg load_velocity_controllers)"
+       name="velocity_controllers" value=""/>
+  
+  <arg if="$(arg load_joint_state_controller)" name="joint_state_controller" value="joint_state_controller"/>
+  <arg unless="$(arg load_joint_state_controller)" name="joint_state_controller" value=""/>
+
+  <!-- load the controllers -->
+  <node if="$(arg load_controllers)" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/jaco" 
+    args="$(arg position_controllers) $(arg velocity_controllers) $(arg joint_state_controller)"/>
+</launch>

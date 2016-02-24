@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+  Example configuration for loading the gazebo plugins with the jaco_on_table robot.
+-->
+<robot name="JacoOnTable" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:arg name="use_ros_control" default="false"/>
+    <xacro:arg name="add_transmission_pos" default="false"/>
+    <xacro:arg name="add_transmission_vel" default="false"/>
+
+    <link name="world"/>
+<!--
+    <link name="jaco_on_table_root">
+        <static>false</static>
+    </link>
+-->
+    <xacro:include filename="$(find jaco_on_table)/urdf/jaco_on_table.urdf.xacro" />
+
+    <xacro:jaco_on_table parent="world">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:jaco_on_table>
+
+
+    <xacro:if value="$(arg use_ros_control)">
+        <xacro:include filename="$(find jaco_gazebo)/urdf/gzplugin_ros_control.urdf.xacro"/>
+        <xacro:arg name="add_transmission_pos" default="$(arg add_transmission_pos)"/>
+        <xacro:arg name="add_transmission_vel" default="$(arg add_transmission_vel)"/>
+    </xacro:if>
+    <xacro:unless value="$(arg use_ros_control)">
+        <xacro:include filename="$(find jaco_gazebo)/urdf/gzplugin_joint_control.urdf.xacro"/>
+        <xacro:arg name="add_transmission_pos" default="$(arg add_transmission_pos)"/>
+        <xacro:arg name="add_transmission_vel" default="$(arg add_transmission_vel)"/>
+    </xacro:unless>
+
+    <xacro:gzplugin_joint_control/>
+</robot>
+

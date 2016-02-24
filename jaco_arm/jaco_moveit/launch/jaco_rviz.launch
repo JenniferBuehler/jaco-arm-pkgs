@@ -1,0 +1,17 @@
+<!--
+ Convenience launch file to bring up RViz with the Moveit plugin
+-->
+<launch>
+    <arg name="moveit_package_path"/>
+
+    ###############################################
+    # launch rviz
+    ###############################################
+
+    <!-- Run Rviz and load the default config to see the state of the move_group node -->
+    <include file="$(arg moveit_package_path)/launch/moveit_rviz.launch">
+        <arg name="config" value="true"/>
+        <arg name="debug" value="false"/>
+    </include>
+
+</launch>

@@ -1,0 +1,48 @@
+# Parameters for the Jaco trajectory execution.
+jaco_trajectory:
+    
+  # FollowJointTrajectoryAction action topic name 
+  action_topic: '/jaco/joint_trajectory_action'
+
+  # set to true to use angle poses in a trajectory to control the device. If this is false,
+  # velocities are used instead.
+  # set to true to use angle poses in a trajectory message to execute. If this is false,
+  # velocities are used instead. 
+  use_angle_poses: false 
+ 
+  # Instead of sending a bunch of trajectory points in advance and then wait the alloted time for the trajectory,
+  # trajectory velocities are controlled *during* trajectory execution. This is more accurate, but yields in a less
+  # smooth trajectory on the real arm. If this is set true, use_angle_poses value is forced to false.
+  use_online_control: true  
+  
+  # velocity limitation (in RAD per second) for joints 1,2,3 and 4,5,6, and fingers.
+  # If use_angle_poses is set to true, this indicates the joint speed at which the trajectory is set to play.
+  # If velocities are used instead in the joint trajectory, this is the maximum speed allowed when playing
+  # the trajectory. However there is no guarantee that the joints will actually be faster than this at times, that
+  # depends on the PID controllers and the drivers. This is just the target speed set/allowed by the trajectory
+  # execution controller.
+  max_arm_speed_123: 0.8
+  max_arm_speed_456: 0.8
+  max_fingers_speed: 0.3
+  
+  # tolerance (in radians) for a joint to be considered at target angle
+  goal_angles_tolerance: 0.02
+  
+  # complementary to goal_angles_tolerance: tolerance of intermediate trajectory points to achieve during execution of trajectory. 
+  # This only applies when online trajectory execution control is performed (use_online_trajectory_control).
+  # It is ensured that each trajectory point is met with this accuracy. The smaller this tolerance,the more jerky the trajectory 
+  # execution might be, but the more accurate as well. If this is > goal_angles_tolerance,
+  # at the end of trajectory execution a correction might be done to meet the desired end accuracy.
+  goal_angles_intermediate_tolerance: 0.03
+  
+  # for trajectory execution, this is the angle (in radian) which two joint positions may be apart
+  # in the trajectory, or the execution is rejected due to safety reasons. Setting this to -1 disables
+  # the safety limitation.
+  angle_safety_limit: -1.0
+  
+  # factor which is allowed on trajectory execution time (vs. expected time)	
+  exceed_duration_wait_factor: 2
+  
+  # joint_states topic, this is where sensor_msgs::JointState messages of the whole arm including fingers are published.
+  # this may be needed by implementations of trajectory execution which rely on ROS messages to read the current arm state. 
+  joint_states_topic: '/jaco/joint_states'

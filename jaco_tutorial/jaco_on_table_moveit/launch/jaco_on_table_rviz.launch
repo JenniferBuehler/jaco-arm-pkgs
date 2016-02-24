@@ -1,0 +1,6 @@
+<launch>
+    <include file="$(find jaco_moveit)/launch/jaco_rviz.launch">
+        <arg name="moveit_package_path" value="$(find jaco_on_table_moveit)"/>
+    </include>
+</launch>
+

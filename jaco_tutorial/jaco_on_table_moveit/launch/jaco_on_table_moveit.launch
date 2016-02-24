@@ -1,0 +1,30 @@
+<launch>
+    <!-- the robot base name, often base_footprint -->
+    <arg name="robot_base" default="base_link"/>
+
+    <!-- this specifies the frame for the octomap (in planning scene) -->
+    <param name="octomap_frame" type="string" value="$(arg robot_base)"/>
+       
+   <!-- Specify joint states topic because MoveIt! reads from it for
+        the current robot state  -->
+    <arg name="joint_states_topic" value="/jaco/joint_state"/>
+    
+    <!-- Switch on or off fake execution in order to suppress errors when
+         no MoveIt! execution is loaded. -->
+    <arg name="load_fake_execution" default="false"/>
+   
+    <!-- Set to true if the robot should be loaded onto robot_description --> 
+    <arg name="load_robot" default="false"/>
+
+    <include file="$(find jaco_moveit)/launch/jaco_moveit.launch">
+        <arg name="moveit_package_path" value="$(find jaco_on_table_moveit)"/>
+        <arg name="joint_states_topic" value="$(arg joint_states_topic)"/>
+        <arg name="load_fake_execution" default="$(arg load_fake_execution)"/>
+        <arg name="load_robot" value="$(arg load_robot)"/>
+        <arg name="has_virtual_joint" value="false"/>
+        <arg name="publish_virtual_joint_frame" value="true"/>
+        <arg name="virtual_joint_parent" value="odom"/>
+        <arg name="virtual_joint_child" value="$(arg robot_base)"/>
+        <arg name="virtual_joint_pubfreq" value="50"/>
+    </include>
+</launch>
