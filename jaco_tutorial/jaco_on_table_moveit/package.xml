@@ -22,14 +22,8 @@
   <run_depend>xacro</run_depend>
   <build_depend>jaco_on_table</build_depend>
   <run_depend>jaco_on_table</run_depend>
-  <!--run_depend>jaco_moveit</run_depend>
-  <run_depend>moveit_controller_multidof</run_depend-->
+  <run_depend>jaco_moveit</run_depend>
+  <!--run_depend>moveit_controller_multidof</run_depend-->
 
   <buildtool_depend>catkin</buildtool_depend>
-<!--
-  <export>
-    moveit_core plugin="${find jaco_moveit}/jaco_moveit_controller_manager_description.xml"/
-    <moveit_core plugin="${find moveit_controller_multidof}/moveit_controller_multidof_plugin_description.xml"/>
-  </export>
--->
 </package>
