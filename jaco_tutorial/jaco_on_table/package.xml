@@ -45,14 +45,12 @@
   <run_depend>xacro</run_depend>
   <run_depend>jaco_description</run_depend>
   <run_depend>jaco_gazebo</run_depend>
-  <run_depend>gazebo_state_plugins</run_depend>
+  <run_depend>gazebo_world_plugin_loader</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- You can specify that this package is a metapackage here: -->
     <!-- <metapackage/> -->
-
     <!-- Other tools can request additional information be placed here -->
-
   </export>
 </package>

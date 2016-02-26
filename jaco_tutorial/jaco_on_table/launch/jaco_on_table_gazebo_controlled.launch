@@ -92,8 +92,9 @@
         <arg name="jaco_joint_states_topic" value="$(arg jaco_joint_states_topic)"/>
 
         # load the gazebo plugin loader in any case, if no ROS parameters are assigned
-        # to particular plugins to be loaded, this will do nothing anyway.
-        <arg name="extra_gazebo_args" value="-s libgazebo_plugin_loader.so"/>
+        # to particular plugins to be loaded, this will do nothing aside from printing an error anyway.
+        # For this to work, the package gazebo_world_plugin_loader has to be installed.
+        <arg name="extra_gazebo_args" value="-s libgazebo_world_plugin_loader.so"/>
 	</include>
 
 	#####################################
