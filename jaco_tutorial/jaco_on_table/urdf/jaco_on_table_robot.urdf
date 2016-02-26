@@ -157,9 +157,6 @@
     <axis xyz="0 0 0"/>
   </joint>
   <!-- Add the JACO arm to the given parent link with the given transforms -->
-  <!--	
-	<xacro:include filename="$(find jaco_model)/urdf/jaco_arm.xacro" />
--->
   <!-- fake cylinder which is actually a box -->
   <!--xacro:macro name="cyl_inertia" params="mass r h ">
       <mass value="${mass}"/>

@@ -92,31 +92,10 @@
         <arg name="jaco_joint_states_topic" value="$(arg jaco_joint_states_topic)"/>
 
         # load the gazebo plugin loader in any case, if no ROS parameters are assigned
-        # to particular plugins to be loaded, this will do nothing anyway.
-        <arg name="extra_gazebo_args" value="-s libgazebo_plugin_loader.so"/>
+        # to particular plugins to be loaded, this will do nothing aside from printing an error anyway.
+        # For this to work, the package gazebo_world_plugin_loader has to be installed.
+        <arg name="extra_gazebo_args" value="-s libgazebo_world_plugin_loader.so"/>
 	</include>
-
-    # Load parameters for Gazebo World Plugins to load
-    <include file="$(find gazebo_state_plugins)/launch/plugin_loader.launch"/>
-
-	#####################################
-	# Load MoveIt! collision object generator
-    #####################################
-    
-    <include file="$(find object_moveit)/launch/collision_object_generator.launch">
-        # use the default config file
-        <arg name="config_file" value="$(find object_moveit)/config/CollisionObjectsGenerator.yaml"/>
-    </include>
-
-
-	#####################################
-	# Load Gazebo fake object detector 
-    #####################################
-    <include file="$(find gazebo_test_tools)/launch/fake_object_recognizer.launch">
-        # use the default config file
-        <arg name="config_file" value="$(find gazebo_test_tools)/config/FakeObjectRecognizer.yaml"/>
-    </include>
-
 
 	#####################################
 	# Load controllers and/or control parameters 

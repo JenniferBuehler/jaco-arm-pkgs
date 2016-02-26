@@ -12,7 +12,6 @@
 	# if the xacro file (robot_xacro) needs additional arguments to xacro.py, put them in here.
 	<arg name="xacro_arguments" default="sensor_on_table:=false"/>
 
-
     <arg name="x" default="0"/>
     <arg name="y" default="0"/>
     <arg name="z" default="0"/>
@@ -22,7 +21,6 @@
 	<arg name="load_robot_state_publisher" default="false"/>
 	<arg name="jaco_joint_states_topic" default="jaco/joint_state"/>
     <arg name="extra_gazebo_args" default=""/>	
-
 
 	#####################################
 	# Load robot_description on parameter server

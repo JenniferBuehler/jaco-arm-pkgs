@@ -60,7 +60,6 @@
             args="0 0 0 0 0 0  $(arg virtual_joint_parent) $(arg virtual_joint_child) $(arg virtual_joint_pubfreq)" />
     </group>
 
-
     <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
     <include file="$(arg moveit_package_path)/launch/planning_context.launch">
         # no need to load robot description by default, as it should have been loaded externally
@@ -75,5 +74,4 @@
         <arg name="info" value="true"/>
         <arg name="debug" value="false"/>
     </include>
-
 </launch>

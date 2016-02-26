@@ -1,0 +1,10 @@
+<!-- 
+    Launch file for the Jaco Robot to load the right ROS Parameters on the parameter server for 
+    use of moveit_controller_multidof controller manager 
+-->
+<launch>
+   <arg name="moveit_controller_manager" default="moveit_controller_multidof/MultiDOFControllerManager"/>
+   <param name="moveit_controller_manager" value="$(arg moveit_controller_manager)"/>
+   
+   <rosparam file="$(find jaco_moveit)/config/moveit_multidof_controllers.yaml"/>
+</launch>
