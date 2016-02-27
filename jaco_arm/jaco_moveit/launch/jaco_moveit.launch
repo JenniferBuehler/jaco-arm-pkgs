@@ -40,7 +40,7 @@
     <arg name="load_robot" default="false"/>
 
     # MoveIt! is reading the current joint state topic from /joint_states,
-    # but this may have to be re-mapped
+    # so re-map it to the actual joint states topic.
     # CAREFUL: This will remove the /joint_states topic. If another
     # node needs this, we'll have to put this remap into the "node"
     # tag of "$(arg moveit_package_path)/launch/move_group.launch.
