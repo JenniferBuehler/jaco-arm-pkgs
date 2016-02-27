@@ -114,8 +114,8 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
     // get joint names from parameters
     std::vector<std::string> joint_names;
     joints.getJointNames(joint_names, true);
-    const std::vector<double>& arm_init = joints.getArmJointsInitPose();
-    const std::vector<double>& finger_init = joints.getFingerJointsInitPose();
+    const std::vector<float>& arm_init = joints.getArmJointsInitPose();
+    const std::vector<float>& finger_init = joints.getFingerJointsInitPose();
 
     if (joint_names.size() != 9)
     {

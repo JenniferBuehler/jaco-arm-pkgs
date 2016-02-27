@@ -78,8 +78,8 @@ public:
      */
     JacoJointManager(const std::vector<std::string>& _arm_joints,
                      const std::vector<std::string>& _finger_joints,
-                     const std::vector<double>& _arm_joint_init,
-                     const std::vector<double>& _finger_joint_init);
+                     const std::vector<float>& _arm_joint_init,
+                     const std::vector<float>& _finger_joint_init);
 
     JacoJointManager(const JacoJointManager& o);
 
@@ -97,15 +97,15 @@ public:
      * \param prepend if not empty, this string is going to be prepended to the joint names
      */
     void getJointNames(std::vector<std::string>& joint_names,
-            bool withFingers, const std::string& prepend = std::string());
+            bool withFingers, const std::string& prepend = std::string()) const;
 
     const std::vector<std::string>& getArmJoints() const;
 
     const std::vector<std::string>& getFingerJoints() const;
 
-    const std::vector<double>& getArmJointsInitPose() const;
+    const std::vector<float>& getArmJointsInitPose() const;
 
-    const std::vector<double>& getFingerJointsInitPose() const;
+    const std::vector<float>& getFingerJointsInitPose() const;
 
     /**
      * Joint names as to be used in the default order (e.g. for JointState messsages)
@@ -113,7 +113,7 @@ public:
      * joint positions here. The order has to be standard, as returned by getJointNames().
      */
     void initJointState(sensor_msgs::JointState& js, bool withFingers = true,
-            const std::vector<float> * init_poses = NULL);
+            const std::vector<float> * init_poses = NULL) const;
 
     /**
      * Helper function to find out the order of joints given in a names vector. An index vector
@@ -207,9 +207,9 @@ private:
     std::vector<std::string> finger_joints;
 
     // contains joint names of the arm joint initial position: joints 1..6 (at indices 0..4)
-    std::vector<double> arm_joint_init;
+    std::vector<float> arm_joint_init;
     // contains joint names of the finger joint initial position: joints 1..3 (at indices 0..2)
-    std::vector<double> finger_joint_init;
+    std::vector<float> finger_joint_init;
 
     ros::NodeHandle priv;
     ros::NodeHandle pub;

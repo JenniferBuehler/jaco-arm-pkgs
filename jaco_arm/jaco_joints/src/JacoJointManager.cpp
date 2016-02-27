@@ -65,8 +65,8 @@ JacoJointManager::JacoJointManager():
 
 JacoJointManager::JacoJointManager(const std::vector<std::string>& _arm_joints,
                                    const std::vector<std::string>& _finger_joints,
-                                   const std::vector<double>& _arm_joint_init,
-                                   const std::vector<double>& _finger_joint_init):
+                                   const std::vector<float>& _arm_joint_init,
+                                   const std::vector<float>& _finger_joint_init):
     arm_joints(_arm_joints),
     finger_joints(_finger_joints),
     arm_joint_init(_arm_joint_init),
@@ -120,31 +120,31 @@ void JacoJointManager::readJointNamesFromParameters()
     priv.param<std::string>("finger_joint_2_name", finger_joints[2], finger_joints[2]);
     // ROS_INFO_STREAM("Finger joint 2: " << finger_joints[2]);
 
-    priv.param<double>("arm_joint_0_init", arm_joint_init[0], arm_joint_init[0]);
+    priv.param<float>("arm_joint_0_init", arm_joint_init[0], arm_joint_init[0]);
     // ROS_INFO_STREAM("Init joint 0: " << arm_joint_init[0]);
 
-    priv.param<double>("arm_joint_1_init", arm_joint_init[1], arm_joint_init[1]);
+    priv.param<float>("arm_joint_1_init", arm_joint_init[1], arm_joint_init[1]);
     // ROS_INFO_STREAM("Init joint 1: " << arm_joint_init[1]);
 
-    priv.param<double>("arm_joint_2_init", arm_joint_init[2], arm_joint_init[2]);
+    priv.param<float>("arm_joint_2_init", arm_joint_init[2], arm_joint_init[2]);
     // ROS_INFO_STREAM("Init joint 2: " << arm_joint_init[2]);
 
-    priv.param<double>("arm_joint_3_init", arm_joint_init[3], arm_joint_init[3]);
+    priv.param<float>("arm_joint_3_init", arm_joint_init[3], arm_joint_init[3]);
     // ROS_INFO_STREAM("Init joint 3: " << arm_joint_init[3]);
 
-    priv.param<double>("arm_joint_4_init", arm_joint_init[4], arm_joint_init[4]);
+    priv.param<float>("arm_joint_4_init", arm_joint_init[4], arm_joint_init[4]);
     // ROS_INFO_STREAM("Init joint 4: " << arm_joint_init[4]);
 
-    priv.param<double>("arm_joint_5_init", arm_joint_init[5], arm_joint_init[5]);
+    priv.param<float>("arm_joint_5_init", arm_joint_init[5], arm_joint_init[5]);
     // ROS_INFO_STREAM("Init joint 5: " << arm_joint_init[5]);
 
-    priv.param<double>("finger_joint_0_init", finger_joint_init[0], finger_joint_init[0]);
+    priv.param<float>("finger_joint_0_init", finger_joint_init[0], finger_joint_init[0]);
     // ROS_INFO_STREAM("Init finger joint 0: " << finger_joint_init[0]);
 
-    priv.param<double>("finger_joint_1_init", finger_joint_init[1], finger_joint_init[1]);
+    priv.param<float>("finger_joint_1_init", finger_joint_init[1], finger_joint_init[1]);
     // ROS_INFO_STREAM("Init finger joint 1: " << finger_joint_init[1]);
 
-    priv.param<double>("finger_joint_2_init", finger_joint_init[2], finger_joint_init[2]);
+    priv.param<float>("finger_joint_2_init", finger_joint_init[2], finger_joint_init[2]);
     // ROS_INFO_STREAM("Init finger joint 2: " << finger_joint_init[2]);
 }
 
@@ -201,7 +201,7 @@ bool JacoJointManager::GetVelGains(const std::string& jointName, float& kp, floa
 
 
 
-void JacoJointManager::getJointNames(std::vector<std::string>& joint_names, bool withFingers, const std::string& prepend)
+void JacoJointManager::getJointNames(std::vector<std::string>& joint_names, bool withFingers, const std::string& prepend) const
 {
     joint_names.insert(joint_names.begin(), arm_joints.begin(), arm_joints.end());
     if (!withFingers) return;
@@ -225,16 +225,16 @@ const std::vector<std::string>& JacoJointManager::getFingerJoints() const
     return finger_joints;
 }
 
-const std::vector<double>& JacoJointManager::getArmJointsInitPose() const
+const std::vector<float>& JacoJointManager::getArmJointsInitPose() const
 {
     return arm_joint_init;
 }
-const std::vector<double>& JacoJointManager::getFingerJointsInitPose() const
+const std::vector<float>& JacoJointManager::getFingerJointsInitPose() const
 {
     return finger_joint_init;
 }
 
-void JacoJointManager::initJointState(sensor_msgs::JointState& js, bool withFingers, const std::vector<float> * init_poses)
+void JacoJointManager::initJointState(sensor_msgs::JointState& js, bool withFingers, const std::vector<float> * init_poses) const
 {
     getJointNames(js.name, withFingers);
     int num = 9;

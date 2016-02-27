@@ -7,6 +7,7 @@
     <xacro:arg name="use_ros_control" default="false"/>
     <xacro:arg name="add_transmission_pos" default="false"/>
     <xacro:arg name="add_transmission_vel" default="false"/>
+    <xacro:arg name="load_grasp_fix" default="false"/>
 
     <link name="world"/>
 <!--
@@ -33,5 +34,11 @@
     </xacro:unless>
 
     <xacro:gzplugin_joint_control/>
+    
+    <xacro:if value="$(arg load_grasp_fix)">
+        <xacro:include filename="$(find jaco_gazebo)/urdf/gzplugin_grasp_fix.urdf.xacro"/>
+        <xacro:gzplugin_grasp_fix/>
+    </xacro:if>
+
 </robot>
 

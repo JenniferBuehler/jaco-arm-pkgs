@@ -6,6 +6,9 @@
     # the robot's xacro file
 	<arg name="robot_xacro" default="$(find jaco_on_table)/urdf/jaco_on_table_robot_gazebo_ctrl.urdf.xacro"/>
 
+    # Load the grasp fix plugin for gazebo?
+    <arg name="load_grasp_fix" default="false"/>
+
     # Specify a name for the robot
 	<arg name="robot_name" default="jaco_on_table"/>
 
@@ -26,6 +29,11 @@
 	
     <arg name="load_robot_state_publisher" default="true"/>
 	<arg name="jaco_joint_states_topic" default="jaco/joint_state"/>
+	
+    # load the world plugin loader (in package gazebo_world_plugin_loader) which launches several
+    # world plugins according to the specification in the ROS parameters. Note that you will
+    # have to load those parameters on the ROS parameter server BEFORE gazebo gets launched. 
+    <arg name="load_world_plugins" default="true"/>
 
 
     # set to true if a Joint::SetVelocity() is to be used instead of
@@ -60,6 +68,7 @@
 	# if the xacro file (robot_xacro) needs additional arguments to xacro.py, put them in here.
 	<arg name="xacro_arguments" default="sensor_on_table:=false 
         use_ros_control:=$(arg load_ros_controllers) 
+        load_grasp_fix:=$(arg load_grasp_fix) 
         add_transmission_pos:=$(arg transmission_pos)
         add_transmission_vel:=$(arg transmission_vel)"/>
 
@@ -90,11 +99,7 @@
         <arg name="joint_state_publisher_topic" value="$(arg joint_state_publisher_topic)"/>
         <arg name="load_robot_state_publisher" value="$(arg load_robot_state_publisher)"/>
         <arg name="jaco_joint_states_topic" value="$(arg jaco_joint_states_topic)"/>
-
-        # load the gazebo plugin loader in any case, if no ROS parameters are assigned
-        # to particular plugins to be loaded, this will do nothing aside from printing an error anyway.
-        # For this to work, the package gazebo_world_plugin_loader has to be installed.
-        <arg name="extra_gazebo_args" value="-s libgazebo_world_plugin_loader.so"/>
+        <arg if="$(arg load_world_plugins)" name="extra_gazebo_args" value="-s libgazebo_world_plugin_loader.so"/>
 	</include>
 
 	#####################################
