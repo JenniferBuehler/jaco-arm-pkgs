@@ -174,7 +174,7 @@ public:
     /**
      * \return true if a trajectory goal is currently being executed.
      */
-    bool executingGoal();
+    bool goalActive();
     /**
      * \return true if there is currently a goal, even if it has not started executing yet.
      */

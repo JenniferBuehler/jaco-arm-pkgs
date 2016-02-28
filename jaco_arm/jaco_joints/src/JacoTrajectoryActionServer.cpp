@@ -365,7 +365,7 @@ void JacoTrajectoryActionServer::playTrajectorySimple(const trajectory_msgs::Joi
             // ROS_INFO("Have to wait as current target is not reached yet by arm");
             ros::Duration(recheckTime).sleep();
             extraTime += recheckTime;
-            /*if (!executingGoal()) {
+            /*if (!goalActive()) {
                 ROS_WARN("Action has been considered ended already, so stopping execution");
                 success=false;
                 break;
@@ -754,6 +754,13 @@ bool JacoTrajectoryActionServer::waitUntilPointReached(const std::vector<float>&
         targetPos = _targetPos;
         valueLock.unlock();
 
+        if (!goalActive())
+        {
+            ROS_WARN_STREAM("Trajectory execution is inactive, maybe has been cancelled.");
+            success=false;
+            break;
+        }
+
         // ROS_INFO("Waiting for target keypoint %i/%lu to be reached with tolerance %f",i,traj.points.size()-1,tolerance);
         ros::Duration(recheckTime).sleep();
         timeSlept += recheckTime;
@@ -1108,7 +1115,7 @@ void JacoTrajectoryActionServer::joinExecutionThread()
     }
 }
 
-bool JacoTrajectoryActionServer::executingGoal()
+bool JacoTrajectoryActionServer::goalActive()
 {
     goalLock.lock();
     bool hasOneGoal = has_goal;

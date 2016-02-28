@@ -143,7 +143,7 @@ public:
     int fingerJointNumber(const std::string& name) const;
 
     /**
-     *  enforces the bound of the angle to be between -PI and PI
+     * enforces the bound of the angle to be between -PI and PI
      * this is a useful helper for lots of places because the
      * native jaco joint angles may go beyond PI.
      */

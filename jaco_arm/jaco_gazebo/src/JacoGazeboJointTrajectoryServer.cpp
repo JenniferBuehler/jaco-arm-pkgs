@@ -273,7 +273,7 @@ void JacoGazeboJointTrajectoryServer::WorldUpdate(const ros::TimerEvent& t)
     }
 
 
-    if (!trajectory_action_server->executingGoal())
+    if (!trajectory_action_server->goalActive())
     {
         // no trajectory is being executed, so there is no need to update
 

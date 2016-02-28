@@ -11,7 +11,7 @@ jaco_gazebo:
 jaco_joints:
 
 - JacoTrajectoryActionServer can be improved to read tolerances from FollowJointTrajectoryAction, after recent migration from JointTrajectoryAction.
-
+- change function to use architecture_binding in JacoJointManager: capToPI(), angleDistance()
 
 # Possible future contributions
 
