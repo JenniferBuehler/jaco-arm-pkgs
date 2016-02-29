@@ -26,27 +26,6 @@
 #include <string>
 #include <vector>
 
-#define J0_NAME  "arm_0_joint"
-#define J1_NAME  "arm_1_joint"
-#define J2_NAME  "arm_2_joint"
-#define J3_NAME  "arm_3_joint"
-#define J4_NAME  "arm_4_joint"
-#define J5_NAME  "arm_5_joint"
-
-#define JF0_NAME  "finger_joint_0"
-#define JF1_NAME  "finger_joint_2"
-#define JF2_NAME  "finger_joint_4"
-
-
-#define J0_INIT 4.5532045
-#define J1_INIT 4.5506868
-#define J2_INIT 0.7038534
-#define J3_INIT 5.4655337
-#define J4_INIT 1.506298
-#define J5_INIT 3.135861
-// #define JF_INIT -0.0043633
-#define JF_INIT 0
-
 
 #include <sensor_msgs/JointState.h>
 #include <ros/ros.h>
@@ -106,6 +85,22 @@ public:
     const std::vector<float>& getArmJointsInitPose() const;
 
     const std::vector<float>& getFingerJointsInitPose() const;
+    
+    /**
+     * returns all gripper links *excluding* the palm link link
+     */
+    std::vector<std::string> getGripperLinks() const;
+
+    /**
+     * Returns the link which counts as the "palm", which is
+     * the link to which all finger joints are attached.
+     */
+    std::string getPalmLink() const;
+
+    /**
+     * Get all links for the arm, *including* the palm link
+     */
+    std::vector<std::string> getArmLinks() const;
 
     /**
      * Joint names as to be used in the default order (e.g. for JointState messsages)

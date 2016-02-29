@@ -25,6 +25,35 @@
 #include <string>
 #include <vector>
 
+#define J0_NAME  "arm_0_joint"
+#define J1_NAME  "arm_1_joint"
+#define J2_NAME  "arm_2_joint"
+#define J3_NAME  "arm_3_joint"
+#define J4_NAME  "arm_4_joint"
+#define J5_NAME  "arm_5_joint"
+
+#define JF0_NAME  "finger_joint_0"
+#define JF1_NAME  "finger_joint_2"
+#define JF2_NAME  "finger_joint_4"
+
+
+#define J0_INIT 4.5532045
+#define J1_INIT 4.5506868
+#define J2_INIT 0.7038534
+#define J3_INIT 5.4655337
+#define J4_INIT 1.506298
+#define J5_INIT 3.135861
+// #define JF_INIT -0.0043633
+#define JF_INIT 0
+
+
+#define HAND_LINK "6_hand_limb"
+#define ARM_LINKS "0_baseA", "0_base_limb", "1_shoulder_limb", "2_upperarm_limb",\
+    "3_forearm_limb", "4_upperwrist_limb", "5_lowerwrist_limb", "ring_1", "ring_2", "ring_3", "ring_4", "ring_5", "ring_6"
+#define FINGER_LINKS "fingers_base_link", "7_finger_mount_index", "8_finger_index",\
+    "9_finger_index_tip", "7_finger_mount_thumb", "8_finger_thumb", "9_finger_thumb_tip",\
+    "7_finger_mount_pinkie", "8_finger_pinkie", "9_finger_pinkie_tip"
+
 /**
  *
  */
@@ -215,6 +244,34 @@ void JacoJointManager::getJointNames(std::vector<std::string>& joint_names, bool
         }
     }
 }
+
+
+std::vector<std::string> JacoJointManager::getGripperLinks() const
+{
+    static std::string arr[] = {FINGER_LINKS};
+    int arrSize=sizeof(arr) / sizeof(std::string);
+
+    std::vector<std::string> vec;
+    for (int i=0; i<arrSize; ++i) vec.push_back(arr[i]);
+    return vec;
+}
+
+std::string JacoJointManager::getPalmLink() const
+{
+    return HAND_LINK;
+}
+
+std::vector<std::string> JacoJointManager::getArmLinks() const
+{
+    static std::string arr[] = {ARM_LINKS, HAND_LINK};
+    int arrSize=sizeof(arr) / sizeof(std::string);
+
+    std::vector<std::string> vec;
+    for (int i=0; i<arrSize; ++i) vec.push_back(arr[i]);
+    return vec;
+}
+
+
 
 const std::vector<std::string>& JacoJointManager::getArmJoints() const
 {
