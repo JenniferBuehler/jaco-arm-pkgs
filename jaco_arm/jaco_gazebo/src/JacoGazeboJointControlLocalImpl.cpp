@@ -20,6 +20,7 @@
 
 
 #include <jaco_gazebo/JacoGazeboJointControlLocalImpl.h>
+#include <convenience_math_functions/MathFunctions.h>
 #include <map>
 #include <string>
 
@@ -70,6 +71,8 @@
 #else
 #define GAZEBO_SETFORCE_REPEAT 0
 #endif
+
+using convenience_math_functions::MathFunctions;
 
 namespace gazebo
 {
@@ -145,14 +148,14 @@ double JacoGazeboJointControlLocalImpl::DistToPosition(const physics::JointPtr& 
     double highLimit=joint->GetUpperLimit(axis).Radian();
 //    ROS_INFO_STREAM("Limits: "<<lowLimit<<", "<<highLimit);
 
-    double _targetPosition=joints.limitsToTwoPI(targetPosition, lowLimit, highLimit);
+    double _targetPosition=MathFunctions::limitsToTwoPI(targetPosition, lowLimit, highLimit);
     // ... currPosition (read from Gazebo) is always in the right format already.
 
     double dist=currPosition - _targetPosition;
 
 /*    if (joint->GetName()=="arm_1_joint") {
         ROS_INFO_STREAM("Distance for "<<joint->GetName()<<": curr="<<currPosition<<" target="<<_targetPosition<<", diff="<<dist);
-        ROS_INFO_STREAM("capToPi curr: "<<joints.capToPI(currPosition));
+        ROS_INFO_STREAM("capToPi curr: "<<MathFunctions::capToPI(currPosition));
     }
 */
     
@@ -161,7 +164,7 @@ double JacoGazeboJointControlLocalImpl::DistToPosition(const physics::JointPtr& 
         // Use the shortest angle distance as goal.
         // TODO: current limitation is the assumption that if there is
         // either a high or a low limit, the arm has both limits.
-        dist=joints.angleDistance(_targetPosition,currPosition);
+        dist=MathFunctions::angleDistance(_targetPosition,currPosition);
     }
     return dist;
 }

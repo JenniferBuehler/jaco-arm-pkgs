@@ -17,7 +17,7 @@
 */
 
 #include <jaco_joints/JacoTrajectoryActionServer.h>
-#include <jaco_joints/JacoJointManager.h>
+#include <convenience_math_functions/MathFunctions.h>
 #include <algorithm>
 #include <vector>
 #include <string>
@@ -48,6 +48,8 @@
 // when waiting for the arm to settle down
 // XXX KINOVA: Was 0.05 at one place and 0.015 at another
 #define VELOCITY_ZERO_TOLERANCE 0.015
+
+using convenience_math_functions::MathFunctions;
 
 JacoTrajectoryActionServer::JacoTrajectoryActionServer(
     ros::NodeHandle &n,
@@ -427,14 +429,14 @@ void JacoTrajectoryActionServer::playTrajectoryOnlineControlled(const trajectory
         valueLock.lock();
         _currAngles = current_joint_angles;
         valueLock.unlock();
-        JacoJointManager::capToPI(_currAngles);
+        MathFunctions::capToPI(_currAngles);
 
         // copy position values of last trajectory point into _lastPos
         setTargetValues(point, joint_indices, group, _currAngles, _lastPos, true);
-        JacoJointManager::capToPI(_lastPos);
+        MathFunctions::capToPI(_lastPos);
         // copy position values of target trajectory point into _targetPos
         setTargetValues(*targetPoint, joint_indices, group, _currAngles, _targetPos, true);
-        JacoJointManager::capToPI(_targetPos);
+        MathFunctions::capToPI(_targetPos);
         // copy velocity values of trajectory point into _targetVel
         setTargetValues(point, joint_indices, group, _currAngles, _targetVel, false);
 
@@ -518,12 +520,12 @@ void JacoTrajectoryActionServer::playTrajectoryOnlineControlled(const trajectory
     valueLock.lock();
     _currAngles = current_joint_angles;
     valueLock.unlock();
-    JacoJointManager::capToPI(_currAngles);
+    MathFunctions::capToPI(_currAngles);
 
     const trajectory_msgs::JointTrajectoryPoint& point = traj.points.back();
     std::vector<float> _targetPos;
     setTargetValues(point, joint_indices, group, _currAngles, _targetPos, true);
-    JacoJointManager::capToPI(_targetPos);
+    MathFunctions::capToPI(_targetPos);
 
     float min_vel = ONLINE_EXE_MIN_CORRECT_VEL_FINE;
     float max_vel = ONLINE_EXE_MAX_CORRECT_VEL_FINE;
@@ -563,7 +565,7 @@ bool JacoTrajectoryActionServer::repeatedWaitUntilPointReached(const std::vector
     valueLock.lock();
     _currAngles = current_joint_angles;
     valueLock.unlock();
-    JacoJointManager::capToPI(_currAngles);
+    MathFunctions::capToPI(_currAngles);
 
     while (!equalJointFloats(_currAngles, _targetPos, tolerance, true))
     {
@@ -603,7 +605,7 @@ bool JacoTrajectoryActionServer::repeatedWaitUntilPointReached(const std::vector
         valueLock.lock();
         _currAngles = current_joint_angles;
         valueLock.unlock();
-        JacoJointManager::capToPI(_currAngles);
+        MathFunctions::capToPI(_currAngles);
 
         --numTries;
         if (numTries <= 0)
@@ -681,7 +683,7 @@ bool JacoTrajectoryActionServer::waitUntilPointReached(const std::vector<float>&
         _currAngles = current_joint_angles;
         valueLock.unlock();
 
-        JacoJointManager::capToPI(_currAngles);
+        MathFunctions::capToPI(_currAngles);
 
         _targetVel = _initialTargetVel;
 
@@ -693,7 +695,7 @@ bool JacoTrajectoryActionServer::waitUntilPointReached(const std::vector<float>&
             {
                 float currPos = _currAngles[k];
                 float nextPoint = _targetPos[k];
-                float targetDiff = JacoJointManager::capToPI(nextPoint - currPos);
+                float targetDiff = MathFunctions::capToPI(nextPoint - currPos);
                 if (fabs(targetDiff) > tolerance)   
                 {
                     // position not reached currently (in which case we don't care), so look ahead in lag
@@ -701,7 +703,7 @@ bool JacoTrajectoryActionServer::waitUntilPointReached(const std::vector<float>&
                     _currAngles[k] = _currAngles[k] + _targetVel[k] * lagTime;
                 }
             }
-            JacoJointManager::capToPI(_currAngles);
+            MathFunctions::capToPI(_currAngles);
         }
 
 
@@ -713,7 +715,7 @@ bool JacoTrajectoryActionServer::waitUntilPointReached(const std::vector<float>&
         {
             float currPos = _currAngles[k];
             float nextPos = _targetPos[k];
-            float targetDiff = JacoJointManager::capToPI(nextPos - currPos);
+            float targetDiff = MathFunctions::capToPI(nextPos - currPos);
 
             float tol = tolerance;
             if (k >= 6) tol = std::max(tolerance, static_cast<float>(MIN_FINGERS_TOLERANCE));  // fingers can't do higher accuracy than this
@@ -805,7 +807,7 @@ bool JacoTrajectoryActionServer::adaptTrajectoryVelocitiesToLinear(trajectory_ms
         {
             float p1 = lastPoint.positions[j];
             float p2 = point.positions[j];
-            float distance = JacoJointManager::angleDistance(p1, p2);
+            float distance = MathFunctions::angleDistance(p1, p2);
             float maxVel = maxVelocities[joint_indices[j]];
             float velocity;
 
@@ -857,7 +859,7 @@ bool JacoTrajectoryActionServer::adaptTrajectoryVelocitiesToLinear(trajectory_ms
             {
                 float p1 = lastPoint.positions[j];
                 float p2 = point.positions[j];
-                float distance = JacoJointManager::angleDistance(p1, p2);
+                float distance = MathFunctions::angleDistance(p1, p2);
                 float velocity = distance / adaptedTimeDiff;
                 lastPoint.velocities[j] = velocity;
             }
@@ -896,7 +898,7 @@ void JacoTrajectoryActionServer::adaptTrajectoryAngles(trajectory_msgs::JointTra
         {
             float p1 = lastPoint.positions[j];
             float p2 = point.positions[j];
-            float distance = JacoJointManager::angleDistance(p1, p2);
+            float distance = MathFunctions::angleDistance(p1, p2);
             if (fabs(distance - M_PI) < epsilon)
             {
                 ROS_INFO("Adapting joint %i (trajectory pos %i) which is 180 degrees from last trajectory point", j, i);
@@ -1066,9 +1068,9 @@ bool JacoTrajectoryActionServer::angleDistanceOK(std::vector<float>& j1, std::ve
         // Check arm angles
         for (int i = 0; i < 6; ++i)
         {
-            float f1 = JacoJointManager::capToPI(j1[i]);
-            float f2 = JacoJointManager::capToPI(j2[i]);
-            float dist = JacoJointManager::angleDistance(f1, f2);
+            float f1 = MathFunctions::capToPI(j1[i]);
+            float f2 = MathFunctions::capToPI(j2[i]);
+            float dist = MathFunctions::angleDistance(f1, f2);
             if (fabs(dist) > maxAngle)
             {
                 ROS_INFO("Angle %i: %f %f", i, j1[i], j2[i]);
@@ -1088,7 +1090,7 @@ bool JacoTrajectoryActionServer::angleDistanceOK(std::vector<float>& j1, std::ve
     {
         float f1 = j1[i];
         float f2 = j2[i];
-        float dist = fabs(JacoJointManager::angleDistance(f1, f2));
+        float dist = fabs(MathFunctions::angleDistance(f1, f2));
         if (dist > maxAngle)
         {
             ROS_ERROR("Safety limit for joint %i reached, %f > %f in moving from %f to %f", i, dist, maxAngle, f1, f2);
@@ -1321,8 +1323,8 @@ bool JacoTrajectoryActionServer::atTrajectoryStart(const trajectory_msgs::JointT
         setTargetValues(traj.points[0], joint_indices, group, curr_angles, target_angles, true);
     }
     goalLock.unlock();
-    JacoJointManager::capToPI(curr_angles);
-    JacoJointManager::capToPI(target_angles);
+    MathFunctions::capToPI(curr_angles);
+    MathFunctions::capToPI(target_angles);
     bool reached = equalJointFloats(curr_angles, target_angles, tolerance, true);
     if (!reached) {
         ROS_ERROR("atTrajectoryStart:: not at start angles, using tolerance %f",tolerance);
@@ -1353,8 +1355,8 @@ void JacoTrajectoryActionServer::maxEndpointDiff(float& maxAngle, int& maxJoint,
         setTargetValues(traj.points.back(), joint_indices, group, curr_angles, target_angles, true);
     }
     goalLock.unlock();
-    JacoJointManager::capToPI(curr_angles);
-    JacoJointManager::capToPI(target_angles);
+    MathFunctions::capToPI(curr_angles);
+    MathFunctions::capToPI(target_angles);
     maxAngle = 0;
     maxJoint = -1;
     maxAngleDiff(curr_angles, target_angles, maxAngle, maxJoint);
@@ -1380,8 +1382,8 @@ bool JacoTrajectoryActionServer::trajectoryFinished(float tolerance)
         setTargetValues(current_traj.points.back(), current_traj_idx, current_traj_group, curr_angles, target_angles, true);
     }
     goalLock.unlock();
-    JacoJointManager::capToPI(curr_angles);
-    JacoJointManager::capToPI(target_angles);
+    MathFunctions::capToPI(curr_angles);
+    MathFunctions::capToPI(target_angles);
     bool reached = equalJointFloats(curr_angles, target_angles, tolerance, true);
     /*if (reached) {
         ROS_INFO("trajectoryFinished: reached target angles with tolerance %f",tolerance);
@@ -1616,7 +1618,7 @@ bool JacoTrajectoryActionServer::equalJointFloats(const std::vector<float>& firs
         float tol = tolerance;
         if (useMinFingers && (i >= 6)) tol = std::max(tolerance,
             static_cast<float>(MIN_FINGERS_TOLERANCE));  // fingers can't handle very fine accuracies
-        if (fabs(JacoJointManager::angleDistance(first[i], second[i])) > tol) return false;
+        if (fabs(MathFunctions::angleDistance(first[i], second[i])) > tol) return false;
     }
     return true;
 }
@@ -1629,12 +1631,12 @@ void JacoTrajectoryActionServer::maxAngleDiff(const std::vector<float>& first,
     idx = -1;
     if (minSize == 0) return;
     idx = 0;
-    maxVal = fabs(JacoJointManager::angleDistance(first[0], second[0]));
+    maxVal = fabs(MathFunctions::angleDistance(first[0], second[0]));
     // ROS_INFO("Vals: %f %f",first[0],second[0]);
     for (int i = 1; i < minSize; ++i)
     {
         // ROS_INFO("Vals: %f %f",first[i],second[i]);
-        float _max = std::max(maxVal, static_cast<float>(fabs(JacoJointManager::angleDistance(first[i], second[i]))));
+        float _max = std::max(maxVal, static_cast<float>(fabs(MathFunctions::angleDistance(first[i], second[i]))));
         if (_max > maxVal)
         {
             maxVal = _max;

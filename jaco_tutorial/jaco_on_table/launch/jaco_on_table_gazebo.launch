@@ -39,8 +39,6 @@
         <arg name="names_config_file" default="$(arg names_config_file)"/>
     </include>
 
-
-
 	#####################################
 	# Launch gazebo 
 	#####################################

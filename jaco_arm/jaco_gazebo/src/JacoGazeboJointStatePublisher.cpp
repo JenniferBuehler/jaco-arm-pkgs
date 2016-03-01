@@ -20,6 +20,7 @@
 
 
 #include <jaco_gazebo/JacoGazeboJointStatePublisher.h>
+#include <convenience_math_functions/MathFunctions.h>
 
 #include <ros/ros.h>
 #include <gazebo/transport/TransportTypes.hh>
@@ -45,6 +46,8 @@
 // set to true if all joints are to be published.
 // If set to false, only the arm joints are published, not including gripper joints.
 #define PUBLISH_ALL_JOINT_STATES true
+
+using convenience_math_functions::MathFunctions;
 
 namespace gazebo
 {
@@ -149,7 +152,7 @@ void JacoGazeboJointStatePublisher::readJointStates(sensor_msgs::JointState& js)
         }
 
         double currAngle = joint->GetAngle(axis).Radian();
-        currAngle = joints.capToPI(currAngle);
+        currAngle = MathFunctions::capToPI(currAngle);
 
 #ifdef DO_JOINT_1_2_PUBLISH_FIX
         if ((armJointNumber == 1) || (armJointNumber == 2))
@@ -195,7 +198,7 @@ void readJointStates(jaco_msgs::JointAngles& as, jaco_msgs::GripperPosition& fs)
         }
 
         double currAngle=joint->GetAngle(axis).Radian();
-        currAngle=joints.capToPI(currAngle);
+        currAngle=MathFunctions::capToPI(currAngle);
 
 // XXX TODO Check again: do we need this for real jaco arm too?
 #ifdef DO_JOINT_1_2_PUBLISH_FIX

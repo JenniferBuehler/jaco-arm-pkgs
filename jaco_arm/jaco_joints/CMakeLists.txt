@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   trajectory_msgs
   actionlib_msgs
   actionlib
+  arm_components_name_manager
+  convenience_math_functions
   roslint
 )
 
@@ -49,7 +51,8 @@ endif(DOXYGEN_FOUND)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES jaco_joints jaco_trajectory_action_server
-  CATKIN_DEPENDS roscpp sensor_msgs control_msgs trajectory_msgs actionlib_msgs actionlib
+  CATKIN_DEPENDS roscpp sensor_msgs control_msgs trajectory_msgs
+        actionlib_msgs actionlib arm_components_name_manager convenience_math_functions
 #  DEPENDS system_lib
 )
 

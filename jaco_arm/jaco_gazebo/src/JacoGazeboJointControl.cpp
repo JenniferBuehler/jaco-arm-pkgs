@@ -20,6 +20,7 @@
 
 #include <jaco_gazebo/JacoGazeboJointControl.h>
 #include <jaco_gazebo/JacoGazeboControlConstants.h>
+#include <convenience_math_functions/MathFunctions.h>
 
 #include <ros/ros.h>
 #include <gazebo/transport/TransportTypes.hh>
@@ -65,6 +66,7 @@
 // SetVelocityLimits() works
 #define GAZEBO_MAJOR_MAXVALS_WORKING 3
 
+using convenience_math_functions::MathFunctions;
 
 
 namespace gazebo
@@ -211,7 +213,7 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
         }
 
         double initVal = isGripper ? gripper_init[i - 6] : arm_init[i];
-        initVal = joints.capToPI(initVal);
+        initVal = MathFunctions::capToPI(initVal);
 
         ROS_INFO_STREAM("Setting initial position for " << joint_names[i] << ": " << initVal);
 
@@ -275,11 +277,11 @@ double JacoGazeboJointControl::capTargetVel(const physics::JointPtr joint, const
 
     if (useEndTargetPos)
     {
-        float target = joints.capToPI(endTargetPos);
+        float target = MathFunctions::capToPI(endTargetPos);
 
-        double _currAngle = joints.capToPI(currAngle);
+        double _currAngle = MathFunctions::capToPI(currAngle);
         distToTargetPos = (target - _currAngle);
-        distToTargetPos = joints.capToPI(distToTargetPos);
+        distToTargetPos = MathFunctions::capToPI(distToTargetPos);
 
         closeToTargetPos = fabs(distToTargetPos) < tolerance;
     }

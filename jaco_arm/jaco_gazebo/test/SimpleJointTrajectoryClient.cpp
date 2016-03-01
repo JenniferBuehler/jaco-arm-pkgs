@@ -31,6 +31,7 @@
 #include <sensor_msgs/JointState.h>
 
 #include <jaco_joints/JacoJointManager.h>
+#include <convenience_math_functions/MathFunctions.h>
 
 #define JOINT_TRAJECTORY_ACTION_TOPIC "/jaco/joint_trajectory_action"
 #define JOINT_STATES_TOPIC "/jaco/joint_state"
@@ -40,6 +41,8 @@
 
 sensor_msgs::JointState js;
 bool received_js;
+
+using convenience_math_functions::MathFunctions;
 
 void jointStateCallback(const sensor_msgs::JointState& jointstate)
 {
@@ -159,9 +162,9 @@ int main(int argc, char **argv)
 
     currentState = getCurrentJointState(jointStateTopic, n);
 
-    float trajPos = JacoJointManager::capToPI(trajectory.points[2].positions[0]);
-    float currPos = JacoJointManager::capToPI(currentState.position[idx[0]]);
-    ROS_INFO("Final accuracy of joint 0: %f", JacoJointManager::capToPI(trajPos - currPos));
+    float trajPos = MathFunctions::capToPI(trajectory.points[2].positions[0]);
+    float currPos = MathFunctions::capToPI(currentState.position[idx[0]]);
+    ROS_INFO("Final accuracy of joint 0: %f", MathFunctions::capToPI(trajPos - currPos));
 
     return 0;
 }

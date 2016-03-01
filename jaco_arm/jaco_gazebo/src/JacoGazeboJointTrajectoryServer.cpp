@@ -20,6 +20,7 @@
 
 
 #include <jaco_gazebo/JacoGazeboJointTrajectoryServer.h>
+#include <convenience_math_functions/MathFunctions.h>
 
 #include <ros/ros.h>
 #include <gazebo/transport/TransportTypes.hh>
@@ -53,6 +54,8 @@
 // velocities with Joint::GetVelocity(), the
 // JointVelocityTracker is used.
 // #define USE_VELOCITY_TRACKER
+
+using convenience_math_functions::MathFunctions;
 
 namespace gazebo
 {
@@ -302,7 +305,7 @@ void JacoGazeboJointTrajectoryServer::WorldUpdate(const ros::TimerEvent& t)
                 std::string scopedName = joint->GetScopedName();
                 data_lock.lock();
                 // ROS_INFO_STREAM("JacoGazeboJointTrajectoryServer: Setting final position target "<<scopedName<<": "<<trajectoryPos[i]);
-                if (!jointController->SetPositionTarget(scopedName, joints.capToPI(trajectoryPos[i])))
+                if (!jointController->SetPositionTarget(scopedName, MathFunctions::capToPI(trajectoryPos[i])))
                 {
                     ROS_ERROR_STREAM_ONCE("Could not set position target for "<<joint->GetName()<<
                            ". Can't control joint. This message is only printed once.");
@@ -349,7 +352,7 @@ void JacoGazeboJointTrajectoryServer::WorldUpdate(const ros::TimerEvent& t)
         if (usePosition)
         {
             // if (fabs(trajectoryPos[i])>0.01) ROS_INFO_STREAM("JacoGazeboJointTrajectoryServer: Setting position target "<<scopedName<<": "<<trajectoryPos[i]);
-            if (!jointController->SetPositionTarget(scopedName, joints.capToPI(trajectoryPos[i])))
+            if (!jointController->SetPositionTarget(scopedName, MathFunctions::capToPI(trajectoryPos[i])))
             {
                 ROS_ERROR_STREAM_ONCE("Could not set position target for "<<joint->GetName()<<
                        ". Can't control joint. This message is only printed once.");
@@ -375,8 +378,8 @@ void JacoGazeboJointTrajectoryServer::WorldUpdate(const ros::TimerEvent& t)
                 // the current angle values. This is random as the current angles can very well be equivalent
                 // to the target position, but more often than not, they are a tiny bit off, caused by the gravity pulling down
                 // the arm just a tiny bit. Then setting these wrong new targets will amplify over multiple iterations.
-                // jointController->SetPositionTarget(scopedName,joints.capToPI(currentAngles[i]));
-                if (!jointController->SetPositionTarget(scopedName,joints.capToPI(trajectoryPos[i])))
+                // jointController->SetPositionTarget(scopedName,MathFunctions::capToPI(currentAngles[i]));
+                if (!jointController->SetPositionTarget(scopedName,MathFunctions::capToPI(trajectoryPos[i])))
                 {
                     ROS_ERROR_STREAM_ONCE("Could not set position target for "<<joint->GetName()<<
                            ". Can't control joint. This message is only printed once.");
@@ -417,7 +420,7 @@ void JacoGazeboJointTrajectoryServer::readJointStates(std::vector<float>& currAn
         }
 
         double currAngle = joint->GetAngle(axis).Radian();
-        currAngle = joints.capToPI(currAngle);
+        currAngle = MathFunctions::capToPI(currAngle);
 
         // double currEff=joint->GetForce(axis);
         double currVel = joint->GetVelocity(axis);

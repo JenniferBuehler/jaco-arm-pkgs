@@ -35,8 +35,16 @@ RUN apt-get update && apt-get install -y \
     ros-indigo-roslint \
     && rm -rf /var/lib/apt/lists/
 
+
+# install git
+RUN apt-get update && apt-get install -y git
+
 COPY jaco_arm /catkin_ws/src/jaco_arm
 COPY jaco_tutorial /catkin_ws/src/jaco_tutorial
+
+# Get the repository convenience-pkgs as well
+RUN bin/bash -c "cd /catkin_ws/src \
+    && git clone https://github.com/JenniferBuehler/convenience-pkgs.git"
 
 # Build
 RUN bin/bash -c "source /.bashrc \
