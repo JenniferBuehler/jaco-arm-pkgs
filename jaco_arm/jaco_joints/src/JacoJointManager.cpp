@@ -50,21 +50,20 @@
 #define HAND_LINK "6_hand_limb"
 #define ARM_LINKS "0_baseA", "0_base_limb", "1_shoulder_limb", "2_upperarm_limb",\
     "3_forearm_limb", "4_upperwrist_limb", "5_lowerwrist_limb", "ring_1", "ring_2", "ring_3", "ring_4", "ring_5", "ring_6"
-#define FINGER_LINKS "fingers_base_link", "7_finger_mount_index", "8_finger_index",\
-    "9_finger_index_tip", "7_finger_mount_thumb", "8_finger_thumb", "9_finger_thumb_tip",\
-    "7_finger_mount_pinkie", "8_finger_pinkie", "9_finger_pinkie_tip"
+#define FINGER_LINKS "grippers_base_link", "7_gripper_mount_index", "8_gripper_index",\
+    "9_gripper_index_tip", "7_gripper_mount_thumb", "8_gripper_thumb", "9_gripper_thumb_tip",\
+    "7_gripper_mount_pinkie", "8_gripper_pinkie", "9_gripper_pinkie_tip"
 
 /**
  *
  */
-JacoJointManager::JacoJointManager():
-    priv("~"),
-    pub("")
+JacoJointManager::JacoJointManager(const std::string& _robot_namespace):
+    robot_namespace(_robot_namespace)
 {
-    arm_joints.resize(6);
+/*    arm_joints.resize(6);
     arm_joint_init.resize(6);
-    finger_joints.resize(3);
-    finger_joint_init.resize(3);
+    gripper_joints.resize(3);
+    gripper_joint_init.resize(3);
 
     arm_joints[0] = J0_NAME;
     arm_joints[1] = J1_NAME;
@@ -73,9 +72,9 @@ JacoJointManager::JacoJointManager():
     arm_joints[4] = J4_NAME;
     arm_joints[5] = J5_NAME;
 
-    finger_joints[0] = JF0_NAME;
-    finger_joints[1] = JF1_NAME;
-    finger_joints[2] = JF2_NAME;
+    gripper_joints[0] = JF0_NAME;
+    gripper_joints[1] = JF1_NAME;
+    gripper_joints[2] = JF2_NAME;
 
     arm_joint_init[0] = J0_INIT;
     arm_joint_init[1] = J1_INIT;
@@ -84,108 +83,210 @@ JacoJointManager::JacoJointManager():
     arm_joint_init[4] = J4_INIT;
     arm_joint_init[5] = J5_INIT;
 
-    finger_joint_init[0] = JF_INIT;
-    finger_joint_init[1] = JF_INIT;
-    finger_joint_init[2] = JF_INIT;
-
+    gripper_joint_init[0] = JF_INIT;
+    gripper_joint_init[1] = JF_INIT;
+    gripper_joint_init[2] = JF_INIT;
+*/
     // get joint names from parameter server
     readJointNamesFromParameters();
 }
 
-JacoJointManager::JacoJointManager(const std::vector<std::string>& _arm_joints,
-                                   const std::vector<std::string>& _finger_joints,
-                                   const std::vector<float>& _arm_joint_init,
-                                   const std::vector<float>& _finger_joint_init):
-    arm_joints(_arm_joints),
-    finger_joints(_finger_joints),
-    arm_joint_init(_arm_joint_init),
-    finger_joint_init(_finger_joint_init),
-    priv("~"),
-    pub("")
-{
-}
-
-
 JacoJointManager::JacoJointManager(const JacoJointManager& o):
+    palm_link(o.palm_link),
     arm_joints(o.arm_joints),
-    finger_joints(o.finger_joints),
+    arm_links(o.arm_links),
+    gripper_joints(o.gripper_joints),
+    gripper_links(o.gripper_links),
     arm_joint_init(o.arm_joint_init),
-    finger_joint_init(o.finger_joint_init),
-    priv(o.priv),
-    pub(o.pub)
+    gripper_joint_init(o.gripper_joint_init)
 {
 }
 
 void JacoJointManager::readJointNamesFromParameters()
 {
-    // get joint names from parameter server
+    ros::NodeHandle robot_nh(robot_namespace);
+    ROS_INFO_STREAM("JacoJointManager reading parameters from namespace: "<<robot_nh.getNamespace());
 
-    // ROS_INFO_STREAM("JacoJointManager reading parameters from namespace: "<<priv.getNamespace());
+    // ROS_INFO_STREAM("Reading palm_link:");
+    robot_nh.getParam("palm_link", palm_link);
+    if (palm_link.empty())
+    {
+      ROS_ERROR("Parameter palm_link should be specified");
+    }
+    
+    // --- arm parameters
+    
+    // ROS_INFO_STREAM("Reading arm_joints:");
+    robot_nh.getParam("arm_joints", arm_joints);
+    if (arm_joints.empty())
+    {
+      ROS_ERROR("Parameter arm_joints should be specified as an array");
+    }
+    // for (int i=0; i < arm_joints.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << arm_joints[i]);}
 
-    priv.param<std::string>("arm_joint_0_name", arm_joints[0], arm_joints[0]);
+    // ROS_INFO_STREAM("Reading arm_joint_init:");
+    robot_nh.getParam("arm_joint_init", arm_joint_init);
+    if (arm_joint_init.empty())
+    {
+      ROS_ERROR("Parameter arm_joint_init should be specified as an array");
+    }
+    // for (int i=0; i < arm_joint_init.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << arm_joint_init[i]);}
+ 
+    
+    // ROS_INFO_STREAM("Reading arm_links:");
+    robot_nh.getParam("arm_links", arm_links);
+    if (arm_links.empty())
+    {
+      ROS_ERROR("Parameter arm_links should be specified as an array");
+    }
+    // for (int i=0; i < arm_links.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << arm_links[i]);}
+
+    // controllers
+
+    // ROS_INFO_STREAM("Reading arm_position_controller_names:");
+    robot_nh.getParam("arm_position_controller_names", arm_position_controller_names);
+    if (arm_position_controller_names.empty())
+    {
+      ROS_INFO("INFO: Parameter arm_position_controller_names has not been specified");
+    }
+    // for (int i=0; i < arm_position_controller_names.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << arm_position_controller_names[i]);}
+
+    // ROS_INFO_STREAM("Reading arm_velocity_controller_names:");
+    robot_nh.getParam("arm_velocity_controller_names", arm_velocity_controller_names);
+    if (arm_velocity_controller_names.empty())
+    {
+      ROS_INFO("INFO: Parameter arm_velocity_controller_names has not been specified");
+    }
+    // for (int i=0; i < arm_velocity_controller_names.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << arm_velocity_controller_names[i]);}
+
+    // ROS_INFO_STREAM("Reading arm_effort_controller_names:");
+    robot_nh.getParam("arm_effort_controller_names", arm_effort_controller_names);
+    if (arm_effort_controller_names.empty())
+    {
+      ROS_INFO("INFO: Parameter arm_effort_controller_names has not been specified");
+    }
+    // for (int i=0; i < arm_effort_controller_names.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << arm_effort_controller_names[i]);}
+
+
+
+    // --- gripper parameters
+
+    // ROS_INFO_STREAM("Reading gripper_joints:");
+    robot_nh.getParam("gripper_joints", gripper_joints);
+    if (gripper_joints.empty())
+    {
+      ROS_ERROR("Parameter gripper_joints should be specified as an array");
+    }
+    // for (int i=0; i < gripper_joints.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << gripper_joints[i]);}
+
+    // ROS_INFO_STREAM("Reading gripper_joint_init:");
+    robot_nh.getParam("gripper_joint_init", gripper_joint_init);
+    if (gripper_joint_init.empty())
+    {
+      ROS_ERROR("Parameter gripper_joint_init should be specified as an array");
+    }
+    // for (int i=0; i < gripper_joint_init.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << gripper_joint_init[i]);}
+ 
+
+    // ROS_INFO_STREAM("Reading gripper_links:");
+    robot_nh.getParam("gripper_links", gripper_links);
+    if (gripper_links.empty())
+    {
+      ROS_ERROR("Parameter gripper_links should be specified as an array");
+    }
+    // for (int i=0; i < gripper_links.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << gripper_links[i]);}
+
+    // controllers
+
+    // ROS_INFO_STREAM("Reading gripper_position_controller_names:");
+    robot_nh.getParam("gripper_position_controller_names", gripper_position_controller_names);
+    if (gripper_position_controller_names.empty())
+    {
+      ROS_INFO("INFO: Parameter gripper_position_controller_names has not been specified");
+    }
+    // for (int i=0; i < gripper_position_controller_names.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << gripper_position_controller_names[i]);}
+
+    // ROS_INFO_STREAM("Reading gripper_velocity_controller_names:");
+    robot_nh.getParam("gripper_velocity_controller_names", gripper_velocity_controller_names);
+    if (gripper_velocity_controller_names.empty())
+    {
+      ROS_INFO("INFO: Parameter gripper_velocity_controller_names has not been specified");
+    }
+    // for (int i=0; i < gripper_velocity_controller_names.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << gripper_velocity_controller_names[i]);}
+
+    // ROS_INFO_STREAM("Reading gripper_effort_controller_names:");
+    robot_nh.getParam("gripper_effort_controller_names", gripper_effort_controller_names);
+    if (gripper_effort_controller_names.empty())
+    {
+      ROS_INFO("INFO: Parameter gripper_effort_controller_names has not been specified");
+    }
+    // for (int i=0; i < gripper_effort_controller_names.size(); ++i) { ROS_INFO_STREAM("idx " << i << ": " << gripper_effort_controller_names[i]);}
+
+
+/*    robot_nh.param<std::string>("arm_joint_0_name", arm_joints[0], arm_joints[0]);
     // ROS_INFO_STREAM("Joint 0: " << arm_joints[0]);
 
-    priv.param<std::string>("arm_joint_1_name", arm_joints[1], arm_joints[1]);
+    robot_nh.param<std::string>("arm_joint_1_name", arm_joints[1], arm_joints[1]);
     // ROS_INFO_STREAM("Joint 1: " << arm_joints[1]);
 
-    priv.param<std::string>("arm_joint_2_name", arm_joints[2], arm_joints[2]);
+    robot_nh.param<std::string>("arm_joint_2_name", arm_joints[2], arm_joints[2]);
     // ROS_INFO_STREAM("Joint 2: " << arm_joints[2]);
 
-    priv.param<std::string>("arm_joint_3_name", arm_joints[3], arm_joints[3]);
+    robot_nh.param<std::string>("arm_joint_3_name", arm_joints[3], arm_joints[3]);
     // ROS_INFO_STREAM("Joint 3: " << arm_joints[3]);
 
-    priv.param<std::string>("arm_joint_4_name", arm_joints[4], arm_joints[4]);
+    robot_nh.param<std::string>("arm_joint_4_name", arm_joints[4], arm_joints[4]);
     // ROS_INFO_STREAM("Joint 4: " << arm_joints[4]);
 
-    priv.param<std::string>("arm_joint_5_name", arm_joints[5], arm_joints[5]);
+    robot_nh.param<std::string>("arm_joint_5_name", arm_joints[5], arm_joints[5]);
     // ROS_INFO_STREAM("Joint 5: " << arm_joints[5]);
 
-    priv.param<std::string>("finger_joint_0_name", finger_joints[0], finger_joints[0]);
-    // ROS_INFO_STREAM("Finger joint 0: " << finger_joints[0]);
+    robot_nh.param<std::string>("gripper_joint_0_name", gripper_joints[0], gripper_joints[0]);
+    // ROS_INFO_STREAM("Gripper joint 0: " << gripper_joints[0]);
 
-    priv.param<std::string>("finger_joint_1_name", finger_joints[1], finger_joints[1]);
-    // ROS_INFO_STREAM("Finger joint 1: " << finger_joints[1]);
+    robot_nh.param<std::string>("gripper_joint_1_name", gripper_joints[1], gripper_joints[1]);
+    // ROS_INFO_STREAM("Gripper joint 1: " << gripper_joints[1]);
 
-    priv.param<std::string>("finger_joint_2_name", finger_joints[2], finger_joints[2]);
-    // ROS_INFO_STREAM("Finger joint 2: " << finger_joints[2]);
+    robot_nh.param<std::string>("gripper_joint_2_name", gripper_joints[2], gripper_joints[2]);
+    // ROS_INFO_STREAM("Gripper joint 2: " << gripper_joints[2]);
 
-    priv.param<float>("arm_joint_0_init", arm_joint_init[0], arm_joint_init[0]);
+    robot_nh.param<float>("arm_joint_0_init", arm_joint_init[0], arm_joint_init[0]);
     // ROS_INFO_STREAM("Init joint 0: " << arm_joint_init[0]);
 
-    priv.param<float>("arm_joint_1_init", arm_joint_init[1], arm_joint_init[1]);
+    robot_nh.param<float>("arm_joint_1_init", arm_joint_init[1], arm_joint_init[1]);
     // ROS_INFO_STREAM("Init joint 1: " << arm_joint_init[1]);
 
-    priv.param<float>("arm_joint_2_init", arm_joint_init[2], arm_joint_init[2]);
+    robot_nh.param<float>("arm_joint_2_init", arm_joint_init[2], arm_joint_init[2]);
     // ROS_INFO_STREAM("Init joint 2: " << arm_joint_init[2]);
 
-    priv.param<float>("arm_joint_3_init", arm_joint_init[3], arm_joint_init[3]);
+    robot_nh.param<float>("arm_joint_3_init", arm_joint_init[3], arm_joint_init[3]);
     // ROS_INFO_STREAM("Init joint 3: " << arm_joint_init[3]);
 
-    priv.param<float>("arm_joint_4_init", arm_joint_init[4], arm_joint_init[4]);
+    robot_nh.param<float>("arm_joint_4_init", arm_joint_init[4], arm_joint_init[4]);
     // ROS_INFO_STREAM("Init joint 4: " << arm_joint_init[4]);
 
-    priv.param<float>("arm_joint_5_init", arm_joint_init[5], arm_joint_init[5]);
+    robot_nh.param<float>("arm_joint_5_init", arm_joint_init[5], arm_joint_init[5]);
     // ROS_INFO_STREAM("Init joint 5: " << arm_joint_init[5]);
 
-    priv.param<float>("finger_joint_0_init", finger_joint_init[0], finger_joint_init[0]);
-    // ROS_INFO_STREAM("Init finger joint 0: " << finger_joint_init[0]);
+    robot_nh.param<float>("gripper_joint_0_init", gripper_joint_init[0], gripper_joint_init[0]);
+    // ROS_INFO_STREAM("Init gripper joint 0: " << gripper_joint_init[0]);
 
-    priv.param<float>("finger_joint_1_init", finger_joint_init[1], finger_joint_init[1]);
-    // ROS_INFO_STREAM("Init finger joint 1: " << finger_joint_init[1]);
+    robot_nh.param<float>("gripper_joint_1_init", gripper_joint_init[1], gripper_joint_init[1]);
+    // ROS_INFO_STREAM("Init gripper joint 1: " << gripper_joint_init[1]);
 
-    priv.param<float>("finger_joint_2_init", finger_joint_init[2], finger_joint_init[2]);
-    // ROS_INFO_STREAM("Init finger joint 2: " << finger_joint_init[2]);
+    robot_nh.param<float>("gripper_joint_2_init", gripper_joint_init[2], gripper_joint_init[2]);
+    // ROS_INFO_STREAM("Init gripper joint 2: " << gripper_joint_init[2]);
+*/
 }
-
 
 
 void JacoJointManager::ReadPIDValues(const std::string& pidParameterName, float& kp, float& ki, float& kd) const
 {
-    static const std::string ns_prefix = "/jaco";
     static const std::string pid_param_name = "pid";
 
     std::map<std::string, float> pid;
-    if (!pub.getParam(ns_prefix + "/" + pidParameterName + "/" + pid_param_name, pid))
+    ros::NodeHandle pub("");
+    if (!pub.getParam(robot_namespace + "/" + pidParameterName + "/" + pid_param_name, pid))
     {
         ROS_WARN_STREAM(pidParameterName << " was not on parameter server. Keeping default values.");
     }
@@ -199,42 +300,98 @@ void JacoJointManager::ReadPIDValues(const std::string& pidParameterName, float&
 
 bool JacoJointManager::GetPosGains(const std::string& jointName, float& kp, float& ki, float& kd) const
 {
-    if (jointName == arm_joints[0]) ReadPIDValues("arm_0_joint_position_controller", kp, ki, kd);
+    std::vector<std::string>::const_iterator jnt = std::find(arm_joints.begin(), arm_joints.end(), jointName);
+    if (jnt==arm_joints.end())
+    {
+        jnt = std::find(gripper_joints.begin(), gripper_joints.end(), jointName);
+        if (jnt==gripper_joints.end())
+        {
+            ROS_ERROR_STREAM("JacoJointManager does not maintain joint name '"<<jointName<<"'");
+            return false;
+        }
+        int idx = jnt - gripper_joints.begin();
+        if (gripper_position_controller_names.size() <= idx)
+        {
+            ROS_ERROR_STREAM("JacoJointManager does have the name for position controller '"<<jointName<<"'");
+            return false;
+        }
+        ReadPIDValues(gripper_position_controller_names[idx], kp, ki, kd);
+    }
+    else
+    {
+        int idx = jnt - arm_joints.begin();
+        if (arm_position_controller_names.size() <= idx)
+        {
+            ROS_ERROR_STREAM("JacoJointManager does have the name for position controller '"<<jointName<<"'");
+            return false;
+        }
+        ReadPIDValues(arm_position_controller_names[idx], kp, ki, kd);
+    }
+    return true;
+
+    /*if (jointName == arm_joints[0]) ReadPIDValues("arm_0_joint_position_controller", kp, ki, kd);
     else if (jointName == arm_joints[1]) ReadPIDValues("arm_1_joint_position_controller", kp, ki, kd);
     else if (jointName == arm_joints[2]) ReadPIDValues("arm_2_joint_position_controller", kp, ki, kd);
     else if (jointName == arm_joints[3]) ReadPIDValues("arm_3_joint_position_controller", kp, ki, kd);
     else if (jointName == arm_joints[4]) ReadPIDValues("arm_4_joint_position_controller", kp, ki, kd);
     else if (jointName == arm_joints[5]) ReadPIDValues("arm_5_joint_position_controller", kp, ki, kd);
-    else if (jointName == finger_joints[0]) ReadPIDValues("finger_joint_0_position_controller", kp, ki, kd);
-    else if (jointName == finger_joints[1]) ReadPIDValues("finger_joint_2_position_controller", kp, ki, kd);
-    else if (jointName == finger_joints[2]) ReadPIDValues("finger_joint_4_position_controller", kp, ki, kd);
+    else if (jointName == gripper_joints[0]) ReadPIDValues("gripper_joint_0_position_controller", kp, ki, kd);
+    else if (jointName == gripper_joints[1]) ReadPIDValues("gripper_joint_2_position_controller", kp, ki, kd);
+    else if (jointName == gripper_joints[2]) ReadPIDValues("gripper_joint_4_position_controller", kp, ki, kd);
     else return false;
-    return true;
+    return true;*/
 }
 
 bool JacoJointManager::GetVelGains(const std::string& jointName, float& kp, float& ki, float& kd) const
 {
-    if (jointName == arm_joints[0]) ReadPIDValues("arm_0_joint_velocity_controller", kp, ki, kd);
+    std::vector<std::string>::const_iterator jnt = std::find(arm_joints.begin(), arm_joints.end(), jointName);
+    if (jnt==arm_joints.end())
+    {
+        jnt = std::find(gripper_joints.begin(), gripper_joints.end(), jointName);
+        if (jnt==gripper_joints.end())
+        {
+            ROS_ERROR_STREAM("JacoJointManager does not maintain joint name '"<<jointName<<"'");
+            return false;
+        }
+        int idx = jnt - gripper_joints.begin();
+        if (gripper_velocity_controller_names.size() <= idx)
+        {
+            ROS_ERROR_STREAM("JacoJointManager does have the name for velocity controller '"<<jointName<<"'");
+            return false;
+        }
+        ReadPIDValues(gripper_velocity_controller_names[idx], kp, ki, kd);
+    }
+    else
+    {
+        int idx = jnt - arm_joints.begin();
+        if (arm_velocity_controller_names.size() <= idx)
+        {
+            ROS_ERROR_STREAM("JacoJointManager does have the name for velocity controller '"<<jointName<<"'");
+            return false;
+        }
+        ReadPIDValues(arm_velocity_controller_names[idx], kp, ki, kd);
+    }
+    return true;
+
+/*    if (jointName == arm_joints[0]) ReadPIDValues("arm_0_joint_velocity_controller", kp, ki, kd);
     else if (jointName == arm_joints[1]) ReadPIDValues("arm_1_joint_velocity_controller", kp, ki, kd);
     else if (jointName == arm_joints[2]) ReadPIDValues("arm_2_joint_velocity_controller", kp, ki, kd);
     else if (jointName == arm_joints[3]) ReadPIDValues("arm_3_joint_velocity_controller", kp, ki, kd);
     else if (jointName == arm_joints[4]) ReadPIDValues("arm_4_joint_velocity_controller", kp, ki, kd);
     else if (jointName == arm_joints[5]) ReadPIDValues("arm_5_joint_velocity_controller", kp, ki, kd);
-    else if (jointName == finger_joints[0]) ReadPIDValues("finger_joint_0_velocity_controller", kp, ki, kd);
-    else if (jointName == finger_joints[1]) ReadPIDValues("finger_joint_2_velocity_controller", kp, ki, kd);
-    else if (jointName == finger_joints[2]) ReadPIDValues("finger_joint_4_velocity_controller", kp, ki, kd);
+    else if (jointName == gripper_joints[0]) ReadPIDValues("gripper_joint_0_velocity_controller", kp, ki, kd);
+    else if (jointName == gripper_joints[1]) ReadPIDValues("gripper_joint_2_velocity_controller", kp, ki, kd);
+    else if (jointName == gripper_joints[2]) ReadPIDValues("gripper_joint_4_velocity_controller", kp, ki, kd);
     else return false;
-    return true;
+    return true; */
 }
 
 
-
-
-void JacoJointManager::getJointNames(std::vector<std::string>& joint_names, bool withFingers, const std::string& prepend) const
+void JacoJointManager::getJointNames(std::vector<std::string>& joint_names, bool withGripper, const std::string& prepend) const
 {
     joint_names.insert(joint_names.begin(), arm_joints.begin(), arm_joints.end());
-    if (!withFingers) return;
-    joint_names.insert(joint_names.end(), finger_joints.begin(), finger_joints.end());
+    if (!withGripper) return;
+    joint_names.insert(joint_names.end(), gripper_joints.begin(), gripper_joints.end());
     if (!prepend.empty())
     {
         for (std::vector<std::string>::iterator it = joint_names.begin();
@@ -245,8 +402,23 @@ void JacoJointManager::getJointNames(std::vector<std::string>& joint_names, bool
     }
 }
 
+const std::vector<std::string>& JacoJointManager::getGripperLinks() const
+{
+    return gripper_links;
+}
 
-std::vector<std::string> JacoJointManager::getGripperLinks() const
+const std::string& JacoJointManager::getPalmLink() const
+{
+    return palm_link;
+}
+
+const std::vector<std::string>& JacoJointManager::getArmLinks() const
+{
+    return arm_links;
+}
+
+
+std::vector<std::string> JacoJointManager::getDefaultGripperLinks() const
 {
     static std::string arr[] = {FINGER_LINKS};
     int arrSize=sizeof(arr) / sizeof(std::string);
@@ -256,12 +428,12 @@ std::vector<std::string> JacoJointManager::getGripperLinks() const
     return vec;
 }
 
-std::string JacoJointManager::getPalmLink() const
+std::string JacoJointManager::getDefaultPalmLink() const
 {
     return HAND_LINK;
 }
 
-std::vector<std::string> JacoJointManager::getArmLinks() const
+std::vector<std::string> JacoJointManager::getDefaultArmLinks() const
 {
     static std::string arr[] = {ARM_LINKS, HAND_LINK};
     int arrSize=sizeof(arr) / sizeof(std::string);
@@ -277,25 +449,25 @@ const std::vector<std::string>& JacoJointManager::getArmJoints() const
 {
     return arm_joints;
 }
-const std::vector<std::string>& JacoJointManager::getFingerJoints() const
+const std::vector<std::string>& JacoJointManager::getGripperJoints() const
 {
-    return finger_joints;
+    return gripper_joints;
 }
 
 const std::vector<float>& JacoJointManager::getArmJointsInitPose() const
 {
     return arm_joint_init;
 }
-const std::vector<float>& JacoJointManager::getFingerJointsInitPose() const
+const std::vector<float>& JacoJointManager::getGripperJointsInitPose() const
 {
-    return finger_joint_init;
+    return gripper_joint_init;
 }
 
-void JacoJointManager::initJointState(sensor_msgs::JointState& js, bool withFingers, const std::vector<float> * init_poses) const
+void JacoJointManager::initJointState(sensor_msgs::JointState& js, bool withGripper, const std::vector<float> * init_poses) const
 {
-    getJointNames(js.name, withFingers);
+    getJointNames(js.name, withGripper);
     int num = 9;
-    if (!withFingers) num = 6;
+    if (!withGripper) num = 6;
     js.position.resize(num, 0);
     js.velocity.resize(num, 0);
     js.effort.resize(num, 0);
@@ -319,9 +491,9 @@ int JacoJointManager::getJointIndices(const std::vector<std::string>& joint_name
     It jnt4 = std::find(joint_names.begin(), joint_names.end(), arm_joints[3]);
     It jnt5 = std::find(joint_names.begin(), joint_names.end(), arm_joints[4]);
     It jnt6 = std::find(joint_names.begin(), joint_names.end(), arm_joints[5]);
-    It fjnt1 = std::find(joint_names.begin(), joint_names.end(), finger_joints[0]);
-    It fjnt2 = std::find(joint_names.begin(), joint_names.end(), finger_joints[1]);
-    It fjnt3 = std::find(joint_names.begin(), joint_names.end(), finger_joints[2]);
+    It fjnt1 = std::find(joint_names.begin(), joint_names.end(), gripper_joints[0]);
+    It fjnt2 = std::find(joint_names.begin(), joint_names.end(), gripper_joints[1]);
+    It fjnt3 = std::find(joint_names.begin(), joint_names.end(), gripper_joints[2]);
 
     bool armIncomplete = (jnt1 == joint_names.end()) ||
                          (jnt2 == joint_names.end()) ||
@@ -329,9 +501,9 @@ int JacoJointManager::getJointIndices(const std::vector<std::string>& joint_name
                          (jnt4 == joint_names.end()) ||
                          (jnt5 == joint_names.end()) ||
                          (jnt6 == joint_names.end());
-    bool fingersIncomplete = (fjnt1 == joint_names.end()) || (fjnt2 == joint_names.end()) || (fjnt3 == joint_names.end());
+    bool grippersIncomplete = (fjnt1 == joint_names.end()) || (fjnt2 == joint_names.end()) || (fjnt3 == joint_names.end());
 
-    if (armIncomplete && fingersIncomplete)
+    if (armIncomplete && grippersIncomplete)
     {
         // ROS_INFO("JacoJointNames::getJointIndices: Not all joint names present in trajectory. List:");
         // for (std::vector<std::string>::const_iterator it=joint_names.begin(); it!=joint_names.end(); ++it) ROS_INFO("%s",it->c_str());
@@ -350,7 +522,7 @@ int JacoJointManager::getJointIndices(const std::vector<std::string>& joint_name
     {
         idx.insert(idx.end(), 6, -1);
     }
-    if (!fingersIncomplete)
+    if (!grippersIncomplete)
     {
         idx.push_back(fjnt1 - joint_names.begin());
         idx.push_back(fjnt2 - joint_names.begin());
@@ -361,13 +533,13 @@ int JacoJointManager::getJointIndices(const std::vector<std::string>& joint_name
         idx.insert(idx.end(), 3, -1);
     }
 
-    return fingersIncomplete ? 1 : armIncomplete ? 2 : 0;
+    return grippersIncomplete ? 1 : armIncomplete ? 2 : 0;
 }
 
-bool JacoJointManager::isFinger(const std::string& name) const
+bool JacoJointManager::isGripper(const std::string& name) const
 {
     std::vector<std::string>::const_iterator it;
-    for (it = finger_joints.begin(); it != finger_joints.end(); ++it)
+    for (it = gripper_joints.begin(); it != gripper_joints.end(); ++it)
     {
         if (*it == name) return true;
     }
@@ -384,11 +556,11 @@ int JacoJointManager::armJointNumber(const std::string& name) const
     return -1;
 }
 
-int JacoJointManager::fingerJointNumber(const std::string& name) const
+int JacoJointManager::gripperJointNumber(const std::string& name) const
 {
-    for (int i = 0; i < finger_joints.size(); ++i)
+    for (int i = 0; i < gripper_joints.size(); ++i)
     {
-        const std::string& name_i = finger_joints[i];
+        const std::string& name_i = gripper_joints[i];
         if (name_i == name) return i;
     }
     return -1;

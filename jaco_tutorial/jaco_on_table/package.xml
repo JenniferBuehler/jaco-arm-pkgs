@@ -44,6 +44,7 @@
   
   <run_depend>xacro</run_depend>
   <run_depend>jaco_description</run_depend>
+  <run_depend>jaco_joints</run_depend>
   <run_depend>jaco_gazebo</run_depend>
   <run_depend>gazebo_world_plugin_loader</run_depend>
 

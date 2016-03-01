@@ -43,7 +43,7 @@
 
 
 // set to true if all joints are to be published.
-// If set to false, only the arm joints are published, not including finger joints.
+// If set to false, only the arm joints are published, not including gripper joints.
 #define PUBLISH_ALL_JOINT_STATES true
 
 namespace gazebo
@@ -81,7 +81,7 @@ void JacoGazeboJointStatePublisher::Load(physics::ModelPtr _parent, sdf::Element
     std::vector<std::string> joint_names;
     joints.getJointNames(joint_names, true);
     const std::vector<float>& arm_init = joints.getArmJointsInitPose();
-    const std::vector<float>& finger_init = joints.getFingerJointsInitPose();
+    const std::vector<float>& gripper_init = joints.getGripperJointsInitPose();
 
     if (joint_names.size() != 9)
     {
@@ -139,7 +139,7 @@ void JacoGazeboJointStatePublisher::readJointStates(sensor_msgs::JointState& js)
         // ROS_INFO("Getting %s",_jointName.c_str());
 
         int armJointNumber = joints.armJointNumber(_jointName);
-        int fingerJointNumber = joints.fingerJointNumber(_jointName);
+        int gripperJointNumber = joints.gripperJointNumber(_jointName);
 
         unsigned int axis = 0;
         if (joint->GetAngleCount() != 1)
@@ -163,7 +163,7 @@ void JacoGazeboJointStatePublisher::readJointStates(sensor_msgs::JointState& js)
 
         // ROS_INFO("Joint %s (%u) %f %f %f", _jointName.c_str(), i, currAngle, currEff, currVel);
 
-        bool isJacoJoint = (fingerJointNumber >= 0) || (armJointNumber >= 0);
+        bool isJacoJoint = (gripperJointNumber >= 0) || (armJointNumber >= 0);
 
         if (publishAllJoints || isJacoJoint)
         {
@@ -177,7 +177,7 @@ void JacoGazeboJointStatePublisher::readJointStates(sensor_msgs::JointState& js)
 
 
 /*
-void readJointStates(jaco_msgs::JointAngles& as, jaco_msgs::FingerPosition& fs) {
+void readJointStates(jaco_msgs::JointAngles& as, jaco_msgs::GripperPosition& fs) {
     gazebo::physics::Joint_V::const_iterator it;
     for (it=model->GetJoints().begin(); it!=model->GetJoints().end(); ++it) {
         physics::JointPtr joint = *it;
@@ -186,7 +186,7 @@ void readJointStates(jaco_msgs::JointAngles& as, jaco_msgs::FingerPosition& fs) 
         //ROS_INFO("Getting %s",_jointName.c_str());
 
         int armJointNumber=joints.armJointNumber(_jointName);
-        int fingerJointNumber=joints.fingerJointNumber(_jointName);
+        int gripperJointNumber=joints.gripperJointNumber(_jointName);
 
         unsigned int axis=0;
         if (joint->GetAngleCount()!=1) {
@@ -201,12 +201,12 @@ void readJointStates(jaco_msgs::JointAngles& as, jaco_msgs::FingerPosition& fs) 
 #ifdef DO_JOINT_1_2_PUBLISH_FIX
         // XXX check if we need to do the fix here too. Copy from other readJointStates().
 #endif
-        if ((armJointNumber >=0) || (fingerJointNumber>=0)) {
+        if ((armJointNumber >=0) || (gripperJointNumber>=0)) {
             //ROS_INFO("Joint %s (%u) %f %f %f", _jointName.c_str(), i, currAngle, currEff, currVel);
-            // Save finger angles in radians
-            if (fingerJointNumber==0) { fs.finger1=currAngle; }
-            else if (fingerJointNumber==1) { fs.finger2=currAngle; }
-            else if (fingerJointNumber==2) { fs.finger3=currAngle; }
+            // Save gripper angles in radians
+            if (gripperJointNumber==0) { fs.gripper1=currAngle; }
+            else if (gripperJointNumber==1) { fs.gripper2=currAngle; }
+            else if (gripperJointNumber==2) { fs.gripper3=currAngle; }
             else if (armJointNumber==0) { as.joint1=currAngle; }
             else if (armJointNumber==1) { as.joint2=currAngle; }
             else if (armJointNumber==2) { as.joint3=currAngle; }
@@ -222,9 +222,9 @@ void readJointStates(jaco_msgs::JointAngles& as, jaco_msgs::FingerPosition& fs) 
 
 
 
-bool JacoGazeboJointStatePublisher::isFinger(const physics::JointPtr& joint) const
+bool JacoGazeboJointStatePublisher::isGripper(const physics::JointPtr& joint) const
 {
-    return joints.isFinger(joint->GetName()) || joints.isFinger(joint->GetScopedName());
+    return joints.isGripper(joint->GetName()) || joints.isGripper(joint->GetScopedName());
 }
 
 

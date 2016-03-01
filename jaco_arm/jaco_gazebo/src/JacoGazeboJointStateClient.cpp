@@ -87,7 +87,7 @@ void JacoGazeboJointStateClient::Load(physics::ModelPtr _parent, sdf::ElementPtr
     std::vector<std::string> joint_names;
     joints.getJointNames(joint_names, true);
     const std::vector<float>& arm_init = joints.getArmJointsInitPose();
-    const std::vector<float>& finger_init = joints.getFingerJointsInitPose();
+    const std::vector<float>& gripper_init = joints.getGripperJointsInitPose();
 
     if (joint_names.size() != 9)
     {
@@ -167,7 +167,7 @@ void JacoGazeboJointStateClient::JointStateCallback(sensor_msgs::JointStateConst
 
     for (size_t i = 0; i < jointCount; ++i)
     {
-        bool isFinger = false;
+        bool isGripper = false;
         std::string jointName = _joints->name[i];
 
 
@@ -249,9 +249,9 @@ void JacoGazeboJointStateClient::JointStateCallback(sensor_msgs::JointStateConst
 
 
 
-bool JacoGazeboJointStateClient::isFinger(const physics::JointPtr& joint) const
+bool JacoGazeboJointStateClient::isGripper(const physics::JointPtr& joint) const
 {
-    return joints.isFinger(joint->GetName()) || joints.isFinger(joint->GetScopedName());
+    return joints.isGripper(joint->GetName()) || joints.isGripper(joint->GetScopedName());
 }
 
 

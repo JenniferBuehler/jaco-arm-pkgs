@@ -86,6 +86,14 @@
 	#####################################
     <rosparam file="$(find jaco_gazebo)/config/JointTrajectoryParams.yaml" command="load" ns=""/>
 
+    ########################################
+    # Load arm joint and gripper joint names
+    ########################################
+    <arg name="names_config_file" default="$(find jaco_joints)/config/JacoJoints.yaml"/>
+    <include file="$(find jaco_joints)/launch/init_jaco_joints.launch">
+        <arg name="names_config_file" default="$(arg names_config_file)"/>
+    </include>
+
 	#####################################
 	# Load gazebo 
 	#####################################

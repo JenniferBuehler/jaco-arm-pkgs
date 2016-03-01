@@ -68,7 +68,7 @@ public:
 protected:
     virtual void UpdateChild();
 
-    bool isFinger(const physics::JointPtr& joint) const;
+    bool isGripper(const physics::JointPtr& joint) const;
 
     physics::ModelPtr model;
     JacoJointManager joints;

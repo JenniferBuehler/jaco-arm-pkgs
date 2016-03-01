@@ -108,17 +108,17 @@ void JacoGazeboJointTrajectoryServer::InitActionServer()
         trajectory_position_mode=false;
     }*/
 
-    double maxSpeed123, maxSpeed456, maxSpeedFingers;
+    double maxSpeed123, maxSpeed456, maxSpeedGrippers;
     // velocity limitation (in RAD per second) for joints 1,2,3 and 4,5,6
     n.param<double>("max_arm_speed_123", maxSpeed123, _MAX_SPEED_123_DEG * _DEG_TO_RAD);
     n.param<double>("max_arm_speed_456", maxSpeed456, _MAX_SPEED_456_DEG * _DEG_TO_RAD);
-    n.param<double>("max_fingers_speed", maxSpeedFingers, _MAX_SPEED_FINGERS_DEG * _DEG_TO_RAD);
-    ROS_INFO("Speed limits: {123} = %lf {456} = %lf {Fingers} = %lf", maxSpeed123, maxSpeed456, maxSpeedFingers);
+    n.param<double>("max_grippers_speed", maxSpeedGrippers, _MAX_SPEED_FINGERS_DEG * _DEG_TO_RAD);
+    ROS_INFO("Speed limits: {123} = %lf {456} = %lf {Grippers} = %lf", maxSpeed123, maxSpeed456, maxSpeedGrippers);
 
     std::vector<float> maxVel;
     maxVel.insert(maxVel.end(), 3, maxSpeed123);
     maxVel.insert(maxVel.end(), 3, maxSpeed456);
-    maxVel.insert(maxVel.end(), 3, maxSpeedFingers);
+    maxVel.insert(maxVel.end(), 3, maxSpeedGrippers);
 
     trajectoryPos.resize(9, 0);
     trajectoryVel.resize(9, 0);
@@ -404,9 +404,9 @@ void JacoGazeboJointTrajectoryServer::readJointStates(std::vector<float>& currAn
         // ROS_INFO("Getting %s",jointName.c_str());
 
         int armJointNumber = joints.armJointNumber(jointName);
-        int fingerJointNumber = joints.fingerJointNumber(jointName);
+        int gripperJointNumber = joints.gripperJointNumber(jointName);
 
-        bool jacoJoint = (armJointNumber >= 0) || (fingerJointNumber >= 0);
+        bool jacoJoint = (armJointNumber >= 0) || (gripperJointNumber >= 0);
         if (!jacoJoint) continue;
 
         unsigned int axis = 0;
@@ -434,11 +434,11 @@ void JacoGazeboJointTrajectoryServer::readJointStates(std::vector<float>& currAn
         
         // if (fabs(currVel>0.1)) ROS_INFO_STREAM("Velocity "<<jointName<<": "<<currVel);
 
-        if (fingerJointNumber >= 0)
+        if (gripperJointNumber >= 0)
         {
-            // Save finger angles in radians
-            currAngles[6 + fingerJointNumber] = currAngle;
-            currVels[6 + fingerJointNumber] = currVel;
+            // Save gripper angles in radians
+            currAngles[6 + gripperJointNumber] = currAngle;
+            currVels[6 + gripperJointNumber] = currVel;
         }
         else if (armJointNumber >= 0)
         {
@@ -450,9 +450,9 @@ void JacoGazeboJointTrajectoryServer::readJointStates(std::vector<float>& currAn
 }
 
 
-bool JacoGazeboJointTrajectoryServer::isFinger(const physics::JointPtr& joint) const
+bool JacoGazeboJointTrajectoryServer::isGripper(const physics::JointPtr& joint) const
 {
-    return joints.isFinger(joint->GetName()) || joints.isFinger(joint->GetScopedName());
+    return joints.isGripper(joint->GetName()) || joints.isGripper(joint->GetScopedName());
 }
 
 

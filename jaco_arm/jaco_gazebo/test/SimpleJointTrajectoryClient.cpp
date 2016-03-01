@@ -97,9 +97,9 @@ int main(int argc, char **argv)
     control_msgs::FollowJointTrajectoryActionGoal actionGoal;
     control_msgs::FollowJointTrajectoryGoal goal;
 
-    std::vector<std::string> joint_names, arm_joint_names, finger_joint_names;
+    std::vector<std::string> joint_names, arm_joint_names, gripper_joint_names;
     arm_joint_names = joints.getArmJoints();
-    finger_joint_names = joints.getFingerJoints();
+    gripper_joint_names = joints.getGripperJoints();
     std::string prepend = "";
     joints.getJointNames(joint_names, true, prepend);
 

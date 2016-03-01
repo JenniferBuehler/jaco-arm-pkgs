@@ -34,7 +34,7 @@
 
 /**
  * this is the angle (in radians) that the joints will always be away from their limits.
- * this is to prevent gazebo instabilities (fingers go flying at joint limits at times)
+ * this is to prevent gazebo instabilities (grippers go flying at joint limits at times)
  */
 #define JOINTLIMIT_PADDING 0.01
 
@@ -278,7 +278,7 @@ protected:
 
 
 
-    bool isFinger(const physics::JointPtr& joint) const;
+    bool isGripper(const physics::JointPtr& joint) const;
     
     bool velocityControllersLoaded() const
     {

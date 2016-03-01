@@ -39,7 +39,7 @@
 
 // maximum velocity for arm joints (rads/sec)
 #define DEFAULT_MAX_VEL 1.5
-// maximum velocity for arm finger (rads/sec)
+// maximum velocity for arm gripper (rads/sec)
 #define DEFAULT_MAX_VEL_FINGER 1.5
 
 #define KP_POS 200
@@ -115,7 +115,7 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
     std::vector<std::string> joint_names;
     joints.getJointNames(joint_names, true);
     const std::vector<float>& arm_init = joints.getArmJointsInitPose();
-    const std::vector<float>& finger_init = joints.getFingerJointsInitPose();
+    const std::vector<float>& gripper_init = joints.getGripperJointsInitPose();
 
     if (joint_names.size() != 9)
     {
@@ -158,7 +158,7 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
 
         jointController->AddJoint(joint);
         
-        bool isFinger = i > 5;
+        bool isGripper = i > 5;
 
         float max_force, max_velocity;
         GetMaxVals(*it, max_force, max_velocity);
@@ -210,7 +210,7 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
             jointController->SetVelocityPID(scopedName, gazebo::common::PID(kp, ki, kd, imin, imax, max_val, -max_val));
         }
 
-        double initVal = isFinger ? finger_init[i - 6] : arm_init[i];
+        double initVal = isGripper ? gripper_init[i - 6] : arm_init[i];
         initVal = joints.capToPI(initVal);
 
         ROS_INFO_STREAM("Setting initial position for " << joint_names[i] << ": " << initVal);
@@ -416,9 +416,9 @@ void JacoGazeboJointControl::UpdateChild()
 }
 
 
-bool JacoGazeboJointControl::isFinger(const physics::JointPtr& joint) const
+bool JacoGazeboJointControl::isGripper(const physics::JointPtr& joint) const
 {
-    return joints.isFinger(joint->GetName()) || joints.isFinger(joint->GetScopedName());
+    return joints.isGripper(joint->GetName()) || joints.isGripper(joint->GetScopedName());
 }
 
 bool JacoGazeboJointControl::DisableGravity() const
@@ -470,18 +470,18 @@ void JacoGazeboJointControl::GetVelGains(const std::string& jointName, float& kp
 
 void JacoGazeboJointControl::GetMaxVals(const std::string& jointName, float& force, float& velocity) const
 {
-    bool isFinger = joints.isFinger(jointName);
+    bool isGripper = joints.isGripper(jointName);
 
     // initialize default values first:
-    force = isFinger ? DEFAULT_MAX_FORCE_FINGER : DEFAULT_MAX_FORCE;
-    velocity = isFinger ? DEFAULT_MAX_VEL_FINGER : DEFAULT_MAX_VEL;
+    force = isGripper ? DEFAULT_MAX_FORCE_FINGER : DEFAULT_MAX_FORCE;
+    velocity = isGripper ? DEFAULT_MAX_VEL_FINGER : DEFAULT_MAX_VEL;
 
     // now read from config file
     const std::vector<std::string>& arm_joints = joints.getArmJoints();
 
-//    ROS_INFO_STREAM("Joint "<<jointName<<" is finger: "<<isFinger);
+//    ROS_INFO_STREAM("Joint "<<jointName<<" is gripper: "<<isGripper);
 
-    if (isFinger)
+    if (isGripper)
     {
         force = MAX_FINGER_EFFORT;
         velocity = MAX_FINGER_VELOCITY;
