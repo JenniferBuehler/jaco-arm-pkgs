@@ -1,0 +1,113 @@
+# please also refer to:
+# ``rosed arm_components_name_manager JointsTemplate.yaml``
+jaco:
+    # Name of the palm link.
+    palm_link: 6_hand_limb
+
+    # Names of the arm joints *without* the gripper joints.
+    arm_joints:
+        - arm_0_joint
+        - arm_1_joint
+        - arm_2_joint
+        - arm_3_joint
+        - arm_4_joint
+        - arm_5_joint
+
+    # initial ("Home") pose of the arm joints. Has to be the same
+    # order as arm_joints.
+    arm_joint_init:
+        - 4.5532045
+        - 4.5506868
+        - 0.7038534
+        - 5.4655337
+        - 1.506298
+        - 3.135861
+
+    # All links which are in-between (and directly before and after)
+    # the arm_joints. It does however *not* include the palm_link
+    # because this is specified separately.
+    arm_links:
+        - 0_baseA
+        - 0_base_limb
+        - 1_shoulder_limb
+        - 2_upperarm_limb
+        - 3_forearm_limb
+        - 4_upperwrist_limb
+        - 5_lowerwrist_limb
+        - ring_1
+        - ring_2
+        - ring_3
+        - ring_4
+        - ring_5
+        - ring_6
+            
+    # All joints of the "gripper". The gripper is the part of the
+    # arm used to grasp/grip objects. 
+    # Essentially, they are the "finger joints".
+    gripper_joints:
+        - finger_joint_0
+        - finger_joint_2
+        - finger_joint_4
+
+    # initial ("Home") pose of the gripper joints. Has to be the same
+    # order as gripper_joints.
+    gripper_joint_init:
+        - 0
+        - 0
+        - 0
+    # -0.0043633
+
+    # All links which are in-between (and directly before and after)
+    # the gripper_joints. It does however *not* include the palm_link
+    # because this is specified separately.
+    gripper_links:
+        - fingers_base_link
+        - 7_finger_mount_index
+        - 8_finger_index
+        - 9_finger_index_tip
+        - 7_finger_mount_thumb
+        - 8_finger_thumb
+        - 9_finger_thumb_tip
+        - 7_finger_mount_pinkie
+        - 8_finger_pinkie
+        - 9_finger_pinkie_tip
+
+    # Position controller names. Does not need to be specified
+    # if ArmComponentsNameManager instance is not used to read PID values
+    # Has to be in same order as arm_joints.
+    arm_position_controller_names:
+        - arm_0_joint_position_controller
+        - arm_1_joint_position_controller
+        - arm_2_joint_position_controller
+        - arm_3_joint_position_controller
+        - arm_4_joint_position_controller
+        - arm_5_joint_position_controller
+    
+    # Has to be in same order as arm_joints.
+    # arm_effort_controller_names:
+    
+    # Has to be in same order as gripper_joints.
+    gripper_position_controller_names:
+        - finger_joint_0_position_controller
+        - finger_joint_2_position_controller
+        - finger_joint_4_position_controller
+
+    # Velocity controller names. Does not need to be specified
+    # if ArmComponentsNameManager instance is not used to read PID values
+    # Has to be in same order as arm_joints.
+    arm_velocity_controller_names:
+        - arm_0_joint_velocity_controller
+        - arm_1_joint_velocity_controller
+        - arm_2_joint_velocity_controller
+        - arm_3_joint_velocity_controller
+        - arm_4_joint_velocity_controller
+        - arm_5_joint_velocity_controller
+    
+    # Has to be in same order as gripper_joints.
+    gripper_velocity_controller_names:
+        - finger_joint_0_velocity_controller
+        - finger_joint_2_velocity_controller
+        - finger_joint_4_velocity_controller
+
+    # Has to be in same order as gripper_joints.
+    # gripper_effort_controller_names:
