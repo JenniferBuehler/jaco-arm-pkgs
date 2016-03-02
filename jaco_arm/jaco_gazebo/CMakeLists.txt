@@ -110,9 +110,6 @@ add_executable(test_joint_trajectory_client
     test/SimpleJointTrajectoryClient.cpp
 )
 
-add_executable(set_gazebo_physics_client 
-    src/SetGazeboPhysicsClient.cpp
-)
 
 add_executable(test_set_joint_state_publisher_vel 
     test/SetJointStatePublisher.cpp
@@ -126,7 +123,6 @@ add_executable(test_set_joint_state_publisher_pos
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(test_joint_trajectory_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(set_gazebo_physics_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(test_set_joint_state_publisher_vel ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(test_set_joint_state_publisher_pos ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
@@ -163,10 +159,6 @@ target_link_libraries(test_joint_trajectory_client
    ${Boost_LIBRARIES}   
 )
 
-target_link_libraries(set_gazebo_physics_client 
-   ${catkin_LIBRARIES}
-   ${Boost_LIBRARIES}   
-)
 
 target_link_libraries(test_set_joint_state_publisher_vel 
    ${catkin_LIBRARIES}
