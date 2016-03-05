@@ -288,7 +288,9 @@ void JacoGazeboJointTrajectoryServer::WorldUpdate(const ros::TimerEvent& t)
 
             boost::unique_lock<boost::recursive_mutex> lck = jointController->GetLock();
             // clear out all possible current targets. Necessary e.g. to clear out
-            // exitsing velocity targets, when only positions are set now...
+            // exitsing velocity targets, when only positions are set now.
+            // This is safe to use here because we are setting new targets for *all*
+            // joints of the arm.
             jointController->Reset();
             int i = 0;
             for (std::vector<std::string>::iterator it = joint_names.begin();
@@ -327,7 +329,8 @@ void JacoGazeboJointTrajectoryServer::WorldUpdate(const ros::TimerEvent& t)
     // clear out all possible current targets. Necessary e.g. to clear out
     // exitsing velocity targets, when only positions are set now...
     // or because we moved on to next trajectory point and the positions
-    // are not valid any more.
+    // are not valid any more. It's ok to use here because we are setting new
+    // targets for every joint anyway.
     jointController->Reset();
 
     // check if the joint names maintained in 'joints' match the names in gazebo,

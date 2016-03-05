@@ -153,12 +153,6 @@ double JacoGazeboJointControlLocalImpl::DistToPosition(const physics::JointPtr& 
 
     double dist=currPosition - _targetPosition;
 
-/*    if (joint->GetName()=="arm_1_joint") {
-        ROS_INFO_STREAM("Distance for "<<joint->GetName()<<": curr="<<currPosition<<" target="<<_targetPosition<<", diff="<<dist);
-        ROS_INFO_STREAM("capToPi curr: "<<MathFunctions::capToPI(currPosition));
-    }
-*/
-    
     if ((fabs(highLimit) > 2*M_PI) || (fabs(lowLimit) > 2*M_PI)) {
         // the joint has no limits, so it can turn either direction. 
         // Use the shortest angle distance as goal.

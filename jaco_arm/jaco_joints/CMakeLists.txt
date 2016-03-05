@@ -42,6 +42,7 @@ endif(DOXYGEN_FOUND)
 ###################################
 ## catkin specific configuration ##
 ###################################
+
 ## The catkin_package macro generates cmake config files for your package
 ## Declare things to be passed to dependent projects
 ## INCLUDE_DIRS: uncomment this if you package contains header files

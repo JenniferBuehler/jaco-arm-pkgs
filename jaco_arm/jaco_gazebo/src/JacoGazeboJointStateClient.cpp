@@ -161,9 +161,12 @@ void JacoGazeboJointStateClient::JointStateCallback(sensor_msgs::JointStateConst
     std::map<std::string, physics::JointPtr > jntMap = jointController->GetJoints();
 
 
+    // XXX old implementation:
     // clear out all possible current targets. Necessary e.g. to clear out
     // exitsing velocity targets, when only positions are set now...
-    jointController->Reset();
+    // XXX this is not good because if the joint state is a subset, all other
+    // targets are cleared out and the arm collapses.
+    // jointController->Reset();
 
     for (size_t i = 0; i < jointCount; ++i)
     {
@@ -204,6 +207,10 @@ void JacoGazeboJointStateClient::JointStateCallback(sensor_msgs::JointStateConst
                 // ROS_INFO_STREAM("Leaving position target "<<scopedName<<": "<<currTargetPosVal);
                 jointController->SetPositionTarget(scopedName, currTargetPosVal);
             }
+            // XXX new implementation:
+            // set velocity to 0 for now, it will be overwritten if a velocity is specified for the
+            // same joint.
+            jointController->SetVelocityTarget(scopedName, 0);
         }
         if (i < _joints->velocity.size())
         {
