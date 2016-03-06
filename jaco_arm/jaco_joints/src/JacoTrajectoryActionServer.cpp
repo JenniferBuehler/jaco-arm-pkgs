@@ -141,9 +141,6 @@ bool JacoTrajectoryActionServer::init()
         return false;
     }
 
-
-
-
     action_server->start();
     ROS_INFO("Action server for Joint Trajectory started. Using position mode: %i", usePositionMode());
 

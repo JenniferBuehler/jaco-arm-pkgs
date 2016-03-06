@@ -81,11 +81,11 @@ void JacoGazeboJointTrajectoryServer::InitActionServer()
     ROS_INFO_STREAM("Reading joint trajectory parameters from namespace "<<rosNamespace);
 
     n.param<std::string>("action_topic", joint_trajectory_action_topic, DEFAULT_JOINT_TRAJECTORY_ACTION_TOPIC);
-    ROS_INFO("got joint trajectory action topic name: <%s>", joint_trajectory_action_topic.c_str());
+    // ROS_INFO("got joint trajectory action topic name: <%s>", joint_trajectory_action_topic.c_str());
 
     double goal_angles_tolerance = 0.01;
     n.param<double>("goal_angles_tolerance", goal_angles_tolerance, goal_angles_tolerance);
-    ROS_INFO("got goal angles tolerance: <%f>", goal_angles_tolerance);
+    // ROS_INFO("got goal angles tolerance: <%f>", goal_angles_tolerance);
 
     double intermediateTrajectoryAnglesTolerance = 2 * goal_angles_tolerance;
     n.param<double>("goal_angles_intermediate_tolerance", intermediateTrajectoryAnglesTolerance,
@@ -93,18 +93,18 @@ void JacoGazeboJointTrajectoryServer::InitActionServer()
 
     double angles_safety_limit = -1;
     n.param<double>("angle_safety_limit", angles_safety_limit, angles_safety_limit);
-    ROS_INFO("got goal angles safety limit: <%lf>", angles_safety_limit);
+    // ROS_INFO("got goal angles safety limit: <%lf>", angles_safety_limit);
 
     bool trajectory_position_mode = DEFAULT_TRAJECTORY_POSITION_MODE;
     n.param<bool>("use_angle_poses", trajectory_position_mode, trajectory_position_mode);
-    ROS_INFO("using trajectory position mode: <%i>", trajectory_position_mode);
+    // ROS_INFO("using trajectory position mode: <%i>", trajectory_position_mode);
 
     bool useOnlineVelocityControl = !DEFAULT_TRAJECTORY_POSITION_MODE;
     n.param<bool>("use_online_control", useOnlineVelocityControl, useOnlineVelocityControl);
 
     exceed_duration_wait_factor = 1.2;
     n.param<double>("exceed_duration_wait_factor", exceed_duration_wait_factor, exceed_duration_wait_factor);
-    ROS_INFO("got exceed duration wait factor: <%f>", exceed_duration_wait_factor);
+    // ROS_INFO("got exceed duration wait factor: <%f>", exceed_duration_wait_factor);
 
     /*if (useOnlineVelocityControl && trajectory_position_mode) {
         ROS_WARN("forcing velocity mode for trajectory execution, because online velocity control is enabled");
@@ -116,7 +116,7 @@ void JacoGazeboJointTrajectoryServer::InitActionServer()
     n.param<double>("max_arm_speed_123", maxSpeed123, _MAX_SPEED_123_DEG * _DEG_TO_RAD);
     n.param<double>("max_arm_speed_456", maxSpeed456, _MAX_SPEED_456_DEG * _DEG_TO_RAD);
     n.param<double>("max_grippers_speed", maxSpeedGrippers, _MAX_SPEED_FINGERS_DEG * _DEG_TO_RAD);
-    ROS_INFO("Speed limits: {123} = %lf {456} = %lf {Grippers} = %lf", maxSpeed123, maxSpeed456, maxSpeedGrippers);
+    // ROS_INFO("Speed limits: {123} = %lf {456} = %lf {Grippers} = %lf", maxSpeed123, maxSpeed456, maxSpeedGrippers);
 
     std::vector<float> maxVel;
     maxVel.insert(maxVel.end(), 3, maxSpeed123);
@@ -147,10 +147,10 @@ void JacoGazeboJointTrajectoryServer::InitActionServer()
     {
         ROS_ERROR("Error initializing joint trajectory action server");
     }
-    else
+    /*else
     {
         ROS_INFO("Joint trajectory action server running.");
-    }
+    }*/
 }
 
 

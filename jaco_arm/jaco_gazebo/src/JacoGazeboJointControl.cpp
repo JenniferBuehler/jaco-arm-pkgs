@@ -165,7 +165,7 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
         float max_force, max_velocity;
         GetMaxVals(*it, max_force, max_velocity);
 
-        ROS_INFO_STREAM("Setting max vals for joint " << *it << ": f=" << max_force << ", v=" << max_velocity);
+        // ROS_INFO_STREAM("Setting max vals for joint " << *it << ": f=" << max_force << ", v=" << max_velocity);
         joint->SetEffortLimit(0, max_force);
 
 #if GAZEBO_MAJOR_VERSION >= GAZEBO_JADE_VERSION
@@ -215,7 +215,7 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
         double initVal = isGripper ? gripper_init[i - 6] : arm_init[i];
         initVal = MathFunctions::capToPI(initVal);
 
-        ROS_INFO_STREAM("Setting initial position for " << joint_names[i] << ": " << initVal);
+        // ROS_INFO_STREAM("Setting initial position for " << joint_names[i] << ": " << initVal);
 
         double lowLimit = joint->GetLowerLimit(0).Radian();
         double upLimit = joint->GetUpperLimit(0).Radian();
@@ -233,7 +233,7 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
         {
             ROS_ERROR_STREAM("Could not set position target for " << joint_names[i]);
         }
-        ROS_INFO_STREAM("Set position target for " << joint_names[i]);
+        // ROS_INFO_STREAM("Set position target for " << joint_names[i]);
         ++i;
     }
 
@@ -455,7 +455,7 @@ void JacoGazeboJointControl::GetPosGains(const std::string& jointName, float& kp
     {
         ROS_ERROR_STREAM("Joint " << jointName << " not maintained by the joint manager");
     }
-    ROS_INFO_STREAM("Using position PID values for joint " << jointName << ": p=" << kp << ", i=" << ki << ", d=" << kd);
+    // ROS_INFO_STREAM("Using position PID values for joint " << jointName << ": p=" << kp << ", i=" << ki << ", d=" << kd);
 }
 
 
@@ -467,7 +467,7 @@ void JacoGazeboJointControl::GetVelGains(const std::string& jointName, float& kp
         ROS_ERROR_STREAM("Joint " << jointName << " not maintained by the joint manager");
     }
 
-    ROS_INFO_STREAM("Using velocity PID values for joint " << jointName << ": p=" << kp << ", i=" << ki << ", d=" << kd);
+    // ROS_INFO_STREAM("Using velocity PID values for joint " << jointName << ": p=" << kp << ", i=" << ki << ", d=" << kd);
 }
 
 void JacoGazeboJointControl::GetMaxVals(const std::string& jointName, float& force, float& velocity) const
