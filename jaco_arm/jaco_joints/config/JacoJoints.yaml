@@ -3,6 +3,9 @@
 jaco:
     # Name of the palm link.
     palm_link: 6_hand_limb
+    
+    # Name of the end effector link.
+    effector_link: 6_hand_limb
 
     # Names of the arm joints *without* the gripper joints.
     arm_joints:
