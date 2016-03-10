@@ -97,7 +97,6 @@ int main(int argc, char **argv)
     ROS_INFO("Now constructing goal");
 
     // send a goal to the action
-    control_msgs::FollowJointTrajectoryActionGoal actionGoal;
     control_msgs::FollowJointTrajectoryGoal goal;
 
     std::vector<std::string> joint_names, arm_joint_names, gripper_joint_names;
