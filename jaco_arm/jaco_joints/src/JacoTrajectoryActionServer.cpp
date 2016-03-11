@@ -372,11 +372,11 @@ void JacoTrajectoryActionServer::playTrajectorySimple(const trajectory_msgs::Joi
         }
 
         if (extraTime > (recheckTime - ZERO_EPS))
-            ROS_INFO("Had to wait an extra %f seconds (roughly) until target reached.", extraTime);
+            ROS_INFO("JacoTrajectoryActionServer: Had to wait an extra %f seconds (roughly) until target reached.", extraTime);
 
         if (!success) break;
     }
-    ROS_INFO("Execution of trajectory finished. Success=%i", success);
+    ROS_INFO("JacoTrajectoryActionServer: Execution of trajectory finished. Success=%i", success);
     setExecutionFinished(true, success);
 }
 
@@ -788,8 +788,16 @@ bool JacoTrajectoryActionServer::adaptTrajectoryVelocitiesToLinear(trajectory_ms
 {
     if (traj.points.size() < 1) return false;
 
-    float timeCount = 0;
-
+    // counter for the loop which containts the time from
+    // start from the current point.
+    float currTimeCount = 0;
+    // total "shift" in time applied to all joints before current point.
+    float totalTimeShift = 0;
+ 
+    // start at 2nd point in iteration, but treat 1st point as "current"
+    // to compute velocities.
+    // The first point is the "start state", but should contain the
+    // target velocity which is specified in the second joint.
     for (int i = 1; i < traj.points.size(); i++)
     {
         trajectory_msgs::JointTrajectoryPoint &lastPoint = traj.points[i - 1];
@@ -798,7 +806,7 @@ bool JacoTrajectoryActionServer::adaptTrajectoryVelocitiesToLinear(trajectory_ms
         {
             lastPoint.velocities.resize(lastPoint.positions.size(), 0);
         }
-        float timeDiff = point.time_from_start.toSec() - lastPoint.time_from_start.toSec();
+        float timeDiff = (point.time_from_start.toSec()+totalTimeShift) - lastPoint.time_from_start.toSec();
         float adaptedTimeDiff = timeDiff;
         for (int j = 0; j < lastPoint.positions.size(); ++j)
         {
@@ -808,12 +816,14 @@ bool JacoTrajectoryActionServer::adaptTrajectoryVelocitiesToLinear(trajectory_ms
             float maxVel = maxVelocities[joint_indices[j]];
             float velocity;
 
-            // distance (now a value between -PI and PI) may have to be made to go the long way 
-            // round if a velocity in p1 indicated this...
-            float v1 = (lastPoint.velocities.size() >= j) ? lastPoint.velocities[j] : 0; // velocity at last point (if given)
-            if ((fabs(v1) > ZERO_EPS) && (sign(distance)!=sign(v1)))
+            // distance (now a value between -PI and PI) may have to be made to go "the long way"
+            // round if a velocity in p1 indicated this, e.g. because of joint limits...
+            float v1 = (lastPoint.velocities.size() > j) ? lastPoint.velocities[j] : 0; // velocity at last point (if given)
+            float v2 = (point.velocities.size() > j) ? point.velocities[j] : 0; // velocity at last point (if given)
+            if ((fabs(v2) > ZERO_EPS) && (sign(distance)!=sign(v2)))
             {
-                ROS_INFO_STREAM("Info: velocity in joint trajectory goes 'the long way round': "<<p1<<" -> "<<p2<<" v="<<v1);
+                ROS_INFO_STREAM("JacoTrajectoryActionServer point "<<i<<", joint "<<j<<": velocity in joint trajectory goes 'the long way round': "
+                    <<p1<<" -> "<<p2<<", distance "<<distance<<", trajectory specifies v1="<<v1<<", v2="<<v2);
                 double invDist = 2*M_PI-fabs(distance); 
                 distance = distance > 0 ? -invDist: invDist;
             }
@@ -822,7 +832,8 @@ bool JacoTrajectoryActionServer::adaptTrajectoryVelocitiesToLinear(trajectory_ms
             {
                 if (fabs(distance) > ZERO_EPS)
                 {
-                    ROS_WARN("Faulty trajectory: Can't cover distance %f in 0 seconds. Assuming max velocity in adaptTrajectoryVelocitiesToLinear.",distance);
+                    ROS_WARN_STREAM("Faulty trajectory point "<<i<<"< joint "<<j
+                        <<": Can't cover distance "<<distance<<" in 0 seconds. Assuming max velocity in adaptTrajectoryVelocitiesToLinear.");
                     velocity = distance > 0 ? maxVel : -maxVel;
                 }
                 else
@@ -861,10 +872,11 @@ bool JacoTrajectoryActionServer::adaptTrajectoryVelocitiesToLinear(trajectory_ms
                 lastPoint.velocities[j] = velocity;
             }
         }
-
-        timeCount += adaptedTimeDiff;
+        totalTimeShift += (timeDiff - adaptedTimeDiff);
+        // ROS_INFO_STREAM("Total time shift at "<<i<<": "<<totalTimeShift);
+        currTimeCount += adaptedTimeDiff;
         // update the time of the trajectory point. If nothing changed in this trajectory point, it should remain the same.
-        point.time_from_start = ros::Duration(timeCount);
+        point.time_from_start = ros::Duration(currTimeCount);
     }
 
     // last point has 0 velocity

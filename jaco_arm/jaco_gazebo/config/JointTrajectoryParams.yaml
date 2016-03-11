@@ -33,7 +33,7 @@ jaco_trajectory:
   # It is ensured that each trajectory point is met with this accuracy. The smaller this tolerance,the more jerky the trajectory 
   # execution might be, but the more accurate as well. If this is > goal_angles_tolerance,
   # at the end of trajectory execution a correction might be done to meet the desired end accuracy.
-  goal_angles_intermediate_tolerance: 0.03
+  goal_angles_intermediate_tolerance: 0.05
   
   # for trajectory execution, this is the angle (in radian) which two joint positions may be apart
   # in the trajectory, or the execution is rejected due to safety reasons. Setting this to -1 disables
