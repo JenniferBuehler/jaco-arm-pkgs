@@ -21,7 +21,6 @@
     <!-- add transmission tags for velocity controllers -->
     <xacro:arg name="add_transmission_vel" default="false"/>
 
-
 	<xacro:macro name="default_material">
         <mu1>100000</mu1>
         <mu2>100000</mu2>
@@ -115,7 +114,7 @@
 				<sphere radius="0.005"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 -->
@@ -189,7 +188,6 @@
 	<!-- MACRO FOR THE ROBOT ARM -->
 	<xacro:macro name="jaco_arm" params="parent mass_divider finger_mass_divider *origin">
 
-
 	<joint name="jaco_arm_joint" type="fixed">
 		<xacro:insert_block name="origin" />
 		<parent link="${parent}" />
@@ -221,7 +219,6 @@
 	<gazebo reference="8_finger_thumb">
 		<xacro:default_material/>
 	</gazebo>
-
 	<gazebo reference="8_finger_index">
 		<xacro:default_material/>
 	</gazebo>
@@ -231,7 +228,6 @@
 	<gazebo reference="9_finger_thumb_tip">
 		<xacro:default_material/>
 	</gazebo>
-
 	<gazebo reference="9_finger_index_tip">
 		<xacro:default_material/>
 	</gazebo>
@@ -295,7 +291,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/0_baseB_limb.STL"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 		<collision>
@@ -317,17 +313,15 @@
 			<origin xyz="-3.57503886452221E-16 -1.58125151997128E-15 -5.55111512312578E-17" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.00872/mass_divider}" h="0.02" r="0.04"/>
 		</inertial>
-<!--
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
 				<mesh filename="package://jaco_description/meshes/jaco2/ring_1.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.50 0.50 0.50 1" />
 			</material>
 		</visual>
--->
 		<collision>
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
@@ -357,7 +351,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/1_shoulder_limb.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 		<xacro:testSphere/>
@@ -393,10 +387,9 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/ring_2.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.50 0.50 0.50 1" />
 			</material>
 		</visual>
-
 		<collision>
 			<origin xyz="-0.0005 -0.003 -0.001" rpy="0 0 0" />
 			<geometry>
@@ -427,7 +420,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/2_upperarm_limb.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 	 	<xacro:testSphere/>
@@ -464,7 +457,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/ring_3.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.5 0.5 0.5 1" />
 			</material>
 		</visual>
 		<collision>
@@ -477,11 +470,11 @@
 	<joint name="ring_3_joint" type="fixed">
 		<origin xyz="0.41 0 0" rpy="${M_PI} 0 -${M_PI}" />
 		<parent link="2_upperarm_limb" />
-		<child link="ring_3" />
-		<axis xyz="0 0 0" />
+		<child link="ring_3"/>
+		<axis xyz="0 0 0"/>
 	</joint>
 	 
-	<!-- ...........................				-->
+	<!-- ........................... -->
 	 
 	<link name="3_forearm_limb">
 		<inertial>
@@ -494,7 +487,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/3_forearm_limb.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.1 0.1 0.1 1" />
 			</material>
 		</visual>
 	 	<xacro:testSphere/>
@@ -527,7 +520,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/ring_4.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.5 0.5 0.5 1" />
 			</material>
 		</visual>
 		<collision>
@@ -558,7 +551,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/4_upperwrist_limb.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.1 0.1 0.1 1" />
 			</material>
 		</visual>
 	 	<xacro:testSphere/>
@@ -592,7 +585,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/ring_5.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.5 0.5 0.5 1" />
 			</material>
 		</visual>
 		<collision>
@@ -623,7 +616,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/5_lowerwrist_limb.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.1 0.1 0.1 1" />
 			</material>
 		</visual>
 	 	<xacro:testSphere/>
@@ -659,7 +652,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/ring_6.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.5 0.5 0.5 1" />
 			</material>
 		</visual>
 		<collision>
@@ -693,7 +686,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/6_hand_limb.STL" scale="${wrist_scale_x} ${wrist_scale_y} ${wrist_scale_z}"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.1 0.1 0.1 1" />
 			</material>
 		</visual>
 	 	<xacro:testSphere/>
@@ -729,14 +722,11 @@
 		<parent link="6_hand_limb" />
 		<child link="fingers_base_link" />
 	</joint>
-	
-
 
  
 	<!-- ...........................	-->
 	<!--			FINGERS					-->
 	<!-- ...........................	-->
-
 
 	 
 	<link name="7_finger_mount_index">
@@ -750,7 +740,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/7_finger_mount_index.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.5 0.5 0.5 1" />
 			</material>
 		</visual>
 		<collision>
@@ -785,7 +775,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/8_finger_index.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.50 0.50 0.50 1" />
 			</material>
 		</visual>
 		<collision>
@@ -820,7 +810,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/9_finger_index_tip.STL" scale="${tip_scale_x} ${tip_scale_y} ${tip_scale_z}"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.5 0.5 0.5 1" />
 			</material>
 		</visual>
 		<collision>
@@ -838,9 +828,6 @@
 	</joint>
 
 
- 
-
-
 
 	<!-- ...........................				-->
 
@@ -856,7 +843,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/7_finger_mount_thumb.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.50 0.50 0.50 1" />
 			</material>
 		</visual>
 		<collision>
@@ -890,7 +877,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/8_finger_thumb.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.5 0.5 0.5 1" />
 			</material>
 		</visual>
 		<collision>
@@ -923,7 +910,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/9_finger_thumb_tip.STL" scale="${tip_scale_x} ${tip_scale_y} ${tip_scale_z}"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.5 0.5 0.5 1" />
 			</material>
 		</visual>
 		<collision>
@@ -953,7 +940,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/7_finger_mount_pinkie.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.5 0.5 0.5 1" />
 			</material>
 		</visual>
 		<collision>
@@ -985,7 +972,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/8_finger_pinkie.STL" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.5 0.5 0.5 1" />
 			</material>
 		</visual>
 		<collision>
@@ -1018,7 +1005,7 @@
 				<mesh filename="package://jaco_description/meshes/jaco2/9_finger_pinkie_tip.STL" scale="${tip_scale_x} ${tip_scale_y} ${tip_scale_z}" />
 			</geometry>
 			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+				<color rgba="0.5 0.5 0.5 1" />
 			</material>
 		</visual>
 		<collision>
