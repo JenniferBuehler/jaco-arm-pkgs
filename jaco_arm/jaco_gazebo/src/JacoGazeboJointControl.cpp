@@ -80,7 +80,7 @@ JacoGazeboJointControl::JacoGazeboJointControl():
     loadedVelocityControllers(false)
 {
     ROS_INFO("Creating JacoGazeboJointControl plugin");
-
+    //gazebo::common::Console::SetQuiet(false);
 }
 
 JacoGazeboJointControl::~JacoGazeboJointControl()
@@ -171,6 +171,9 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
 #if GAZEBO_MAJOR_VERSION >= GAZEBO_JADE_VERSION
         joint->SetVelocityLimit(0, max_velocity);
 #endif
+            
+    // XXX TODO March 29th this causes Gazebo warnings (only visible when gazebo::common::Console::SetQuiet(false)), but I think this is
+    // what actually made it work in the end.. have to test later again and find the proper way to make this work!
 
 #if GAZEBO_MAJOR_VERSION > 2
         // joint->SetParam("fmax") must be called if joint->SetAngle() or joint->SetParam("vel") are
@@ -178,6 +181,7 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
         // going to be called.
         // XXX TODO investigate: This was deprecated in ODE gazebo 5? Also works without it..
         if (!UseForce()) {
+            ROS_INFO("Setting fmax prints a warning/error but it somehow still is required...");
             joint->SetParam("fmax", 0, max_force);
         }
 #else

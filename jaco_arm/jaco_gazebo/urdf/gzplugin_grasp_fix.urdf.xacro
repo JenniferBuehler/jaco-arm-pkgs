@@ -15,10 +15,13 @@
 			fixed joint. Gazebo makes one whole link out of this automatically. When listing the 9_*_tip links
 			here, they won't be found in the SDF.
             -->
-			<palm_link>6_hand_limb</palm_link>
-			<gripper_link>8_finger_index</gripper_link>
-			<gripper_link>8_finger_pinkie</gripper_link>
-			<gripper_link>8_finger_thumb</gripper_link>
+            <arm>
+                <arm_name>JacoArm1</arm_name>
+                <palm_link>6_hand_limb</palm_link>
+                <gripper_link>8_finger_index</gripper_link>
+                <gripper_link>8_finger_pinkie</gripper_link>
+                <gripper_link>8_finger_thumb</gripper_link>
+            </arm>
 			<forces_angle_tolerance>100</forces_angle_tolerance>
 			<update_rate>4</update_rate>
 			<grip_count_threshold>4</grip_count_threshold>
