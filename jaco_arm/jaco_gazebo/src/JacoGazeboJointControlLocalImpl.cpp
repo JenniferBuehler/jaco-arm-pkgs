@@ -474,9 +474,11 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
             // double currV=joint->GetVelocity(axis);
             // ROS_INFO_STREAM("Setting velocity of "<<joint->GetName()<<": "<<fju->second<<" - curr "<<currV<<", stepTime: "<<stepTime.Double());
 #if GAZEBO_MAJOR_VERSION > 2
-            // XXX TODO March 29th commented out because of Gazebo warnings (only visible when gazebo::common::Console::SetQuiet(false)), but I think this is
-            // what actually made it work in the end.. have to test later again!
-            //joint->SetParam("vel", axis, fju->second);
+            // XXX TODO setting the velocity like this generates gazebo errors, but in the end it was required
+            // to make it work anyway? Switching off the error message here for now.
+            gazebo::common::Console::SetQuiet(true);
+            joint->SetParam("vel", axis, fju->second);
+            gazebo::common::Console::SetQuiet(false);
             // for some reason, SetVelocity() still has to be called. But if called
             // without the previous SetParam(), it doesn't work as effectively, set
             // velocities are mostly not met if moving against direction of gravity.
