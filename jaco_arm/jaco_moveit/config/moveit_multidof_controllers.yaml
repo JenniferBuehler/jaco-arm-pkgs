@@ -1,22 +1,22 @@
-# Template that can be used to load the moveit_multidof_controller
-# implementation as a MoveIt! controller for the Jaco arm.
+# moveit_multidof_controller parameters for the Jaco arm.
 
-# Specify virtual joint name IF the robot has one.
+# Specify virtual joint name *if* the robot has one.
 # Leave unspecified or empty string otherwise.
 # virtual_joint_name: ""
 
-# action topic to subscribe to which provides a
-# navigation_actions/PathExecutionAction action for the robot.
+# Action topic to subscribe to which provides a
+# path_navigation_msgs/PathExecution.action for the robot.
 # Required if robot has a virtual joint.
+# If virtual_joint_name is empty, this field will be ignored.
 path_navigation_action_topic: /navigate_path
 
-# action topic to subscribe to which provides a
+# Action topic to subscribe to which provides a
 # control_msgs/FollowJointTrajectoryAction action for the robot
 joint_trajectory_action_topic: /jaco/joint_trajectory_action
 
+# List of controllers. Specify as for moveit_simple_controller_manager.
 controller_list:
-  - name: jaco 
-    action_ns: only_specified_for_compatibility 
+  - name: jaco
     type: FollowRobotTrajectory
     default: true
     joints:

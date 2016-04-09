@@ -33,8 +33,7 @@
     # load the world plugin loader (in package gazebo_world_plugin_loader) which launches several
     # world plugins according to the specification in the ROS parameters. Note that you will
     # have to load those parameters on the ROS parameter server BEFORE gazebo gets launched. 
-    <arg name="load_world_plugins" default="true"/>
-
+    <arg name="load_world_plugins" default="false"/>
 
     # set to true if a Joint::SetVelocity() is to be used instead of
     # Joint::SetForce(). Note that this will require loading different PID values.
