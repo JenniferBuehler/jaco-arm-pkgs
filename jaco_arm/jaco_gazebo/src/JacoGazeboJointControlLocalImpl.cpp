@@ -81,7 +81,9 @@ namespace gazebo
 JacoGazeboJointControlLocalImpl::JacoGazeboJointControlLocalImpl():
     JacoGazeboJointControl()
 {
+#if GAZEBO_MAJOR_VERSION > 2
     gazebo::common::Console::SetQuiet(false);
+#endif
     ROS_INFO("Creating JacoGazeboJointControlLocalImpl plugin");
     ros::NodeHandle n("");
     n.param<bool>("jaco/gazebo_use_set_velocity",useSetVelocity,true);
@@ -467,7 +469,7 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
         }
         // possible HACK: If velocity is 0, we could here fix the current position with SetJointPosition(), and NOT
         // do a  velocity 0 update. This can prevent the arm from slightly wiggling around 0 velocity positions.
-        // ROS_INFO_STREAM("JacoGazeboJointControlLocalImpl: Setting velocity "<<joint->GetName()<<": "<<fju->second);
+        // ROS_INFO_STREAM("Setting velocity "<<joint->GetName()<<": "<<fju->second<<" (measured: "<<joint->GetVelocity(0)<<")");
 
         if (SetVelocity())
         {
@@ -479,6 +481,7 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
             gazebo::common::Console::SetQuiet(true);
             joint->SetParam("vel", axis, fju->second);
             gazebo::common::Console::SetQuiet(false);
+            // ROS_INFO_STREAM("Setting velocity "<<joint->GetName()<<": "<<fju->second<<" (measured: "<<joint->GetVelocity(0)<<"), "<<joint->GetParam("vel", axis));
             // for some reason, SetVelocity() still has to be called. But if called
             // without the previous SetParam(), it doesn't work as effectively, set
             // velocities are mostly not met if moving against direction of gravity.
