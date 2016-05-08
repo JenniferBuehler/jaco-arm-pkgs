@@ -24,7 +24,7 @@
 #include <map>
 #include <string>
 
-#define DISABLE_GRAVITY false 
+#define DISABLE_GRAVITY false
 
 #define INIT_WITH_POS false
 
@@ -37,7 +37,7 @@
 #define KI_VEL_SETVEL 0.01
 #define KD_VEL_SETVEL 0
 
-// Default PID gains if SetVelocity() returns false 
+// Default PID gains if SetVelocity() returns false
 #define KP_POS_SETF 100
 #define KI_POS_SETF 0.01
 #define KD_POS_SETF 5
@@ -55,7 +55,7 @@
 // work still if the user does not set the target
 // commands consistenly. Warnings will be printed
 // if this fix has been applied.
-#define _FIX_POSITION_FALLBACK_                            
+#define _FIX_POSITION_FALLBACK_
 
 // the major version of Gazebo when call to Joint::SetForce()
 // does *not* need to be repeated artificially in order for
@@ -86,8 +86,8 @@ JacoGazeboJointControlLocalImpl::JacoGazeboJointControlLocalImpl():
 #endif
     ROS_INFO("Creating JacoGazeboJointControlLocalImpl plugin");
     ros::NodeHandle n("");
-    n.param<bool>("jaco/gazebo_use_set_velocity",useSetVelocity,true);
-    ROS_INFO_STREAM("Gazebo using SetVelocity(): "<<useSetVelocity);
+    n.param<bool>("jaco/gazebo_use_set_velocity", useSetVelocity, true);
+    ROS_INFO_STREAM("Gazebo using SetVelocity(): " << useSetVelocity);
 }
 
 JacoGazeboJointControlLocalImpl::~JacoGazeboJointControlLocalImpl()
@@ -119,7 +119,9 @@ void JacoGazeboJointControlLocalImpl::GetDefaultPosGains(float& kp, float& ki, f
         kp = KP_POS_SETVEL;
         ki = KI_POS_SETVEL;
         kd = KD_POS_SETVEL;
-    } else {
+    }
+    else
+    {
         kp = KP_POS_SETF;
         ki = KI_POS_SETF;
         kd = KD_POS_SETF;
@@ -134,7 +136,9 @@ void JacoGazeboJointControlLocalImpl::GetDefaultVelGains(float& kp, float& ki, f
         kp = KP_VEL_SETVEL;
         ki = KI_VEL_SETVEL;
         kd = KD_VEL_SETVEL;
-    } else {
+    }
+    else
+    {
         kp = KP_VEL_SETF;
         ki = KI_VEL_SETF;
         kd = KD_VEL_SETF;
@@ -147,21 +151,22 @@ double JacoGazeboJointControlLocalImpl::DistToPosition(const physics::JointPtr& 
     const int axis = 0;
     double currPosition = joint->GetAngle(axis).Radian();
 
-    double lowLimit=joint->GetLowerLimit(axis).Radian();
-    double highLimit=joint->GetUpperLimit(axis).Radian();
+    double lowLimit = joint->GetLowerLimit(axis).Radian();
+    double highLimit = joint->GetUpperLimit(axis).Radian();
 //    ROS_INFO_STREAM("Limits: "<<lowLimit<<", "<<highLimit);
 
-    double _targetPosition=MathFunctions::limitsToTwoPI(targetPosition, lowLimit, highLimit);
+    double _targetPosition = MathFunctions::limitsToTwoPI(targetPosition, lowLimit, highLimit);
     // ... currPosition (read from Gazebo) is always in the right format already.
 
-    double dist=currPosition - _targetPosition;
+    double dist = currPosition - _targetPosition;
 
-    if ((fabs(highLimit) > 2*M_PI) || (fabs(lowLimit) > 2*M_PI)) {
-        // the joint has no limits, so it can turn either direction. 
+    if ((fabs(highLimit) > 2 * M_PI) || (fabs(lowLimit) > 2 * M_PI))
+    {
+        // the joint has no limits, so it can turn either direction.
         // Use the shortest angle distance as goal.
         // TODO: current limitation is the assumption that if there is
         // either a high or a low limit, the arm has both limits.
-        dist=MathFunctions::angleDistance(_targetPosition,currPosition);
+        dist = MathFunctions::angleDistance(_targetPosition, currPosition);
     }
     return dist;
 }
@@ -172,7 +177,7 @@ double JacoGazeboJointControlLocalImpl::AdjustForCloseTarget(const physics::Join
         const double distToTarget, const gazebo::common::Time& stepTime, const double lookaheadSecs, const double commandValue) const
 {
     const int axis=0;
-    double currVel = joint->GetVelocity(axis); 
+    double currVel = joint->GetVelocity(axis);
     double nextStepSize = currVel * lookaheadSecs;
     double retVal = commandValue;
     if (((distToTarget < 0) && (nextStepSize < distToTarget)) ||
@@ -193,7 +198,7 @@ double JacoGazeboJointControlLocalImpl::AdjustForCloseTarget(const physics::Join
                 <<": target "<<targetVel<<", adjust "<<commandValue<<" by "<<factor);
             ROS_ERROR("DEBUG ME: Factor should never be higher");
             throw std::string("DEBUG ME: Factor should never be higher");
-        } 
+        }
         retVal = commandValue * factor;
     }
     return retVal;
@@ -204,7 +209,7 @@ double JacoGazeboJointControlLocalImpl::UpdateVelocityToPosition(const physics::
         double targetPosition, common::PID& pid, const gazebo::common::Time& stepTime) const
 {
 
-    double dist = DistToPosition(joint,targetPosition);
+    double dist = DistToPosition(joint, targetPosition);
     double cmd = pid.Update(dist, stepTime);
     // double targetVel = capTargetVel(joint, cmd, true, targetAngle,1e-04);
     return capTargetVel(joint, cmd, false);
@@ -213,7 +218,7 @@ double JacoGazeboJointControlLocalImpl::UpdateVelocityToPosition(const physics::
 double JacoGazeboJointControlLocalImpl::UpdateForceToPosition(const physics::JointPtr& joint,
         double targetPosition, common::PID& pid, const gazebo::common::Time& stepTime) const
 {
-    double dist = DistToPosition(joint,targetPosition);
+    double dist = DistToPosition(joint, targetPosition);
     double cmd = pid.Update(dist, stepTime);
     // ROS_INFO_STREAM("PID val "<<joint->GetName()<<": "<<cmd);
     // return cmd;
@@ -227,7 +232,8 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
 {
     // XXX TODO remove this test:
     static boost::mutex updateMtx;
-    if (!updateMtx.try_lock()) {
+    if (!updateMtx.try_lock())
+    {
         ROS_WARN("Other thread is just updating the joints, your JacoGazeboJointControlLocalImpl::UpdateJoints() may be too slow");
         return false;
     }
@@ -253,7 +259,7 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
 
     if (stepTime <= 0)
     {
-        prevUpdateTime = currTime; 
+        prevUpdateTime = currTime;
         return true;
     }
 //    ROS_INFO_STREAM("Step time: "<<stepTime.Double());
@@ -297,23 +303,26 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
             }
             physics::JointPtr joint = jntIt->second;
 
-            std::map<std::string, common::PID>::iterator pidIt=posPIDs.find(it->first);
-            if (pidIt==posPIDs.end())
+            std::map<std::string, common::PID>::iterator pidIt = posPIDs.find(it->first);
+            if (pidIt == posPIDs.end())
             {
-                ROS_ERROR_STREAM_ONCE("No position PID controller found for "<<it->first<<
-                       ". Can't control joint. This message is only printed once.");
+                ROS_ERROR_STREAM_ONCE("No position PID controller found for " << it->first <<
+                                      ". Can't control joint. This message is only printed once.");
                 return false;
             }
             common::PID& pid = pidIt->second;
             // ROS_INFO_STREAM("Updating position PID for "<<it->first);
 
-            double targetVal=it->second;
-            if (SetVelocity()) {
+            double targetVal = it->second;
+            if (SetVelocity())
+            {
                 targetVal = UpdateVelocityToPosition(joint, it->second, pid, stepTime);
-           } else {
+            }
+            else
+            {
                 targetVal = UpdateForceToPosition(joint, it->second, pid, stepTime);
             }
-            
+
             finalJointUpdates.insert(std::make_pair(joint->GetName(), targetVal));
 
             // Because unfortunately JointController does not give us back a reference,
@@ -326,8 +335,8 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
     {
         if (!velocityControllersLoaded())
         {
-            ROS_ERROR_STREAM_ONCE("No velocity controllers loaded. "<<
-                   ". Can't control joints. This message is only printed once.");
+            ROS_ERROR_STREAM_ONCE("No velocity controllers loaded. " <<
+                                  ". Can't control joints. This message is only printed once.");
             return false;
         }
         std::map<std::string, common::PID> velPIDs = jointController->GetVelocityPIDs();
@@ -349,16 +358,16 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
             double currVel = joint->GetVelocity(axis);
 
 
-            std::map<std::string, common::PID>::iterator pidIt=velPIDs.find(it->first);
-            if (pidIt==velPIDs.end())
+            std::map<std::string, common::PID>::iterator pidIt = velPIDs.find(it->first);
+            if (pidIt == velPIDs.end())
             {
-                ROS_ERROR_STREAM_ONCE("No velocity PID controller found for "<<it->first<<
-                       ". Can't control joint. This message is only printed once.");
+                ROS_ERROR_STREAM_ONCE("No velocity PID controller found for " << it->first <<
+                                      ". Can't control joint. This message is only printed once.");
                 return false;
             }
-            
+
             // ROS_INFO_STREAM("Updating velocity PID for "<<it->first<<" (curr vel "<<currVel<<")");
-            
+
             common::PID& pid = pidIt->second;
 
             double cmd = pid.Update(currVel - targetVel, stepTime);
@@ -370,16 +379,17 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
             bool insertToMap = true;
             if (DisableGravity())
             {
-                if (!SetVelocity()) {
+                if (!SetVelocity())
+                {
                     ROS_ERROR_STREAM_ONCE("JacoGazeboJointControlLocalImpl does not support disabled "
-                        <<"gravity and use of Joint::SetForce() yet. This message is printed only once.");
+                                          << "gravity and use of Joint::SetForce() yet. This message is printed only once.");
                     return false;
                 }
 
                 // Because there is no gravity anyway, set velocity directly.
                 finalTargetVal = targetVel;
-                if (fabs(targetVel) > 1e-04) 
-                    ROS_INFO_STREAM("DisableGrav: Velocity for "<<joint->GetName()<<": curr="<<currVel<<", target="<<targetVel<<" in orig map "<<it->second);
+                if (fabs(targetVel) > 1e-04)
+                    ROS_INFO_STREAM("DisableGrav: Velocity for " << joint->GetName() << ": curr=" << currVel << ", target=" << targetVel << " in orig map " << it->second);
             }
             else
             {
@@ -388,17 +398,19 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
                     double pidTargetVel = targetVel + cmd;
                     pidTargetVel = capTargetVel(joint, pidTargetVel, false);
                     finalTargetVal = pidTargetVel;
-                } else {
+                }
+                else
+                {
                     finalTargetVal = cmd;
                 }
                 static const float eps = 1e-04;
                 if (fabs(targetVel) <= eps)
-                // if velocity is 0, rely on the position command instead
+                    // if velocity is 0, rely on the position command instead
                 {
                     // Check whether a replacement position was actually specified as well, and print an error if not.
                     std::map<std::string, double>::iterator posIt = positions.find(it->first);
                     bool hasPositionUpdate = (posIt != positions.end());
-#ifdef _FIX_POSITION_FALLBACK_                            
+#ifdef _FIX_POSITION_FALLBACK_
                     if (!hasPositionUpdate)
                     {
                         ROS_WARN_STREAM_ONCE("Velocity specified as 0 (" << targetVel << ") for joint " << it->first
@@ -410,14 +422,14 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
                         std::map<std::string, common::PID> posPIDs = jointController->GetPositionPIDs();
                         common::PID posPID = posPIDs[it->first];
                         double currPosition = joint->GetAngle(axis).Radian();  // if capped to PI, it won't work for joint limits
-                        
+
                         if (SetVelocity()) finalTargetVal = UpdateVelocityToPosition(joint, currPosition, posPID, stepTime);
                         else finalTargetVal = UpdateForceToPosition(joint, currPosition, posPID, stepTime);
-                        
+
                         jointController->SetPositionPID(it->first, posPID);
                     }
 #endif  //_FIX_POSITION_FALLBACK_                   
-                    if (hasPositionUpdate) 
+                    if (hasPositionUpdate)
                     {
                         /*std::map<std::string, double>::iterator fju = finalJointUpdates.find(joint->GetName());
                         if (fju==finalJointUpdates.end()) {
@@ -428,7 +440,7 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
                         insertToMap = false;
                     }
                 }
-                else  
+                else
                 {
                     // double p,i,d;
                     // pid.GetErrors(p,i,d);
@@ -439,7 +451,7 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
             if (insertToMap)
             {
                 std::map<std::string, double>::iterator fju =
-                        finalJointUpdates.insert(std::make_pair(joint->GetName(), finalTargetVal)).first;
+                    finalJointUpdates.insert(std::make_pair(joint->GetName(), finalTargetVal)).first;
                 if (fju == finalJointUpdates.end())
                 {
                     ROS_WARN_STREAM("Joint " << joint->GetName() << " was not in position map");
@@ -489,19 +501,21 @@ bool JacoGazeboJointControlLocalImpl::UpdateJoints()
 #else
             joint->SetVelocity(axis, fju->second);
 #endif
-        } else {
+        }
+        else
+        {
             //double currF=joint->GetForce(axis);
             //ROS_INFO_STREAM("Setting force of "<<joint->GetName()<<": "<<fju->second<<" - curr "<<currF<<", stepTime: "<<stepTime.Double());
             joint->SetForce(axis, fju->second);
             // sometimes, successive calls to SetForce
             // are required (because it's accumulative),
             // otherwise not enough force gets applied.
-            for (int i=0; i < GAZEBO_SETFORCE_REPEAT; ++i) 
+            for (int i = 0; i < GAZEBO_SETFORCE_REPEAT; ++i)
                 joint->SetForce(axis, fju->second);
         }
     }
     prevUpdateTime = model->GetWorld()->GetSimTime();
-   // ROS_INFO_STREAM("end: "<<stepTime.Double());
+    // ROS_INFO_STREAM("end: "<<stepTime.Double());
     return true;
 }
 

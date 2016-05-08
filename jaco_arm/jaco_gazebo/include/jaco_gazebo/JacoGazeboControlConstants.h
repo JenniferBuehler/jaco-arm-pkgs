@@ -1,7 +1,7 @@
 #ifndef JACO_GAZEBO_JACOGAZEBOCONTROLCONSTANTS_H
 #define JACO_GAZEBO_JACOGAZEBOCONTROLCONSTANTS_H
 /**
-    
+
    Copyright (C) 2015 Jennifer Buehler
 
    This program is free software; you can redistribute it and/or modify
@@ -33,9 +33,9 @@
 #define MAX_ARM_5_VELOCITY 4.0
 
 
-#define MAX_FINGER_EFFORT 2 
+#define MAX_FINGER_EFFORT 2
 #define MAX_ARM_0_EFFORT 8
-#define MAX_ARM_1_EFFORT 8 
+#define MAX_ARM_1_EFFORT 8
 #define MAX_ARM_2_EFFORT 4
 #define MAX_ARM_3_EFFORT 2
 #define MAX_ARM_4_EFFORT 2

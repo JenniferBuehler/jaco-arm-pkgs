@@ -47,8 +47,10 @@ namespace gazebo
  *
  * **Requirements**
  *
- * Requires another gazebo plugin running which adds a gazebo::physics::JointControllerThreadsafe instance as a child to the model
- * and controls the joints. This can be for example an instance of gazebo::JacoGazeboJointControl.
+ * - Requires another gazebo plugin running which adds a gazebo::physics::JointControllerThreadsafe instance as a child to the model
+ *     and controls the joints. This can be for example an instance of gazebo::JacoGazeboJointControl.
+ * - This class uses jaco_joints::JacoJointManager, which requires the joint names to be loaded via
+ *     ROS parameter. Please see JacoJointManager class (and its base class) for documentation.
  *
  * \author Jennifer Buehler
  * \date January 2016
@@ -83,7 +85,7 @@ private:
 
     void readJointStates(std::vector<float>& currAngles, std::vector<float>& currVels);
 
-    JacoTrajectoryActionServerPtr trajectory_action_server;
+    jaco_joints::JacoTrajectoryActionServerPtr trajectory_action_server;
 
     // target trajectory positions
     std::vector<float> trajectoryPos;

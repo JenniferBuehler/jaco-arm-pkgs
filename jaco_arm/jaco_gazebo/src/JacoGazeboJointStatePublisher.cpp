@@ -157,7 +157,8 @@ void JacoGazeboJointStatePublisher::readJointStates(sensor_msgs::JointState& js)
 #ifdef DO_JOINT_1_2_PUBLISH_FIX
         // XXX TODO use convenience_math_functions::MathFunctions::limitsToTwoPI instead!
         if ((armJointNumber == 1) || (armJointNumber == 2))
-        {   // simply overwrite the "capToPi" correction from above
+        {
+            // simply overwrite the "capToPi" correction from above
             currAngle = joint->GetAngle(axis).Radian();
         }
 #endif

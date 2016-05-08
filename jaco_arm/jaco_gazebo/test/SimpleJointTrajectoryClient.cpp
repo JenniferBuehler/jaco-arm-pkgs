@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     JacoJointManager joints;
 
     std::string jointStateTopic(JOINT_STATES_TOPIC);
-    if (argc > 1) jointStateTopic=std::string(argv[1]);
+    if (argc > 1) jointStateTopic = std::string(argv[1]);
 
     sensor_msgs::JointState currentState = getCurrentJointState(jointStateTopic, n);
     std::vector<int> idx;
@@ -130,8 +130,8 @@ int main(int argc, char **argv)
         }
     }
 
-    trajectory.points[1].positions[0]+=0.4;
-    trajectory.points[2].positions[0]+=0.8;
+    trajectory.points[1].positions[0] += 0.4;
+    trajectory.points[2].positions[0] += 0.8;
 
     trajectory.points[1].positions[6] += 0.2;
     trajectory.points[1].positions[7] += 0.2;

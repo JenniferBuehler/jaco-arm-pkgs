@@ -37,7 +37,7 @@
 #define ONLINE_EXE_MAX_CORRECT_VEL 0.15
 
 
-// like ONLINE_EXE_MIN_CORRECT_VEL but for 
+// like ONLINE_EXE_MIN_CORRECT_VEL but for
 // fine-adjustment, so should be lower.
 #define ONLINE_EXE_MIN_CORRECT_VEL_FINE 0.05
 // maximum of ONLINE_EXE_MIN_CORRECT_VEL_FINE
@@ -50,6 +50,7 @@
 #define VELOCITY_ZERO_TOLERANCE 0.015
 
 using convenience_math_functions::MathFunctions;
+using jaco_joints::JacoTrajectoryActionServer;
 
 JacoTrajectoryActionServer::JacoTrajectoryActionServer(
     ros::NodeHandle &n,
@@ -226,7 +227,7 @@ void JacoTrajectoryActionServer::actionCallback(GoalHandle& goal)
     }
 
     float tolerance = ANGLE_SAFETY_LIMIT;
-    if (ANGLE_SAFETY_LIMIT < 0) tolerance=GOAL_TOLERANCE; // if no safety limit is used, just use goal tolerance.
+    if (ANGLE_SAFETY_LIMIT < 0) tolerance = GOAL_TOLERANCE; // if no safety limit is used, just use goal tolerance.
     if (!atTrajectoryStart(traj, joint_indices, idxRet, tolerance))
     {
         ROS_ERROR("Can only accept trajectoryies that start at the current state of the robot");
@@ -294,7 +295,7 @@ void JacoTrajectoryActionServer::actionCallback(GoalHandle& goal)
 
 
 bool JacoTrajectoryActionServer::playTrajectoryImplementation(const trajectory_msgs::JointTrajectory& traj,
-    const std::vector<int>& joint_indices, const int group)
+        const std::vector<int>& joint_indices, const int group)
 {
     if (playThread != NULL)
     {
@@ -306,12 +307,12 @@ bool JacoTrajectoryActionServer::playTrajectoryImplementation(const trajectory_m
     if (useOnlineVelocityControl)
     {
         playThread = new boost::thread(boost::bind(&JacoTrajectoryActionServer::playTrajectoryOnlineControlled,
-                this, traj, joint_indices, group, INTER_GOAL_TOLERANCE, 0.0));
+                                       this, traj, joint_indices, group, INTER_GOAL_TOLERANCE, 0.0));
     }
     else
     {
         playThread = new boost::thread(boost::bind(&JacoTrajectoryActionServer::playTrajectorySimple,
-                this, traj, joint_indices, group));
+                                       this, traj, joint_indices, group));
     }
 
     return true;
@@ -382,7 +383,7 @@ void JacoTrajectoryActionServer::playTrajectorySimple(const trajectory_msgs::Joi
 
 
 void JacoTrajectoryActionServer::playTrajectoryOnlineControlled(const trajectory_msgs::JointTrajectory traj,
-    const std::vector<int>& joint_indices, const int group, const float inter_tolerance, float lagTime)
+        const std::vector<int>& joint_indices, const int group, const float inter_tolerance, float lagTime)
 {
     if (usePositionMode())
     {
@@ -448,13 +449,16 @@ void JacoTrajectoryActionServer::playTrajectoryOnlineControlled(const trajectory
         float min_vel = ONLINE_EXE_MIN_CORRECT_VEL;
         float max_vel = ONLINE_EXE_MAX_CORRECT_VEL;
 
-        if (simplifyTrajectoryVelocities) {
-            if (i < (traj.points.size() - 1)) ROS_INFO("Waiting to reach trajectory point %i.", i+1);
-        } else {
+        if (simplifyTrajectoryVelocities)
+        {
+            if (i < (traj.points.size() - 1)) ROS_INFO("Waiting to reach trajectory point %i.", i + 1);
+        }
+        else
+        {
             ROS_INFO("Waiting to reach trajectory point %i.", i);
         }
-    
-        // set the target position now already. This is required to fall back to 
+
+        // set the target position now already. This is required to fall back to
         // if velocities become 0. Velocities will be adjusted in call to waitUntilPointReached() below.
         valueLock.lock();
         targetPos = _targetPos;
@@ -465,7 +469,7 @@ void JacoTrajectoryActionServer::playTrajectoryOnlineControlled(const trajectory
         if (!success)
         {
             ROS_ERROR("playTrajectoryOnlineControlled: Could not reach trajectory point %i within the allocated time (%f s). step time: %f. %s",
-                i + 1, maxWaitTime, stepTime, __FILE__);
+                      i + 1, maxWaitTime, stepTime, __FILE__);
             break;
         }
         // if this is the last point in the trajectory, we should already have reached it in the last
@@ -473,7 +477,7 @@ void JacoTrajectoryActionServer::playTrajectoryOnlineControlled(const trajectory
         if (i < traj.points.size() - 1)
         {
             ROS_INFO("Reached trajectory point %i. %f %f %f %f %f %f", i + 1,
-                _targetPos[0], _targetPos[1], _targetPos[2], _targetPos[3], _targetPos[4], _targetPos[5]);
+                     _targetPos[0], _targetPos[1], _targetPos[2], _targetPos[3], _targetPos[4], _targetPos[5]);
         }
     }
 
@@ -529,7 +533,7 @@ void JacoTrajectoryActionServer::playTrajectoryOnlineControlled(const trajectory
     float maxWaitForExact = 2.0;
     int numTries = 10;
     if (!repeatedWaitUntilPointReached(_targetPos, recheckTime, maxWaitForExact, maxWaitForZero,
-            GOAL_TOLERANCE, lagTime, min_vel, max_vel, numTries))
+                                       GOAL_TOLERANCE, lagTime, min_vel, max_vel, numTries))
     {
         ROS_ERROR("Could not wait for final adjustment");
         success = false;
@@ -538,7 +542,7 @@ void JacoTrajectoryActionServer::playTrajectoryOnlineControlled(const trajectory
     float maxAngle;
     int maxJoint;
     maxEndpointDiff(maxAngle, maxJoint, traj, joint_indices, group);
-    
+
     ROS_INFO("##########################################################");
     ROS_INFO("###  Execution of trajectory finished. Success=%i", success);
     ROS_INFO("###  Final accuracy is %f (at joint %i)", maxAngle, maxJoint);
@@ -572,7 +576,7 @@ bool JacoTrajectoryActionServer::repeatedWaitUntilPointReached(const std::vector
         _targetVel.resize(9, 0);  // start off with 0 velocities, and leave adjustments to internal waitUntilPointReached call.
 
         success = waitUntilPointReached(_targetPos, _targetVel, recheckTime, maxWaitForExact,
-                tolerance, lagTime, min_correct_vel, max_correct_vel);
+                                        tolerance, lagTime, min_correct_vel, max_correct_vel);
         if (!success)
         {
             ROS_INFO("Could not reach exact angle position within allocated time, tries left: %i", numTries);
@@ -653,7 +657,7 @@ bool JacoTrajectoryActionServer::waitUntilVelocitiesZero(float recheckTime, floa
     if (timeSlept > maxWaitTime)
     {
         ROS_ERROR("Waiting (max %lfs) until velocities 0: Could not reach point within the allocated time. Failed with velocity %f, tolerance was %f",
-                maxWaitTime, failVel, tolerance);
+                  maxWaitTime, failVel, tolerance);
         return false;
     }
     return true;
@@ -693,7 +697,7 @@ bool JacoTrajectoryActionServer::waitUntilPointReached(const std::vector<float>&
                 float currPos = _currAngles[k];
                 float nextPoint = _targetPos[k];
                 float targetDiff = MathFunctions::capToPI(nextPoint - currPos);
-                if (fabs(targetDiff) > tolerance)   
+                if (fabs(targetDiff) > tolerance)
                 {
                     // position not reached currently (in which case we don't care), so look ahead in lag
                     // ROS_INFO("Adapting curr Angle %i from %f to %f",k,_currAngles[k],_currAngles[k] + _targetVel[k]*lagTime);
@@ -707,7 +711,7 @@ bool JacoTrajectoryActionServer::waitUntilPointReached(const std::vector<float>&
         // targetPos and _targetVel are now of size 9
 
         bool allTargetsReached = true;
-        // check whether the targets are reached or velocities have to be adapted 
+        // check whether the targets are reached or velocities have to be adapted
         for (int k = 0; k < 9; ++k)
         {
             float currPos = _currAngles[k];
@@ -729,7 +733,7 @@ bool JacoTrajectoryActionServer::waitUntilPointReached(const std::vector<float>&
                 // ROS_INFO("Target joint %i not reached! tvel=%f, currPos=%f, nextPos=%f, diff %f (iter %i)",k,_targetVel[k],currPos,nextPos,targetDiff,numIter);
 
                 // float lastPoint=_lastPos[k];
-                bool overshot = _targetVel[k] > 0 ? targetDiff < 0 : targetDiff > 0; 
+                bool overshot = _targetVel[k] > 0 ? targetDiff < 0 : targetDiff > 0;
 
                 // if we overshot the goal, we have to correct. Or if velocitiy is 0, we will never get there!
                 if (overshot || (fabs(_targetVel[k]) < ZERO_EPS))
@@ -740,7 +744,7 @@ bool JacoTrajectoryActionServer::waitUntilPointReached(const std::vector<float>&
                     if (fabs(_targetVel[k]) < min_correct_vel) _targetVel[k] = targetDiff < 0 ? -min_correct_vel : min_correct_vel;
                     if (fabs(_targetVel[k]) > max_correct_vel) _targetVel[k] = targetDiff < 0 ? -max_correct_vel : max_correct_vel;
                     // ROS_WARN("Correct target vel joint %i (overshot: %i) from %f to %f (p-diff %f), pos=%f next=%f",
-                       // k, overshot, oldVel, _targetVel[k], targetDiff, currPos, nextPos);
+                    // k, overshot, oldVel, _targetVel[k], targetDiff, currPos, nextPos);
                 }
             }
         }
@@ -756,7 +760,7 @@ bool JacoTrajectoryActionServer::waitUntilPointReached(const std::vector<float>&
         if (!goalActive())
         {
             ROS_WARN_STREAM("Trajectory execution is inactive, maybe has been cancelled.");
-            success=false;
+            success = false;
             break;
         }
 
@@ -793,7 +797,7 @@ bool JacoTrajectoryActionServer::adaptTrajectoryVelocitiesToLinear(trajectory_ms
     float currTimeCount = 0;
     // total "shift" in time applied to all joints before current point.
     float totalTimeShift = 0;
- 
+
     // start at 2nd point in iteration, but treat 1st point as "current"
     // to compute velocities.
     // The first point is the "start state", but should contain the
@@ -806,7 +810,7 @@ bool JacoTrajectoryActionServer::adaptTrajectoryVelocitiesToLinear(trajectory_ms
         {
             lastPoint.velocities.resize(lastPoint.positions.size(), 0);
         }
-        float timeDiff = (point.time_from_start.toSec()+totalTimeShift) - lastPoint.time_from_start.toSec();
+        float timeDiff = (point.time_from_start.toSec() + totalTimeShift) - lastPoint.time_from_start.toSec();
         float adaptedTimeDiff = timeDiff;
         for (int j = 0; j < lastPoint.positions.size(); ++j)
         {
@@ -820,20 +824,20 @@ bool JacoTrajectoryActionServer::adaptTrajectoryVelocitiesToLinear(trajectory_ms
             // round if a velocity in p1 indicated this, e.g. because of joint limits...
             float v1 = (lastPoint.velocities.size() > j) ? lastPoint.velocities[j] : 0; // velocity at last point (if given)
             float v2 = (point.velocities.size() > j) ? point.velocities[j] : 0; // velocity at last point (if given)
-            if ((fabs(v2) > ZERO_EPS) && (sign(distance)!=sign(v2)))
+            if ((fabs(v2) > ZERO_EPS) && (sign(distance) != sign(v2)))
             {
-                ROS_INFO_STREAM("JacoTrajectoryActionServer point "<<i<<", joint "<<j<<": velocity in joint trajectory goes 'the long way round': "
-                    <<p1<<" -> "<<p2<<", distance "<<distance<<", trajectory specifies v1="<<v1<<", v2="<<v2);
-                double invDist = 2*M_PI-fabs(distance); 
-                distance = distance > 0 ? -invDist: invDist;
+                ROS_INFO_STREAM("JacoTrajectoryActionServer point " << i << ", joint " << j << ": velocity in joint trajectory goes 'the long way round': "
+                                << p1 << " -> " << p2 << ", distance " << distance << ", trajectory specifies v1=" << v1 << ", v2=" << v2);
+                double invDist = 2 * M_PI - fabs(distance);
+                distance = distance > 0 ? -invDist : invDist;
             }
 
             if (fabs(timeDiff) < ZERO_EPS)
             {
                 if (fabs(distance) > ZERO_EPS)
                 {
-                    ROS_WARN_STREAM("Faulty trajectory point "<<i<<"< joint "<<j
-                        <<": Can't cover distance "<<distance<<" in 0 seconds. Assuming max velocity in adaptTrajectoryVelocitiesToLinear.");
+                    ROS_WARN_STREAM("Faulty trajectory point " << i << "< joint " << j
+                                    << ": Can't cover distance " << distance << " in 0 seconds. Assuming max velocity in adaptTrajectoryVelocitiesToLinear.");
                     velocity = distance > 0 ? maxVel : -maxVel;
                 }
                 else
@@ -972,7 +976,7 @@ bool JacoTrajectoryActionServer::checkTrajectory(const trajectory_msgs::JointTra
         return false;
     }
 
-    if ((ANGLE_SAFETY_LIMIT >=0) && !angleDistanceOK(currentAngles, firstTargetAngles, group, ANGLE_SAFETY_LIMIT))
+    if ((ANGLE_SAFETY_LIMIT >= 0) && !angleDistanceOK(currentAngles, firstTargetAngles, group, ANGLE_SAFETY_LIMIT))
     {
         ROS_ERROR("Too much distance to first trajectory point from current state!");
         return false;
@@ -1065,7 +1069,7 @@ bool JacoTrajectoryActionServer::maxVelExceeded(std::vector<float>& vels, int ch
 
 
 bool JacoTrajectoryActionServer::angleDistanceOK(std::vector<float>& j1, std::vector<float>& j2,
-                int check, float maxAngle) const
+        int check, float maxAngle) const
 {
     if (j1.size() != j2.size())
     {
@@ -1111,6 +1115,7 @@ bool JacoTrajectoryActionServer::angleDistanceOK(std::vector<float>& j1, std::ve
 
 void JacoTrajectoryActionServer::abortExecution()
 {
+    abortExecutionImpl();
     if (playThread)
     {
         playThread->interrupt();
@@ -1124,6 +1129,7 @@ void JacoTrajectoryActionServer::joinExecutionThread()
     {
         playThread->join();
     }
+    joinExecutionThreadImpl();
 }
 
 bool JacoTrajectoryActionServer::goalActive()
@@ -1196,7 +1202,7 @@ int JacoTrajectoryActionServer::waitForExecution(float timeout_secs)
         if ((timeout_secs > 0) && (waited > timeout_secs))
         {
             ROS_WARN("Timeout reached waiting for joint trajectory action to finish. Waited %f secs (maximum %f)",
-                waited, timeout_secs);
+                     waited, timeout_secs);
             abortExecution();
             goalLock.lock();
             if (has_goal)
@@ -1250,7 +1256,7 @@ int JacoTrajectoryActionServer::waitForExecution(float timeout_secs)
                 int maxJoint;
                 maxEndpointDiff(maxAngle, maxJoint, current_traj, current_traj_idx, current_traj_group);
                 ROS_WARN("Execution finished successful, but we are not at target (max distance %f at joint %i)",
-                    maxAngle, maxJoint);
+                         maxAngle, maxJoint);
             }
             else
             {
@@ -1283,7 +1289,7 @@ int JacoTrajectoryActionServer::waitForExecution(float timeout_secs)
 }
 
 bool JacoTrajectoryActionServer::currentTargetReached(const trajectory_msgs::JointTrajectoryPoint& point,
-            const std::vector<int>& joint_indices, const int group, float tolerance)
+        const std::vector<int>& joint_indices, const int group, float tolerance)
 {
     if (!hasCurrentGoal()) return true;
     updateCurrentState();
@@ -1313,7 +1319,7 @@ bool JacoTrajectoryActionServer::currentTargetReached(const std::vector<float>& 
 
 
 bool JacoTrajectoryActionServer::atTrajectoryStart(const trajectory_msgs::JointTrajectory& traj,
-            const std::vector<int>& joint_indices, int group, float tolerance)
+        const std::vector<int>& joint_indices, int group, float tolerance)
 {
     updateCurrentState();
 
@@ -1335,11 +1341,12 @@ bool JacoTrajectoryActionServer::atTrajectoryStart(const trajectory_msgs::JointT
     MathFunctions::capToPI(curr_angles);
     MathFunctions::capToPI(target_angles);
     bool reached = equalJointFloats(curr_angles, target_angles, tolerance, true);
-    if (!reached) {
-        ROS_ERROR("atTrajectoryStart:: not at start angles, using tolerance %f",tolerance);
-        for (int i=0; i<curr_angles.size(); ++i)
-            ROS_ERROR("%i Curr: %f , Targ: %f",i,
-                curr_angles[i],target_angles[i]);
+    if (!reached)
+    {
+        ROS_ERROR("atTrajectoryStart:: not at start angles, using tolerance %f", tolerance);
+        for (int i = 0; i < curr_angles.size(); ++i)
+            ROS_ERROR("%i Curr: %f , Targ: %f", i,
+                      curr_angles[i], target_angles[i]);
     }
     return reached;
 }
@@ -1445,7 +1452,7 @@ bool JacoTrajectoryActionServer::getTargetAngles(const trajectory_msgs::JointTra
 
 
 bool JacoTrajectoryActionServer::getTargetVelocities(const trajectory_msgs::JointTrajectoryPoint& p,
-    const std::vector<int>& j_idx, std::vector<float>& targetVels) const
+        const std::vector<int>& j_idx, std::vector<float>& targetVels) const
 {
     if (j_idx.size() != 9)
     {
@@ -1532,7 +1539,7 @@ void JacoTrajectoryActionServer::setTargetValues(const trajectory_msgs::JointTra
     {
         // for (int k=0; k<targetState.size(); ++k) ROS_INFO("TAngle1%i: %f",k,p.positions[k]);
         // for (int k=0; k<targetState.size(); ++k) ROS_INFO("TAngle2%i: %f",k,(*val)[k]);
-        for (int k=0; k<6; ++k)
+        for (int k = 0; k < 6; ++k)
         {
             double v = (*val)[joint_indices[k]];
             targetState[k] = v * mult;
@@ -1550,7 +1557,7 @@ void JacoTrajectoryActionServer::setTargetValues(const trajectory_msgs::JointTra
         }
         else   // set zero velocities
         {
-            for (int k=0; k<6; ++k)
+            for (int k = 0; k < 6; ++k)
             {
                 targetState[k] = 0.0;
             }
@@ -1560,7 +1567,7 @@ void JacoTrajectoryActionServer::setTargetValues(const trajectory_msgs::JointTra
 
     if (group != 1)  // finger joints specified
     {
-        for (int k=6; k<9; ++k) 
+        for (int k = 6; k < 9; ++k)
         {
             double v = (*val)[joint_indices[k]];
             targetState[k] = v * mult;
@@ -1570,14 +1577,14 @@ void JacoTrajectoryActionServer::setTargetValues(const trajectory_msgs::JointTra
     {
         if (usePositions)
         {
-            for (int k=6; k<9; ++k) 
+            for (int k = 6; k < 9; ++k)
             {
                 targetState[k] = currentState[k];
             }
         }
         else    // set 0 velocities
         {
-            for (int k=6; k<9; ++k) 
+            for (int k = 6; k < 9; ++k)
             {
                 targetState[k] = 0.0;
             }
@@ -1626,7 +1633,7 @@ bool JacoTrajectoryActionServer::equalJointFloats(const std::vector<float>& firs
         // ROS_INFO("Vals: %f %f",first[i],second[i]);
         float tol = tolerance;
         if (useMinFingers && (i >= 6)) tol = std::max(tolerance,
-            static_cast<float>(MIN_FINGERS_TOLERANCE));  // fingers can't handle very fine accuracies
+                                                 static_cast<float>(MIN_FINGERS_TOLERANCE));  // fingers can't handle very fine accuracies
         if (fabs(MathFunctions::angleDistance(first[i], second[i])) > tol) return false;
     }
     return true;

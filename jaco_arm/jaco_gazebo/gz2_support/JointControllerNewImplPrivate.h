@@ -27,43 +27,54 @@
 
 namespace gazebo
 {
-  namespace physics
-  {
-    class JointControllerNewImplPrivate
-    {
-      /// \brief Model to control.
-      public: ModelPtr model;
+namespace physics
+{
+class JointControllerNewImplPrivate
+{
+    /// \brief Model to control.
+public:
+    ModelPtr model;
 
-      /// \brief List of links that have been updated.
-      public: Link_V updatedLinks;
+    /// \brief List of links that have been updated.
+public:
+    Link_V updatedLinks;
 
-      /// \brief Map of joint names to the joint pointer.
-      public: std::map<std::string, JointPtr> joints;
+    /// \brief Map of joint names to the joint pointer.
+public:
+    std::map<std::string, JointPtr> joints;
 
-      /// \brief Position PID controllers.
-      public: std::map<std::string, common::PID> posPids;
+    /// \brief Position PID controllers.
+public:
+    std::map<std::string, common::PID> posPids;
 
-      /// \brief Velocity PID controllers.
-      public: std::map<std::string, common::PID> velPids;
+    /// \brief Velocity PID controllers.
+public:
+    std::map<std::string, common::PID> velPids;
 
-      /// \brief Forces applied to joints.
-      public: std::map<std::string, double> forces;
+    /// \brief Forces applied to joints.
+public:
+    std::map<std::string, double> forces;
 
-      /// \brief Joint positions.
-      public: std::map<std::string, double> positions;
+    /// \brief Joint positions.
+public:
+    std::map<std::string, double> positions;
 
-      /// \brief Joint velocities.
-      public: std::map<std::string, double> velocities;
+    /// \brief Joint velocities.
+public:
+    std::map<std::string, double> velocities;
 
-      /// \brief Node for communication.
-      public: transport::NodePtr node;
+    /// \brief Node for communication.
+public:
+    transport::NodePtr node;
 
-      /// \brief Subscribe to joint command.
-      public: transport::SubscriberPtr jointCmdSub;
+    /// \brief Subscribe to joint command.
+public:
+    transport::SubscriberPtr jointCmdSub;
 
-      /// \brief Last time the controller was updated.
-      public: common::Time prevUpdateTime;
-    };
-  }
+    /// \brief Last time the controller was updated.
+public:
+    common::Time prevUpdateTime;
+};
+}
 }
 #endif

@@ -38,17 +38,18 @@
  * whether it's used or not (just pass random int if you don't need the joint reference).
  */
 template<class Joint>
-class JointStateStamped {
+class JointStateStamped
+{
 public:
     JointStateStamped<Joint>(const double& pos, const ros::Time& t, Joint& jnt):
         time(t),
         position(pos),
         joint(jnt),
-        valid(true){}
+        valid(true) {}
     JointStateStamped<Joint>(const double& pos, const ros::Time& t):
         time(t),
         position(pos),
-        valid(true){}
+        valid(true) {}
     JointStateStamped<Joint>(Joint& jnt):
         joint(jnt),
         valid(false) {}
@@ -61,31 +62,46 @@ public:
         position(o.position),
         velocities(o.velocities),
         valid(o.valid) {}
-   
+
     void reset()
     {
-        valid=false;
+        valid = false;
         velocities.clear();
     }
     void set(const double pos, const ros::Time& t)
     {
-        position=pos;
-        time=t;
-        valid=true;
+        position = pos;
+        time = t;
+        valid = true;
     }
-    bool isValid() const { return valid; }
-    void invalidate() { valid=false; } 
-    const ros::Time& getTime() const { return time; }
-    double getPosition() const { return position; }
-    const std::list<double>& getVelocities() const  { return velocities; }
+    bool isValid() const
+    {
+        return valid;
+    }
+    void invalidate()
+    {
+        valid = false;
+    }
+    const ros::Time& getTime() const
+    {
+        return time;
+    }
+    double getPosition() const
+    {
+        return position;
+    }
+    const std::list<double>& getVelocities() const
+    {
+        return velocities;
+    }
 
     void addVelocity(double velocity)
     {
-        if (velocities.size() >= AVG_VELOCITY_SAMPLES) 
+        if (velocities.size() >= AVG_VELOCITY_SAMPLES)
             velocities.pop_front();
         velocities.push_back(velocity);
     }
- 
+
     Joint joint;
 private:
     ros::Time time;
@@ -109,7 +125,7 @@ template<class Joint>
 class JointVelocityTracker
 {
 private:
-    typedef std::map<std::string,JointStateStamped<Joint> > JointStateMap;
+    typedef std::map<std::string, JointStateStamped<Joint> > JointStateMap;
     typedef JointStateStamped<Joint> JointStateStampedT;
 public:
     JointVelocityTracker() {}
@@ -122,14 +138,14 @@ public:
      *      mandatory.
      * \return false if the joint name already exists
      */
-    bool add(const std::string& jointName, Joint * joint=NULL)
+    bool add(const std::string& jointName, Joint * joint = NULL)
     {
-        typename JointStateMap::iterator it=jointStates.find(jointName);
-        if (it==jointStates.end())
+        typename JointStateMap::iterator it = jointStates.find(jointName);
+        if (it == jointStates.end())
         {
-            if (joint) jointStates.insert(std::make_pair(jointName,JointStateStampedT(*joint)));
-            else jointStates.insert(std::make_pair(jointName,JointStateStampedT()));
-            return true; 
+            if (joint) jointStates.insert(std::make_pair(jointName, JointStateStampedT(*joint)));
+            else jointStates.insert(std::make_pair(jointName, JointStateStampedT()));
+            return true;
         }
         return false;
     }
@@ -142,21 +158,23 @@ public:
      */
     bool update(const std::string& jointName, double jointPos, const ros::Time& atTime)
     {
-        typename JointStateMap::iterator it=jointStates.find(jointName);
-        if (it==jointStates.end())
+        typename JointStateMap::iterator it = jointStates.find(jointName);
+        if (it == jointStates.end())
         {
-            return false; 
+            return false;
         }
-        if (it->second.getTime() > atTime) {
-            ROS_ERROR_STREAM("Inconsistency: update time "<<atTime<<" is greater than last update time "
-                <<it->second.getTime()<<" for joint "<<jointName<<". Won't update.");
+        if (it->second.getTime() > atTime)
+        {
+            ROS_ERROR_STREAM("Inconsistency: update time " << atTime << " is greater than last update time "
+                             << it->second.getTime() << " for joint " << jointName << ". Won't update.");
             return false;
         }
 
         if (!it->second.isValid())
-        {   // this is the first joint update, we can't compute a velocity yet.
+        {
+            // this is the first joint update, we can't compute a velocity yet.
             // this call will also validate the instance for later calls.
-            it->second.set(jointPos,atTime);
+            it->second.set(jointPos, atTime);
             return true;
         }
         ros::Duration stepTime = atTime - it->second.getTime();
@@ -164,11 +182,11 @@ public:
         // not too small a timestep to update:
         if (stepTime.toSec() > 1e-05)
         {
-            double velocity = (jointPos - it->second.getPosition()) / stepTime.toSec(); 
-            it->second.addVelocity(velocity); 
+            double velocity = (jointPos - it->second.getPosition()) / stepTime.toSec();
+            it->second.addVelocity(velocity);
         }
-        
-        it->second.set(jointPos,atTime);
+
+        it->second.set(jointPos, atTime);
         return true;
     }
 
@@ -178,13 +196,14 @@ public:
      * \return false if the joint is not maintained in this instance, true otherwise,
      *      then \e jnt will contain the joint reference.
      */
-    bool getJoint(const std::string& jointName, Joint& jnt) {
-        typename JointStateMap::iterator it=jointStates.find(jointName);
-        if (it==jointStates.end()) return false;
-        jnt=it->second.joint;
+    bool getJoint(const std::string& jointName, Joint& jnt)
+    {
+        typename JointStateMap::iterator it = jointStates.find(jointName);
+        if (it == jointStates.end()) return false;
+        jnt = it->second.joint;
         return true;
-    }   
- 
+    }
+
     /**
      * Computes the average velocity of the last AVG_VELOCITY_SAMPLES measurements for this joint.
      * \retval 1 velocity returned in \e vel
@@ -193,28 +212,29 @@ public:
      */
     int getJointVelocity(const std::string& jointName, double& vel) const
     {
-        typename JointStateMap::const_iterator it=jointStates.find(jointName);
-        if (it==jointStates.end())
-            return -1; 
-    
+        typename JointStateMap::const_iterator it = jointStates.find(jointName);
+        if (it == jointStates.end())
+            return -1;
+
         const std::list<double>& velocities = it->second.getVelocities();
-        
-        if (velocities.empty()) {
-            vel=0;
+
+        if (velocities.empty())
+        {
+            vel = 0;
             return 0;
         }
 
         std::list<double>::const_iterator vels;
-        double sum=0;
-        for (vels=velocities.begin(); vels!=velocities.end(); ++vels)
+        double sum = 0;
+        for (vels = velocities.begin(); vels != velocities.end(); ++vels)
         {
-            sum+=*vels;
+            sum += *vels;
         }
-        vel=sum/velocities.size();
+        vel = sum / velocities.size();
         return 1;
     }
 private:
-    std::map<std::string,JointStateStampedT> jointStates;
+    std::map<std::string, JointStateStampedT> jointStates;
 };
 
 #endif  // JACO_JOINTS_JOINTVELOCITYTRACKER_H

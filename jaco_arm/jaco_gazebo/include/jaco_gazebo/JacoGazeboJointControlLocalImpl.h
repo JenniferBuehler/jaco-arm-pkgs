@@ -94,7 +94,7 @@ protected:
 
     virtual bool DisableGravity() const;
     virtual bool UseForce() const;
-    
+
     // returns true if a Joint::SetVelocity() is to be used instead of
     // Joint::SetForce(). Note that this will require loading different PID values.
     // The flag is read from the ROS parameter "jaco/gazebo_use_set_velocity", and
@@ -110,7 +110,7 @@ private:
 
     /**
      *  Helper to adjust a PID command according to how close the joint
-     *  is to the goal. *If* with the current joint velocity, 
+     *  is to the goal. *If* with the current joint velocity,
      *  in \e lookaheadSecs seconds the target would be
      *  *overshot*, the joint needs to slow down, hence the current
      *  \e commandValue reduced. It is reduced according to how
@@ -126,9 +126,9 @@ private:
      * \param distToTarget distance to target pose in radians (i.e. how
      * many radians the joint still has to move to its target)
      */
-/*    double AdjustForCloseTarget(const physics::JointPtr& joint,
-            const double distToTarget, const gazebo::common::Time& stepTime,
-            const double lookaheadSecs, const double commandValue) const;*/
+    /*    double AdjustForCloseTarget(const physics::JointPtr& joint,
+                const double distToTarget, const gazebo::common::Time& stepTime,
+                const double lookaheadSecs, const double commandValue) const;*/
 
 
 
@@ -138,12 +138,12 @@ private:
      * Updates the position PID controller passed as \e pid and returns the target velocity to set on the joint
      */
     double UpdateVelocityToPosition(const physics::JointPtr& joint, double targetPosition,
-            common::PID& pid, const gazebo::common::Time& stepTime) const;
+                                    common::PID& pid, const gazebo::common::Time& stepTime) const;
     /**
      * Updates the position PID controller passed as \e pid and returns the target force to set on the joint
      */
     double UpdateForceToPosition(const physics::JointPtr& joint, double targetPosition,
-            common::PID& pid, const gazebo::common::Time& stepTime) const;
+                                 common::PID& pid, const gazebo::common::Time& stepTime) const;
 
 
     common::Time prevUpdateTime;

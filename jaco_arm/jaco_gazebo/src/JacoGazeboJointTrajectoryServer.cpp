@@ -33,7 +33,7 @@
 
 #define DEFAULT_JOINT_TRAJECTORY_ACTION_TOPIC "joint_trajectory_action"
 
-#define DEFAULT_TRAJECTORY_POSITION_MODE false 
+#define DEFAULT_TRAJECTORY_POSITION_MODE false
 
 #define _DEG_TO_RAD M_PI/180.0
 #define _RAD_TO_DEG 180.0/M_PI
@@ -78,7 +78,7 @@ void JacoGazeboJointTrajectoryServer::InitActionServer()
 {
     std::string rosNamespace = READ_PARAMS_FROM_ROS_NAMESPACE;
     ros::NodeHandle n(rosNamespace);
-    ROS_INFO_STREAM("Reading joint trajectory parameters from namespace "<<rosNamespace);
+    ROS_INFO_STREAM("Reading joint trajectory parameters from namespace " << rosNamespace);
 
     n.param<std::string>("action_topic", joint_trajectory_action_topic, DEFAULT_JOINT_TRAJECTORY_ACTION_TOPIC);
     // ROS_INFO("got joint trajectory action topic name: <%s>", joint_trajectory_action_topic.c_str());
@@ -89,7 +89,7 @@ void JacoGazeboJointTrajectoryServer::InitActionServer()
 
     double intermediateTrajectoryAnglesTolerance = 2 * goal_angles_tolerance;
     n.param<double>("goal_angles_intermediate_tolerance", intermediateTrajectoryAnglesTolerance,
-            intermediateTrajectoryAnglesTolerance);
+                    intermediateTrajectoryAnglesTolerance);
 
     double angles_safety_limit = -1;
     n.param<double>("angle_safety_limit", angles_safety_limit, angles_safety_limit);
@@ -129,8 +129,8 @@ void JacoGazeboJointTrajectoryServer::InitActionServer()
     currentVels.resize(9, 0);
     bool simplifyTrajectories = true;
 
-    trajectory_action_server = JacoTrajectoryActionServerPtr(
-                                   new JacoTrajectoryActionServer(
+    trajectory_action_server = jaco_joints::JacoTrajectoryActionServerPtr(
+                                   new jaco_joints::JacoTrajectoryActionServer(
                                        nh, joint_trajectory_action_topic,
                                        trajectoryPos, trajectoryVel,
                                        currentAngles, currentVels,
@@ -215,10 +215,10 @@ void JacoGazeboJointTrajectoryServer::Load(physics::ModelPtr _parent, sdf::Eleme
             ROS_ERROR_STREAM("Joint name " << *it << " not found in joint controller joints.");
             throw std::string("Joint not found");
         }
-       
+
 #ifdef USE_VELOCITY_TRACKER
-        int axis=0; 
-        velTracker.add(*it,&joint);
+        int axis = 0;
+        velTracker.add(*it, &joint);
 #endif
         ++i;
     }
@@ -241,25 +241,25 @@ void JacoGazeboJointTrajectoryServer::WorldUpdate(const ros::TimerEvent& t)
     std::vector<std::string> joint_names;
     std::string prepend = "";
     joints.getJointNames(joint_names, true, prepend);
-   
+
 #ifdef USE_VELOCITY_TRACKER
     // update velocity tracker so that we can read the actual physical
-    // joint velocity averaged over a brief time. 
+    // joint velocity averaged over a brief time.
     for (std::vector<std::string>::iterator it = joint_names.begin();
             it != joint_names.end(); ++it)
     {
-        int axis=0;
+        int axis = 0;
         gazebo::physics::JointPtr joint;
-        if (!velTracker.getJoint(*it,joint) || !joint.get())
+        if (!velTracker.getJoint(*it, joint) || !joint.get())
         {
-            ROS_ERROR_STREAM("Inconsistency: Joint "<<*it<<" should have been added to velocity tracker.");
+            ROS_ERROR_STREAM("Inconsistency: Joint " << *it << " should have been added to velocity tracker.");
             throw std::string("Inconsistency: Joint should have been added to velocity tracker.");
-        } 
+        }
         velTracker.update(*it, joint->GetAngle(axis).Radian(), ros::Time::now());
     }
 #endif
 
-     // read the current joint values and store in vector
+    // read the current joint values and store in vector
     data_lock.lock();
     JacoGazeboJointTrajectoryServer::readJointStates(currentAngles, currentVels);
     data_lock.unlock();
@@ -283,7 +283,8 @@ void JacoGazeboJointTrajectoryServer::WorldUpdate(const ros::TimerEvent& t)
         // however it may be necessary to ensure the last trajectory point positions
         // are finalised, because now all velocities will be zero. Must at least
         // once ensure current target positions are set in the controller.
-        if (finalize) {
+        if (finalize)
+        {
             // ROS_INFO_STREAM("Finalizing trajectory");
 
             boost::unique_lock<boost::recursive_mutex> lck = jointController->GetLock();
@@ -309,19 +310,19 @@ void JacoGazeboJointTrajectoryServer::WorldUpdate(const ros::TimerEvent& t)
                 // ROS_INFO_STREAM("JacoGazeboJointTrajectoryServer: Setting final position target "<<scopedName<<": "<<trajectoryPos[i]);
                 if (!jointController->SetPositionTarget(scopedName, MathFunctions::capToPI(trajectoryPos[i])))
                 {
-                    ROS_ERROR_STREAM_ONCE("Could not set position target for "<<joint->GetName()<<
-                           ". Can't control joint. This message is only printed once.");
+                    ROS_ERROR_STREAM_ONCE("Could not set position target for " << joint->GetName() <<
+                                          ". Can't control joint. This message is only printed once.");
                 }
                 data_lock.unlock();
                 ++i;
             }
-            finalize=false;
-        } 
+            finalize = false;
+        }
         return;
     }
 
- 
-    finalize=true;
+
+    finalize = true;
 
     boost::unique_lock<boost::recursive_mutex> lck = jointController->GetLock();
 
@@ -357,8 +358,8 @@ void JacoGazeboJointTrajectoryServer::WorldUpdate(const ros::TimerEvent& t)
             // if (fabs(trajectoryPos[i])>0.01) ROS_INFO_STREAM("JacoGazeboJointTrajectoryServer: Setting position target "<<scopedName<<": "<<trajectoryPos[i]);
             if (!jointController->SetPositionTarget(scopedName, MathFunctions::capToPI(trajectoryPos[i])))
             {
-                ROS_ERROR_STREAM_ONCE("Could not set position target for "<<joint->GetName()<<
-                       ". Can't control joint. This message is only printed once.");
+                ROS_ERROR_STREAM_ONCE("Could not set position target for " << joint->GetName() <<
+                                      ". Can't control joint. This message is only printed once.");
             }
         }
         else
@@ -366,26 +367,26 @@ void JacoGazeboJointTrajectoryServer::WorldUpdate(const ros::TimerEvent& t)
             // if (fabs(trajectoryVel[i])>0.2) ROS_INFO_STREAM("JacoGazeboJointTrajectoryServer: Setting velocity target "<<scopedName<<": "<<trajectoryVel[i]);
             if (!jointController->SetVelocityTarget(scopedName, trajectoryVel[i]))
             {
-                ROS_ERROR_STREAM_ONCE("Could not set velocity target for "<<joint->GetName()<<
-                       ". Can't control joint. This message is only printed once.");
+                ROS_ERROR_STREAM_ONCE("Could not set velocity target for " << joint->GetName() <<
+                                      ". Can't control joint. This message is only printed once.");
             }
             // with 0 velocities, also have to maintain the correct arm pose:
-            if (fabs(trajectoryVel[i]<1e-04))
+            if (fabs(trajectoryVel[i] < 1e-04))
             {
                 // ROS_INFO_STREAM("JacoGazeboJointTrajectoryServer: Setting position target "<<scopedName<<": "<<currentAngles[i]);
-                
+
                 // if the velocity is 0, we can assume that we either are at the next trajectory point already,
                 // or this joint didn't move in between trajectory points. Therefore, we can use the next trajectory
-                // pose as joint position value. 
+                // pose as joint position value.
                 // NOTE: If we use currentAngles[i] here, the arm will slowly collapse. This is because small fluctuations in
                 // the current angle values. This is random as the current angles can very well be equivalent
                 // to the target position, but more often than not, they are a tiny bit off, caused by the gravity pulling down
                 // the arm just a tiny bit. Then setting these wrong new targets will amplify over multiple iterations.
                 // jointController->SetPositionTarget(scopedName,MathFunctions::capToPI(currentAngles[i]));
-                if (!jointController->SetPositionTarget(scopedName,MathFunctions::capToPI(trajectoryPos[i])))
+                if (!jointController->SetPositionTarget(scopedName, MathFunctions::capToPI(trajectoryPos[i])))
                 {
-                    ROS_ERROR_STREAM_ONCE("Could not set position target for "<<joint->GetName()<<
-                           ". Can't control joint. This message is only printed once.");
+                    ROS_ERROR_STREAM_ONCE("Could not set position target for " << joint->GetName() <<
+                                          ". Can't control joint. This message is only printed once.");
                 }
             }
         }
@@ -432,12 +433,12 @@ void JacoGazeboJointTrajectoryServer::readJointStates(std::vector<float>& currAn
         double currGzbVel = currVel;
         if (velTracker.getJointVelocity(jointName, currVel) < 0)
         {
-            ROS_ERROR_STREAM("Error obtaining joint velocity for joint "<<jointName);
+            ROS_ERROR_STREAM("Error obtaining joint velocity for joint " << jointName);
             // continue;
         }
         // if (fabs(currGzbVel)>0.1) ROS_INFO_STREAM("Velocity compare "<<jointName<<": g="<<currGzbVel<<", t="<<currVel);
 #endif
-        
+
         // if (fabs(currVel>0.1)) ROS_INFO_STREAM("Velocity "<<jointName<<": "<<currVel);
 
         if (gripperJointNumber >= 0)

@@ -1,24 +1,25 @@
 <?xml version="1.0"?>
 <package>
-  <name>jaco_arm</name>
+  <name>jaco_kinova</name>
   <version>0.0.0</version>
-  <description>All packages related to the jaco arm</description>
+  <description>The jaco_kinova package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
-  <maintainer email="jennifer.e.buehler@gmail.com">Jennifer Buehler</maintainer>
+  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
+  <maintainer email="jenny@todo.todo">jenny</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
   <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>GPLv3</license>
+  <license>TODO</license>
 
 
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/jaco</url> -->
+  <!-- <url type="website">http://wiki.ros.org/jaco_kinova</url> -->
 
 
   <!-- Author tags are optional, mutiple are allowed, one per tag -->
@@ -39,15 +40,23 @@
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <run_depend>jaco_description</run_depend>
-  <run_depend>jaco_gazebo</run_depend>
+  <build_depend>jaco_joints</build_depend>
+  <build_depend>jaco_msgs</build_depend>
+  <build_depend>jaco_driver</build_depend>
+  <build_depend>convenience_math_functions</build_depend>
+  <build_depend>controller_manager</build_depend>
+  <build_depend>roscpp</build_depend>
   <run_depend>jaco_joints</run_depend>
-  <run_depend>jaco_moveit</run_depend>
-  <run_depend>jaco_kinova</run_depend>
+  <run_depend>jaco_msgs</run_depend>
+  <run_depend>jaco_driver</run_depend>
+  <run_depend>convenience_math_functions</run_depend>
+  <run_depend>controller_manager</run_depend>
+  <run_depend>roscpp</run_depend>
+
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <metapackage/> 
     <!-- Other tools can request additional information be placed here -->
+
   </export>
 </package>

@@ -271,7 +271,7 @@ protected:
      *
      * 1. caps it to the maximum values allowed for this joint
      * 2. [optional, only if considerJointLimits=true): if the joint is near to its
-     *     limit (within JOINTLIMIT_PADDING) the force 
+     *     limit (within JOINTLIMIT_PADDING) the force
      *     is not allowed to go in the direction beyond the limit
      */
     double capTargetForce(const physics::JointPtr joint, const float targetForce, const bool considerJointLimits) const;
@@ -279,7 +279,7 @@ protected:
 
 
     bool isGripper(const physics::JointPtr& joint) const;
-    
+
     bool velocityControllersLoaded() const
     {
         return loadedVelocityControllers;
@@ -318,7 +318,7 @@ private:
     void GetMaxVals(const std::string& jointName, float& force, float& velocity) const;
 
     void WorldUpdate();
- //   void WorldUpdate(const ros::TimerEvent& t);
+//   void WorldUpdate(const ros::TimerEvent& t);
 
     event::ConnectionPtr update_connection;
 //    ros::Timer update_connection;

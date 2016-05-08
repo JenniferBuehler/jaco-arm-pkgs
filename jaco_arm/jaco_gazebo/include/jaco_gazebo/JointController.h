@@ -2,7 +2,7 @@
 #define JACO_GAZEBO_JOINTCONTROLLER_H
 /**
    Adapter fror gazebo::physics::JointController which adds thread safety.
-    
+
    Copyright (C) 2015 Jennifer Buehler
 
    This program is free software; you can redistribute it and/or modify

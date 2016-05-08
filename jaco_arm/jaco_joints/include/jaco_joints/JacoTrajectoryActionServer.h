@@ -41,6 +41,9 @@
 #define DEFAULT_ANGLE_SAFETY_LIMIT 0.3
 #define DEFAULT_GOAL_TOLERANCE 0.05
 
+namespace jaco_joints
+{
+
 /**
  * \brief Provides a ROS control_msgs/JoinTrajectoryAction and computes target joint position / velocity to set at the times of playing the trajectory.
  *
@@ -56,16 +59,16 @@
  * adjust velocities, e.g. backtrack when a position goal has been overshot.
  *
  * The disadvantage of the increased accuracy control is that the execution of the trajectory may not be as
- * smooth. 
+ * smooth.
  *
- * **Prerequisite**    
+ * **Prerequisite**
  * This implementation only works well if the joint velocities in the robot can be met fairly well
  * according to the target values provided by this class. As a rule of thumb, an error margin of
  * max. 15-20% *can* be acceptable, but the greater the error, the more often the trajectory execution
  * may get stuck and not reach the target points. Underlying PID controllers should be used in the
  * arm controllers to ensure that the error margin is low.
  *
- * **Usage**    
+ * **Usage**
  * A controller which maintains an instance of this class may read the target
  * joint positions/velocities and control the arm accordingly.
  * An array is passed to the constructor (along with a mutex) which will have the current target
@@ -73,7 +76,7 @@
  * Please refer to the constructor documentation which provides more details on how this
  * class works through the documentation of paramters.
  *
- * **Important TODO**    
+ * **Important TODO**
  * This class has recently been migrated from JointTrajectoryAction to FollowJointTrajectoryAction.
  * Accordingly, this can be improved to read the tolerances from FollowJointTrajectoryAction. In
  * the current implementation, tolerances are set globally for all joints.
@@ -101,7 +104,7 @@ public:
      *      finger angles (not velocities).
      *      This is to determine when the trajectory has finished playing.
      *      The values must externally be kept up-to-date at all times.
-     * \param _currentVels pointer to current velocity values, 9 floats for arm and finger velocities. 
+     * \param _currentVels pointer to current velocity values, 9 floats for arm and finger velocities.
      *      This is to determine when the trajectory has finished playing.
      *      The values must externally be kept up-to-date at all times.
      * \param _lock lock to use for \e _targetPos, \e _targetVel, \e _currentAngles and \e _currentVels.
@@ -219,12 +222,18 @@ protected:
     /**
      * Abort execution which was started (spinned off in separate thread) in playTrajectoryImplementation.
      */
-    virtual void abortExecution();
+    void abortExecution();
+    
+    /**
+     * Implementation-specific, called from abortExecution().
+     */
+    virtual void abortExecutionImpl(){}
 
     /**
      * Joins the thread started within playTrajectoryImplementation(), if applicable.
      */
-    virtual void joinExecutionThread();
+    void joinExecutionThread();
+    virtual void joinExecutionThreadImpl() {}
 
     /**
      * If implementation-specific details require a manual update of the array current_joint_angles
@@ -233,14 +242,13 @@ protected:
      */
     virtual void updateCurrentState() {}
 
-
     /**
      * Plays the trajectory by updating the target values subsequently and
      * then sleeping for the duration of the trajectory point. This method is
      * designed to be spinned off in a separate thread from playTrajectoryImplementation().
      */
     void playTrajectorySimple(const trajectory_msgs::JointTrajectory traj,
-            const std::vector<int>& joint_indices, const int group);
+                              const std::vector<int>& joint_indices, const int group);
 
     /**
      * Plays the trajectory by setting target velocities (writing to array targetVel) and setting them to 0 when the
@@ -248,7 +256,7 @@ protected:
      *
      * The on-line control of the trajectory which continually checks whether the joint has arrived at its
      * intermediate trajectory position. The trajectory playing is synchronized at each intermediate trajectory point:
-     * if some joints were slower, others wait for it to be at this intermediate trajectory point. 
+     * if some joints were slower, others wait for it to be at this intermediate trajectory point.
      * Only works if velocity mode is set (usePositionMode()==false).
      *
      * \param inter_tolerance target angle tolerance for points inbetween the trajectory.
@@ -283,8 +291,8 @@ protected:
      * \param maxWaitForZero maximum wait for call of waitUntilVelocitiesZero().
      */
     bool repeatedWaitUntilPointReached(const std::vector<float>& _targetPos, float recheckTime,
-        float maxWaitForExact, float maxWaitForZero, float tolerance, float lagTime,
-        float min_correct_vel, float max_correct_vel, int numTries);
+                                       float maxWaitForExact, float maxWaitForZero, float tolerance, float lagTime,
+                                       float min_correct_vel, float max_correct_vel, int numTries);
 
 
     /**
@@ -322,13 +330,13 @@ protected:
      * Returns maximum angle distance (and index of which) to tarjectory target
      */
     void maxEndpointDiff(float& maxAngle, int& maxJoint, const trajectory_msgs::JointTrajectory& traj,
-            const std::vector<int>& joint_indices, const int group);
+                         const std::vector<int>& joint_indices, const int group);
 
     /**
      * Checks whether the robot is at the start of this trajectory
      */
     bool atTrajectoryStart(const trajectory_msgs::JointTrajectory& traj,
-            const std::vector<int>& joint_indices, int group, float tolerance);
+                           const std::vector<int>& joint_indices, int group, float tolerance);
 
     /**
      * Checks wheter the current target (set in array targetAngles) is reached by
@@ -341,7 +349,7 @@ protected:
      * Checks whether target angles in this trajectory point are reached
      */
     bool currentTargetReached(const trajectory_msgs::JointTrajectoryPoint& point,
-        const std::vector<int>& joint_indices, const int group, float tolerance);
+                              const std::vector<int>& joint_indices, const int group, float tolerance);
 
     /**
      * Checks if trajectory is eligible for execution from the current robot state.
@@ -353,7 +361,7 @@ protected:
      * are present, in which case the size has to be 6, or set to 2 if only finger angles are present, when size is 3.
      */
     bool checkTrajectory(const trajectory_msgs::JointTrajectory& traj,
-        const std::vector<int>& joint_indices, int group);
+                         const std::vector<int>& joint_indices, int group);
 
     /**
      * Removes angles of exactly PI (180 degrees) from trajectory by slightly altering
@@ -362,7 +370,7 @@ protected:
      * joint execution is controlled by mere position(angle).
      */
     void adaptTrajectoryAngles(trajectory_msgs::JointTrajectory& traj,
-        double diff = 0.02, double epsilon = 1e-03) const;
+                               double diff = 0.02, double epsilon = 1e-03) const;
 
     /**
      * Because at this stage the velocities coming from MoveIt are not supported
@@ -374,11 +382,11 @@ protected:
      * are assumed.
      */
     bool adaptTrajectoryVelocitiesToLinear(trajectory_msgs::JointTrajectory& traj,
-                    const std::vector<int>& joint_indices) const;
+                                           const std::vector<int>& joint_indices) const;
 
     /**
      * Helper function which interpolates between vectors v1 and v2 (must be of same size):
-     * 
+     *
      *      result[i] = v1[i] + t * (v2[i]-v1[i])
      *
      * which is equivalent to
@@ -386,17 +394,17 @@ protected:
      *      result[i]=(1-t)*v1[i] + t*v2[i]
      */
     bool interpolate(const std::vector<float>& v1, const std::vector<float>& v2,
-                const float t, std::vector<float>& result);
+                     const float t, std::vector<float>& result);
 
 
-     /**
-     * Checks whether angles distances in joint states \e j1 and \e j2 are too far away for given
-     * safety measures (\e maxAngle - this is to prevent the arm from doing unpredictable movements).
-     * \e j1 and \e j2 can be two trajectory points, or the current state and the first trajectory point.
-     * \param check set to 0 if both arm and finger angles are given. In that case, both \e j1 and \e j2
-     * have to be of size 9. Set to 1 if only arm joints are present, in which case the size has to
-     * be 6, or set to 2 if only finger angles are present, when size is 3.
-     */
+    /**
+    * Checks whether angles distances in joint states \e j1 and \e j2 are too far away for given
+    * safety measures (\e maxAngle - this is to prevent the arm from doing unpredictable movements).
+    * \e j1 and \e j2 can be two trajectory points, or the current state and the first trajectory point.
+    * \param check set to 0 if both arm and finger angles are given. In that case, both \e j1 and \e j2
+    * have to be of size 9. Set to 1 if only arm joints are present, in which case the size has to
+    * be 6, or set to 2 if only finger angles are present, when size is 3.
+    */
     bool angleDistanceOK(std::vector<float>& j1, std::vector<float>& j2, int check, float maxAngle) const;
 
     /**
@@ -430,7 +438,7 @@ protected:
      * as finger accuracy on the real robot is not as good.
      */
     bool equalJointFloats(const std::vector<float>& first, const std::vector<float>& second,
-            float tolerance, bool useMinFingerVal);
+                          float tolerance, bool useMinFingerVal);
 
     /**
      *
@@ -447,9 +455,9 @@ protected:
      * \param usePositions use the positions array of the point, or use velocities otherwise
      */
     void setTargetValues(const trajectory_msgs::JointTrajectoryPoint& p,
-            const std::vector<int>& joint_indices, const int group,
-            const std::vector<float>& currentState,
-            std::vector<float>& targetState, bool usePositions);
+                         const std::vector<int>& joint_indices, const int group,
+                         const std::vector<float>& currentState,
+                         std::vector<float>& targetState, bool usePositions);
 
     /**
      * Returns target pose of the arm specified in trajectory point (in parameter target).
@@ -462,13 +470,13 @@ protected:
      *      reducing resulting size of target.
      */
     bool getTargetAngles(const trajectory_msgs::JointTrajectoryPoint& p,
-            const std::vector<int>& j_idx, std::vector<float>& target) const;
+                         const std::vector<int>& j_idx, std::vector<float>& target) const;
 
     /**
      * As getTargetAngles(), but instead of positions returns velocities.
      */
     bool getTargetVelocities(const trajectory_msgs::JointTrajectoryPoint& p,
-            const std::vector<int>& j_idx, std::vector<float>& target) const;
+                             const std::vector<int>& j_idx, std::vector<float>& target) const;
 
 
     /**
@@ -597,5 +605,6 @@ private:
 
 typedef boost::shared_ptr<JacoTrajectoryActionServer> JacoTrajectoryActionServerPtr;
 
+}  // namespace
 
 #endif  // JACO_JOINTS_JACOTRAJECTORYACTIONSERVER_H

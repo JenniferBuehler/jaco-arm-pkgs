@@ -62,7 +62,7 @@
 
 #define UPDATE_RATE 1000
 
-// the major version of Gazebo from which on 
+// the major version of Gazebo from which on
 // SetVelocityLimits() works
 #define GAZEBO_MAJOR_MAXVALS_WORKING 3
 
@@ -96,9 +96,9 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
                          << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
         return;
     }
-    
+
     bool loadVelocityControllers = true;
-    nh.param<bool>("gazebo/load_velocity_controllers",loadVelocityControllers,loadVelocityControllers);
+    nh.param<bool>("gazebo/load_velocity_controllers", loadVelocityControllers, loadVelocityControllers);
 
     physics::JointControllerPtr _modelJointController = _parent->GetJointController();
     if (!_modelJointController.get())
@@ -159,7 +159,7 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
 
 
         jointController->AddJoint(joint);
-        
+
         bool isGripper = i > 5;
 
         float max_force, max_velocity;
@@ -171,23 +171,24 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
 #if GAZEBO_MAJOR_VERSION >= GAZEBO_JADE_VERSION
         joint->SetVelocityLimit(0, max_velocity);
 #endif
-            
-    // XXX TODO March 29th this causes Gazebo warnings (only visible when gazebo::common::Console::SetQuiet(false)), but I think this is
-    // what actually made it work in the end.. have to test later again and find the proper way to make this work!
+
+        // XXX TODO March 29th this causes Gazebo warnings (only visible when gazebo::common::Console::SetQuiet(false)), but I think this is
+        // what actually made it work in the end.. have to test later again and find the proper way to make this work!
 
 #if GAZEBO_MAJOR_VERSION > 2
         // joint->SetParam("fmax") must be called if joint->SetAngle() or joint->SetParam("vel") are
         // going to be called. joint->SetParam("fmax") must *not* be called if joint->SetForce() is
         // going to be called.
         // XXX TODO investigate: This was deprecated in ODE gazebo 5? Also works without it..
-        if (!UseForce()) {
+        if (!UseForce())
+        {
             ROS_INFO("Setting fmax prints a warning/error but it somehow still is required...");
             joint->SetParam("fmax", 0, max_force);
         }
 #else
-        joint->SetMaxForce(0,max_force);
+        joint->SetMaxForce(0, max_force);
 #endif
-        
+
         if (DisableGravity())
         {
             physics::LinkPtr link = joint->GetChild();
@@ -200,7 +201,7 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
         }
 
         float max_val = UseForce() ? max_force : max_velocity;
-        
+
         std::string scopedName = joint->GetScopedName();
 
         float imin = 0;
@@ -247,7 +248,7 @@ void JacoGazeboJointControl::Load(physics::ModelPtr _parent, sdf::ElementPtr _sd
     update_connection = event::Events::ConnectWorldUpdateBegin(boost::bind(&JacoGazeboJointControl::WorldUpdate, this));
     // ros::NodeHandle nh;
     // update_connection = nh.createTimer(ros::Duration(1.0 / UPDATE_RATE), &JacoGazeboJointControl::WorldUpdate, this);
-   
+
     loadedVelocityControllers = loadVelocityControllers;
 }
 
@@ -264,15 +265,15 @@ double JacoGazeboJointControl::capTargetVel(const physics::JointPtr joint, const
     int axis = 0;
 
 #if GAZEBO_MAJOR_VERSION > GAZEBO_MAJOR_MAXVALS_WORKING
-    float maxVel = fabs(joint->GetVelocityLimit(axis));  
+    float maxVel = fabs(joint->GetVelocityLimit(axis));
     float maxForce = fabs(joint->GetEffortLimit(axis));
 #else
     float maxForce, maxVel;
     GetMaxVals(joint->GetName(), maxForce, maxVel);
-  // double maxForce=fabs(joint->GetMaxForce(axis));
+    // double maxForce=fabs(joint->GetMaxForce(axis));
 #endif
-  // ROS_INFO_STREAM("Max vel "<<joint->GetName()<<": "<<maxVel);
-  // ROS_INFO_STREAM("Max f "<<joint->GetName()<<": "<<maxForce);
+    // ROS_INFO_STREAM("Max vel "<<joint->GetName()<<": "<<maxVel);
+    // ROS_INFO_STREAM("Max f "<<joint->GetName()<<": "<<maxForce);
 
     double distToTargetPos = 0;
     bool closeToTargetPos = false;
@@ -337,9 +338,9 @@ double JacoGazeboJointControl::capTargetForce(const physics::JointPtr joint, con
 
     float force = targetForce;
     int axis = 0;
-  
+
 #if GAZEBO_MAJOR_VERSION > GAZEBO_MAJOR_MAXVALS_WORKING
-    float maxVel = fabs(joint->GetVelocityLimit(axis));  
+    float maxVel = fabs(joint->GetVelocityLimit(axis));
     float maxForce = fabs(joint->GetEffortLimit(axis));
 #else
     float maxForce, maxVel;
@@ -351,7 +352,7 @@ double JacoGazeboJointControl::capTargetForce(const physics::JointPtr joint, con
 
     force = std::min(force, maxForce);
     force = std::max(force, -maxForce);
-    
+
     double currAngle = joint->GetAngle(axis).Radian();
 
     // Now, prevent the joints to get close to any possible limits, because

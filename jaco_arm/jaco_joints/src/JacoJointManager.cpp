@@ -68,10 +68,10 @@ JacoJointManager::JacoJointManager(const JacoJointManager& o):
 std::vector<std::string> JacoJointManager::getDefaultGripperLinks() const
 {
     static std::string arr[] = {FINGER_LINKS};
-    int arrSize=sizeof(arr) / sizeof(std::string);
+    int arrSize = sizeof(arr) / sizeof(std::string);
 
     std::vector<std::string> vec;
-    for (int i=0; i<arrSize; ++i) vec.push_back(arr[i]);
+    for (int i = 0; i < arrSize; ++i) vec.push_back(arr[i]);
     return vec;
 }
 
@@ -83,10 +83,10 @@ std::string JacoJointManager::getDefaultPalmLink() const
 std::vector<std::string> JacoJointManager::getDefaultArmLinks() const
 {
     static std::string arr[] = {ARM_LINKS, HAND_LINK};
-    int arrSize=sizeof(arr) / sizeof(std::string);
+    int arrSize = sizeof(arr) / sizeof(std::string);
 
     std::vector<std::string> vec;
-    for (int i=0; i<arrSize; ++i) vec.push_back(arr[i]);
+    for (int i = 0; i < arrSize; ++i) vec.push_back(arr[i]);
     return vec;
 }
 

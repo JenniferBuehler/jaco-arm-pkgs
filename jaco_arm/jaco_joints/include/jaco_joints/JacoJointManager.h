@@ -32,6 +32,13 @@
 #include <ros/ros.h>
 
 /**
+ * Implementation of arm_components_name_manager::ArmComponentsNameManager which
+ * provides some convenience functions for the Jaco arm.
+ * 
+ * **Requirement:**
+ * All joints must be loaded via the ROS parameters (see base class) in the
+ * following order: First all arm joints 0-5, then all finger joints 0-2.
+ *
  * \author Jennifer Buehler
  * \date January 2016
  */
@@ -42,9 +49,9 @@ public:
      * Initializes joint names by reading from parameter server.
      * \namespace of the robot which is used in the YAML file
      */
-    JacoJointManager(const std::string& robot_namespace="jaco", bool readParams=true);
+    JacoJointManager(const std::string& robot_namespace = "jaco", bool readParams = true);
     JacoJointManager(const JacoJointManager& o);
-    
+
     virtual bool hasDefaults()
     {
         return true;
@@ -59,7 +66,7 @@ protected:
     virtual std::vector<float> getDefaultGripperJointsInitPose() const;
     virtual std::vector<std::string> getDefaultGripperJoints() const;
     virtual std::vector<std::string> getDefaultGripperLinks() const;
-    
+
 };
 
 #endif  // JACO_JOINTS_JACOJOINTMANAGER_H

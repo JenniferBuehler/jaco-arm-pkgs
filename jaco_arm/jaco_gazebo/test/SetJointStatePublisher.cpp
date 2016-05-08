@@ -116,22 +116,22 @@ int main(int argc, char **argv)
 
     ros::Duration(maintain_secs).sleep();
 
-/*
-    // reset velocity
-    newState = getCurrentJointState(jointStateTopic, n);
-    for (int i = 0; i < newState.velocity.size(); ++i) newState.velocity[i] = 0;
-    newState.velocity[idx[set_joint_i]] = 0;
+    /*
+        // reset velocity
+        newState = getCurrentJointState(jointStateTopic, n);
+        for (int i = 0; i < newState.velocity.size(); ++i) newState.velocity[i] = 0;
+        newState.velocity[idx[set_joint_i]] = 0;
 
 
-    while (pub.getNumSubscribers() == 0)
-    {
-        ROS_INFO("Waiting for subscribers...");
+        while (pub.getNumSubscribers() == 0)
+        {
+            ROS_INFO("Waiting for subscribers...");
+            ros::Duration(1).sleep();
+        }
+        pub.publish(newState);
+
+        // wait to make sure the message arrives
         ros::Duration(1).sleep();
-    }
-    pub.publish(newState);
-
-    // wait to make sure the message arrives
-    ros::Duration(1).sleep();
-*/
+    */
     return 0;
 }
