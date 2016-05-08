@@ -1,4 +1,4 @@
-## Quick HOwTO use the real Jaco arm
+## Quick HOWTO use the real Jaco arm
 
 The package jaco_kinova provides a ROS joint trajectory action server for the Kinova Jaco arm.
 
@@ -17,7 +17,7 @@ packages which directly use the kinova drivers. It is meant to use *in place of*
 Having two separate ROS nodes which control the arm directly
 running at the same time would be a conflict in itself.
 Therefore, *jaco_kinova* supports also the publishing sensor_msgs/JointState and the support of jaco_msgs/ArmJointAngles.action and
- * jaco_msgs/SetFingersPositionAction.action
+jaco_msgs/SetFingersPositionAction.action
 
 
 
@@ -26,9 +26,10 @@ Therefore, *jaco_kinova* supports also the publishing sensor_msgs/JointState and
 **Connecting the arm**
 
 Connect the arm to the USB.
-You *may* need to set the rules for the USB port, but try without this first.
 
-*[optional] Setting the rules for USB access*
+**[optional] Setting the rules for USB access**
+
+You *may* need to set the rules for the USB port, but try without this optional step first.
 
 Edit /etc/udev/rules.d/10-kinova.rules, and rename to 99-kinova.rules.
 It needs the following contents:
@@ -89,8 +90,8 @@ Start with a simple one which will set only the position of the last arm joint (
 ``rosrun jaco_kinova jaco_arm_action_client_node 0 0 0 0 0 0.5`` 
 
 Play around with the values and see if it makes sense. Compare the joint values to 
-how they look like in Gazebo, see also [this tutorial](https://github.com/JenniferBuehler/jaco-arm-pkgs/wiki/Jaco-example-in-Gazebo):
-
+how they look like in Gazebo, see also [this tutorial](https://github.com/JenniferBuehler/jaco-arm-pkgs/wiki/Jaco-example-in-Gazebo).    
+To launch Jaco in Gazebo with the joint state publisher:    
 ``roslaunch jaco_on_table jaco_on_table_gazebo_controlled.launch load_joint_state_publisher:=true``
 
 After testing the arm joints, try the same for the fingers:
