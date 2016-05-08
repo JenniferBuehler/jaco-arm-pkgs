@@ -19,14 +19,6 @@ running at the same time would be a conflict in itself.
 Therefore, *jaco_kinova* supports also the publishing sensor_msgs/JointState and the support of jaco_msgs/ArmJointAngles.action and
 jaco_msgs/SetFingersPositionAction.action
 
-
-
-###Testing
-
-**Connecting the arm**
-
-Connect the arm to the USB.
-
 **[optional] Setting the rules for USB access**
 
 You *may* need to set the rules for the USB port, but try without this optional step first.
@@ -54,6 +46,14 @@ Troubleshooting tips:
 * With ``lsusb`` you can also see if the arm is listed, and if 22cd appears as vendor.
 * You can find out more details about currently applied udev rules with where the device is currently mounted with
       ``udevadm info -a -n /dev/<current-mount>``
+
+
+
+###Testing
+
+**Connecting the arm**
+
+Connect the arm to the USB. You should try a USB-2 port first.
 
 **General advice**
 
