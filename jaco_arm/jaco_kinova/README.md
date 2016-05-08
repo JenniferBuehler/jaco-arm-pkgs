@@ -17,20 +17,23 @@ packages which directly use the kinova drivers. It is meant to use *in place of*
 Having two separate ROS nodes which control the arm directly
 running at the same time would be a conflict in itself.
 Therefore, *jaco_kinova* supports also the publishing sensor_msgs/JointState and the support of jaco_msgs/ArmJointAngles.action and
-jaco_msgs/SetFingersPositionAction.action
+jaco_msgs/SetFingersPositionAction.action.    
+Some time in hopefully near future, a better way can be found to combine functionality of jaco_driver and this package.
+
 
 **[optional] Setting the rules for USB access**
 
 You *may* need to set the rules for the USB port, but try without this optional step first.
 
 Edit /etc/udev/rules.d/10-kinova.rules, and rename to 99-kinova.rules.
-It needs the following contents:
 
+Alternatively, copy the udev rule file 99-jaco-arm.rules from ``<kinova-ros-repo>/jaco_driver/udev`` to ``/etc/udev/rules.d/``
+
+In case you create a new one, the following contents have been working:
 ```
 SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device",ATTRS{idVendor}=="22cd", MODE="0666", SYMLINK+="kinova/jaco%n", GROUP="plugdev"
 ```
-
-The symlink specified there will enable you to look up the device under /dev/kinova/jaco/.
+The symlink specified in the rules file will enable you to look up the device under /dev/kinova/jaco/.
 You might need to rename the .rules file to start with a higher number, so it has higher priority,
 e.g. rename to ``/etc/udev/rules.d/99-kinova.rules``.
 
@@ -48,6 +51,15 @@ Troubleshooting tips:
       ``udevadm info -a -n /dev/<current-mount>``
 
 
+**Exposing the USB library**
+
+
+The library ``<kinova-ros-repo>/jaco_driver/lib/<architecture>/Kinova.API.USBCommandLayerUbuntu.so`` has to 
+be in a path where it can be found. Add the path to your LD_LIBRARY_PATH.
+
+``export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path-to-kinova-ros>/jaco_driver/lib/x86_64-linux-gnu/``
+
+or do it in the .bashrc.
 
 ###Testing
 
