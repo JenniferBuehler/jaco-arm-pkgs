@@ -448,29 +448,36 @@ bool JacoTrajectoryActionServerKinova::initImpl()
         return false;
     }
 
-    knv_lock.lock();
-    ROS_INFO("The Kinova command has been initialized correctly. Now calling InitAPI().");
-    int result = (*KnvInitAPI)();
-    ROS_INFO("result of InitAPI() = %i", result);
+    {   // scope for mutex
+        boost::unique_lock<boost::mutex> lock(knv_lock);
+        ROS_INFO("The Kinova command has been initialized correctly. Now calling InitAPI().");
+        int result = (*KnvInitAPI)();
+        ROS_INFO("result of InitAPI() = %i", result);
+        if (result != 1)
+        {
+            ROS_ERROR("Error initializing Kinova API");
+            return false;
+        }
 
-    ROS_INFO("Using version: ");
-    printVersion();
+        ROS_INFO("Using version: ");
+        printVersion();
 
-    if (result != 1) return false;
-    result = (*KnvStartControlAPI)();
-    ROS_INFO("result of StartControlAPI() = %i", result);
-    if (result != 1) return false;
+        result = (*KnvStartControlAPI)();
+        ROS_INFO("result of StartControlAPI() = %i", result);
+        if (result != 1)
+        {
+            ROS_ERROR("Could not start control API");
+            return false;
+        }
+        ROS_INFO("TEST: Moving home");
+        int data;
+        //result=(*KnvMoveHome)(data);
 
-    ROS_INFO("TEST: Moving home");
-    int data;
-    //result=(*KnvMoveHome)(data);
+        ROS_INFO("TEST: Init fingers");
+        result = (*KnvInitFingers)();
 
-    ROS_INFO("TEST: Init fingers");
-    result = (*KnvInitFingers)();
-
-    (*KnvSetAngularControl)();
-
-    knv_lock.unlock();
+        (*KnvSetAngularControl)();
+    }
 
     //test();
     //test3();

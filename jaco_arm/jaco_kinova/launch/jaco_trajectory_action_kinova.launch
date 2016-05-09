@@ -1,6 +1,13 @@
+<!-- launches joint trajectory action server using the kinova drivers -->
 <launch>
 
-	<!-- launches joint trajectory action server using the kinova drivers -->
+    # TODO the default should be optional as soon as first round of testing is finished 
+    <arg name="load_ros_params" default="true"/>
+    <arg name="names_config_file" value="$(find jaco_joints)/config/JacoJoints.yaml"/>
+
+    <include if="$(arg load_ros_params)" file="$(find jaco_joints)/launch/init_jaco_joints.launch">
+        <arg name="names_config_file" value="$(arg names_config_file)"/>
+    </include>
 	
 	# velocity limitation (in RAD per second) for joints 1,2,3 and 4,5,6	
 	# This only applies if use_angle_poses is set to true, and then indicates the speed at which the trajectory is played.
@@ -17,9 +24,6 @@
 	<!-- joint_states topic, this is where sensor_msgs::JointState messages of the whole arm including fingers are published -->
     <arg name="joint_states_topic" default="jaco/joint_states" />
 
-    <include file="$(find jaco_joints)/launch/init_jaco_joints.launch">
-        <arg name="names_config_file" value="$(find jaco_joints)/config/JacoJoints.yaml"/>
-    </include>
  
 	<node name="jaco_trajectory_action_kinova" pkg="jaco_kinova" type="jaco_trajectory_action_server_kinova_node" respawn="false" output="screen">
 		<param name="joint_trajectory_action_topic" value="$(arg joint_trajectory_action_topic)" />

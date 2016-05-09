@@ -50,9 +50,7 @@ Troubleshooting tips:
 * You can find out more details about currently applied udev rules with where the device is currently mounted with
       ``udevadm info -a -n /dev/<current-mount>``
 
-
 **Exposing the USB library**
-
 
 The library ``<kinova-ros-repo>/jaco_driver/lib/<architecture>/Kinova.API.USBCommandLayerUbuntu.so`` has to 
 be in a path where it can be found. Add the path to your LD_LIBRARY_PATH.

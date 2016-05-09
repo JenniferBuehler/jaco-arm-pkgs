@@ -70,19 +70,22 @@ int main(int argc, char ** argv)
         useRosControllers = false;
     }
 
-    jaco_kinova::JacoTrajectoryActionServerKinova jte(pub, JOINT_TRAJECTORY_ACTION_TOPIC, useAnglePoses, maxVel, maxSpeed123, maxSpeed456,
-                                         CURRENT_JOINT_STATES_TOPIC, CURRENT_JOINT_STATES_FREQ, angleSafetyLimit,
-                                         goalTolerance,
-                                         ARM_ANGLES_ACTION_TOPIC,
-                                         FINGERS_ANGLES_ACTION_TOPIC,
-                                         useRosControllers, useOnlineVelocityControl, interGoalTolerance);
+    jaco_kinova::JacoTrajectoryActionServerKinova jte(pub, JOINT_TRAJECTORY_ACTION_TOPIC,
+                     useAnglePoses, maxVel, maxSpeed123, maxSpeed456,
+                     CURRENT_JOINT_STATES_TOPIC, CURRENT_JOINT_STATES_FREQ, angleSafetyLimit,
+                     goalTolerance,
+                     ARM_ANGLES_ACTION_TOPIC,
+                     FINGERS_ANGLES_ACTION_TOPIC,
+                     useRosControllers, useOnlineVelocityControl, interGoalTolerance);
     if (!jte.init())
     {
-        ROS_ERROR("Error initializing");
+        ROS_ERROR("Failed to initialize JacoTrajectoryActionServerKinova. Exit.");
     }
-    ROS_INFO("Joint trajectory action server running.");
-    ros::spin();
-
+    else
+    {
+        ROS_INFO("Joint trajectory action server running.");
+        ros::spin();
+    }
     jte.shutdown();
 }
 

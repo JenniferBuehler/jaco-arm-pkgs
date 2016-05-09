@@ -233,6 +233,10 @@ protected:
      * Joins the thread started within playTrajectoryImplementation(), if applicable.
      */
     void joinExecutionThread();
+    
+    /**
+     * Implementation-specific, called from joinExecutionThread().
+     */
     virtual void joinExecutionThreadImpl() {}
 
     /**
