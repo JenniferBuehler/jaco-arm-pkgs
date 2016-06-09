@@ -6,14 +6,32 @@
  xmlns:xacro="http://ros.org/wiki/xacro">
 
 
-<!-- MACRO FOR THE ROBOT ARM ON THE TABLE-->
-<xacro:macro name="gzplugin_joint_control">
-
+<!-- macro to laod jaco control plugins -->
+<xacro:macro name="gzplugin_joint_control" params="robot_components_namespace trajectory_param_namespace">
 	<gazebo>
-		<plugin name="gzplugin_joint_control" filename="libjaco_gazebo_joint_control.so"/>
-		<plugin name="gzplugin_joint_state_client" filename="libjaco_gazebo_joint_state_client.so"/>
-		<plugin name="gzplugin_joint_state_publisher" filename="libjaco_gazebo_joint_state_publisher.so"/>
-        <plugin name="gzplugin_joint_trajectory_server" filename="libjaco_gazebo_joint_trajectory_server.so"/> 
+        <plugin name="gzplugin_joint_control" filename="libgazebo_joint_control.so">
+            <robot_components_namespace>
+                ${robot_components_namespace} 
+            </robot_components_namespace>
+        </plugin>
+		<plugin name="gzplugin_joint_state_client" filename="libgazebo_joint_state_client.so">
+            <robot_components_namespace>
+                ${robot_components_namespace} 
+            </robot_components_namespace>
+        </plugin>
+		<plugin name="gzplugin_joint_state_publisher" filename="libgazebo_joint_state_publisher.so">
+            <robot_components_namespace>
+                ${robot_components_namespace} 
+            </robot_components_namespace>
+        </plugin>
+        <plugin name="gzplugin_joint_trajectory_server" filename="libgazebo_joint_trajectory_server.so"> 
+            <robot_components_namespace>
+                ${robot_components_namespace} 
+            </robot_components_namespace>
+            <trajectory_param_namespace>
+                ${trajectory_param_namespace} 
+            </trajectory_param_namespace>
+        </plugin>
 	</gazebo>
 </xacro:macro>
 

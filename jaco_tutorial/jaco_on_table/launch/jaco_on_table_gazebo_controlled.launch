@@ -28,7 +28,7 @@
 	<arg name="joint_state_publisher_topic" default="jaco/joint_control"/>
 	
     <arg name="load_robot_state_publisher" default="true"/>
-	<arg name="jaco_joint_states_topic" default="jaco/joint_state"/>
+	<arg name="joint_states_topic" default="jaco/joint_state"/>
 	
     # load the world plugin loader (in package gazebo_world_plugin_loader) which launches several
     # world plugins according to the specification in the ROS parameters. Note that you will
@@ -55,7 +55,6 @@
     # Exception: when load_ros_controllers=true, only a position OR a velocity controller is loaded (both not supported by DefaultRobotHWSim)
     # so in this case if load_velocity_controller is true, the position controller is *not* loaded.
     <arg name="load_velocity_controller" default="true"/>
-
    
     # Need to load the URDF "transmission" tags only if using ROS controllers, but it doesn't harm
     # to load them as well when not using the local joint controller implementation.
@@ -69,16 +68,14 @@
         use_ros_control:=$(arg load_ros_controllers) 
         load_grasp_fix:=$(arg load_grasp_fix) 
         add_transmission_pos:=$(arg transmission_pos)
-        add_transmission_vel:=$(arg transmission_vel)"/>
+        add_transmission_vel:=$(arg transmission_vel)
+        trajectory_param_namespace:=jaco_trajectory
+        robot_components_namespace:=jaco"/>
 
 	#####################################
 	# Load robot_description on parameter server
 	#####################################
 	<param name="robot_description" command="$(find xacro)/xacro --inorder '$(arg robot_xacro)' $(arg xacro_arguments)"/>
-	<!-- 
-      for indigo or ealier, use this instead:
-      <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_xacro)' $(arg xacro_arguments)"/>
-    -->
 
 	#####################################
     # Joint trajectory server parameters
@@ -105,7 +102,7 @@
         <arg name="load_joint_state_publisher" value="$(arg load_joint_state_publisher)"/>
         <arg name="joint_state_publisher_topic" value="$(arg joint_state_publisher_topic)"/>
         <arg name="load_robot_state_publisher" value="$(arg load_robot_state_publisher)"/>
-        <arg name="jaco_joint_states_topic" value="$(arg jaco_joint_states_topic)"/>
+        <arg name="joint_states_topic" value="$(arg joint_states_topic)"/>
         <arg if="$(arg load_world_plugins)" name="extra_gazebo_args" value="-s libgazebo_world_plugin_loader.so"/>
 	</include>
 

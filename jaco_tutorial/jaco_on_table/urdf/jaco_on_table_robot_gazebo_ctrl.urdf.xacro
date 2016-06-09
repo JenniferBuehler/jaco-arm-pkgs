@@ -4,6 +4,8 @@
 -->
 <robot name="JacoOnTable" xmlns:xacro="http://ros.org/wiki/xacro">
 
+    <xacro:arg name="robot_components_namespace" default="jaco"/>
+    <xacro:arg name="trajectory_param_namespace" default="jaco"/>
     <xacro:arg name="use_ros_control" default="false"/>
     <xacro:arg name="add_transmission_pos" default="false"/>
     <xacro:arg name="add_transmission_vel" default="false"/>
@@ -15,25 +17,24 @@
         <static>false</static>
     </link>
 -->
-    <xacro:include filename="$(find jaco_on_table)/urdf/jaco_on_table.urdf.xacro" />
+    <xacro:include filename="$(find jaco_on_table)/urdf/jaco_on_table.urdf.xacro">
+        <xacro:arg name="add_transmission_pos" default="$(arg add_transmission_pos)"/>
+        <xacro:arg name="add_transmission_vel" default="$(arg add_transmission_vel)"/>
+    </xacro:include>
 
     <xacro:jaco_on_table parent="world">
         <origin xyz="0 0 0" rpy="0 0 0" />
     </xacro:jaco_on_table>
 
-
     <xacro:if value="$(arg use_ros_control)">
         <xacro:include filename="$(find jaco_gazebo)/urdf/gzplugin_ros_control.urdf.xacro"/>
-        <xacro:arg name="add_transmission_pos" default="$(arg add_transmission_pos)"/>
-        <xacro:arg name="add_transmission_vel" default="$(arg add_transmission_vel)"/>
+        <xacro:gzplugin_joint_control/>
     </xacro:if>
     <xacro:unless value="$(arg use_ros_control)">
         <xacro:include filename="$(find jaco_gazebo)/urdf/gzplugin_joint_control.urdf.xacro"/>
-        <xacro:arg name="add_transmission_pos" default="$(arg add_transmission_pos)"/>
-        <xacro:arg name="add_transmission_vel" default="$(arg add_transmission_vel)"/>
+        <xacro:gzplugin_joint_control robot_components_namespace="$(arg robot_components_namespace)"
+                                  trajectory_param_namespace="$(arg trajectory_param_namespace)"/>
     </xacro:unless>
-
-    <xacro:gzplugin_joint_control/>
     
     <xacro:if value="$(arg load_grasp_fix)">
         <xacro:include filename="$(find jaco_gazebo)/urdf/gzplugin_grasp_fix.urdf.xacro"/>

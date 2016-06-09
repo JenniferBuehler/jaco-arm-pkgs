@@ -15,7 +15,6 @@
 
     <param name="gazebo/load_velocity_controllers" value="$(arg load_velocity_controllers)"/>
 
-
     # Load arm joint and gripper joint names
     # needed for local implementation
     <arg name="names_config_file" default="$(find jaco_joints)/config/JacoJoints.yaml"/>

@@ -19,7 +19,7 @@
 	<arg name="load_joint_state_publisher" default="false"/>
 	<arg name="joint_state_publisher_topic" default="jaco/joint_control"/>
 	<arg name="load_robot_state_publisher" default="false"/>
-	<arg name="jaco_joint_states_topic" default="jaco/joint_state"/>
+	<arg name="joint_states_topic" default="jaco/joint_state"/>
     <arg name="extra_gazebo_args" default=""/>	
 
 	#####################################
@@ -40,7 +40,7 @@
         <arg name="load_joint_state_publisher" value="$(arg load_joint_state_publisher)"/>
         <arg name="joint_state_publisher_topic" value="$(arg joint_state_publisher_topic)"/>
         <arg name="load_robot_state_publisher" value="$(arg load_robot_state_publisher)"/>
-        <arg name="jaco_joint_states_topic" value="$(arg jaco_joint_states_topic)"/>
+        <arg name="joint_states_topic" value="$(arg joint_states_topic)"/>
         <arg name="extra_gazebo_args" value="$(arg extra_gazebo_args)"/>	
 	</include>
 </launch>

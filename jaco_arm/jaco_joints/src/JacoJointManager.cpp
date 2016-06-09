@@ -54,6 +54,16 @@
     "9_gripper_index_tip", "7_gripper_mount_thumb", "8_gripper_thumb", "9_gripper_thumb_tip",\
     "7_gripper_mount_pinkie", "8_gripper_pinkie", "9_gripper_pinkie_tip"
 
+// A value of 5 for MAX_FORCE proved to work with high
+// KP values so the hand could just stay up. So shouldn't
+// be much higher than that...
+#define DEFAULT_MAX_FORCE 5
+#define DEFAULT_MAX_FORCE_FINGER 2.5
+
+// maximum velocity for arm joints (rads/sec)
+#define DEFAULT_MAX_VEL 1.5
+// maximum velocity for arm gripper (rads/sec)
+#define DEFAULT_MAX_VEL_FINGER 1.5
 
 JacoJointManager::JacoJointManager(const std::string& _robot_namespace, bool _readParams):
     arm_components_name_manager::ArmComponentsNameManager(_robot_namespace, _readParams)
@@ -130,8 +140,92 @@ std::vector<float> JacoJointManager::getDefaultGripperJointsInitPose() const
 {
     std::vector<float> _gripper_joint_init;
     _gripper_joint_init.resize(3);
-    _gripper_joint_init[0] = JF_INIT;
-    _gripper_joint_init[1] = JF_INIT;
-    _gripper_joint_init[2] = JF_INIT;
+    _gripper_joint_init.assign(3, JF_INIT);
     return _gripper_joint_init;
 }
+
+
+std::vector<float> JacoJointManager::getDefaultArmJointsMaxVel() const
+{
+    std::vector<float> _arm_max_vel;
+    _arm_max_vel.resize(6);
+    _arm_max_vel.assign(6, DEFAULT_MAX_VEL);
+    return _arm_max_vel;
+}
+std::vector<float> JacoJointManager::getDefaultArmJointsMaxForce() const
+{
+    std::vector<float> _arm_max_force;
+    _arm_max_force.resize(6);
+    _arm_max_force.assign(6, DEFAULT_MAX_FORCE);
+    return _arm_max_force;
+}
+
+std::vector<float> JacoJointManager::getDefaultGripperJointsMaxVel() const
+{
+    std::vector<float> _gripper_max_vel;
+    _gripper_max_vel.resize(3);
+    _gripper_max_vel.assign(3, DEFAULT_MAX_VEL_FINGER);
+    return _gripper_max_vel;
+
+}
+
+std::vector<float> JacoJointManager::getDefaultGripperJointsMaxForce() const
+{
+    std::vector<float> _gripper_max_force;
+    _gripper_max_force.resize(3);
+    _gripper_max_force.assign(3, DEFAULT_MAX_FORCE_FINGER);
+    return _gripper_max_force;
+}
+
+#if 0
+bool JacoJointManager::GetMaxVals(const std::string& jointName, float& force, float& velocity) const
+{
+    bool gripper = isGripper(jointName);
+
+    // initialize default values first:
+    force = gripper ? DEFAULT_MAX_FORCE_FINGER : DEFAULT_MAX_FORCE;
+    velocity = gripper ? DEFAULT_MAX_VEL_FINGER : DEFAULT_MAX_VEL;
+
+    // now read from config file
+    const std::vector<std::string>& arm_joints = getArmJoints();
+
+//    ROS_INFO_STREAM("Joint "<<jointName<<" is gripper: "<<gripper);
+
+    if (gripper)
+    {
+        force = MAX_FINGER_EFFORT;
+        velocity = MAX_FINGER_VELOCITY;
+    }
+    else if (jointName == arm_joints[0])
+    {
+        force = MAX_ARM_0_EFFORT;
+        velocity = MAX_ARM_0_VELOCITY;
+    }
+    else if (jointName == arm_joints[1])
+    {
+        force = MAX_ARM_1_EFFORT;
+        velocity = MAX_ARM_1_VELOCITY;
+    }
+    else if (jointName == arm_joints[2])
+    {
+        force = MAX_ARM_2_EFFORT;
+        velocity = MAX_ARM_2_VELOCITY;
+    }
+    else if (jointName == arm_joints[3])
+    {
+        force = MAX_ARM_3_EFFORT;
+        velocity = MAX_ARM_3_VELOCITY;
+    }
+    else if (jointName == arm_joints[4])
+    {
+        force = MAX_ARM_4_EFFORT;
+        velocity = MAX_ARM_4_VELOCITY;
+    }
+    else if (jointName == arm_joints[5])
+    {
+        force = MAX_ARM_5_EFFORT;
+        velocity = MAX_ARM_5_VELOCITY;
+    }
+    return true;
+}
+#endif

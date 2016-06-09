@@ -48,25 +48,43 @@
 
 	# The topic onto which the joint state publisher (if loaded by
     # arg load_joint_state_publisher) publishes the joint states.
-	# XXX NOTE: previsouly named gazebo_joint_control_topic
+    # The joint state publisher can be used to control the joints with the
+    # graphical interface.
 	<arg name="joint_state_publisher_topic" default="jaco/joint_control"/>
 
     # set true if a robot_state_publisher should be launched to
     # publish tf messages which are being published as JointState messages
-    # in the topic specified in argument jaco_joint_states_topic.
+    # in the topic specified in argument joint_states_topic.
 	<arg name="load_robot_state_publisher" default="false"/>
 
 	# This is the topic robot_state_publisher subscribes to in order to
-    # receive JointState messages which it then publishes as tf messages
-	# XXX NOTE: Previously called gazebo_joint_states_topic.
-	<arg name="jaco_joint_states_topic" default="jaco/joint_state"/>
+    # receive JointState messages which it then publishes as tf messages.
+    # It is also the topic onto which the joint state messages are published
+    # by the robot.
+	<arg name="joint_states_topic" default="jaco/joint_state"/>
 
+    # Parameter required for gazebo_joint_control/GazeboJointStatePublisher.
+    # We need to publish values NOT between -PI and PI for arm joints 1 and 2, because
+    # its lower limit is lower than -PI. When using Gazebo, it was not possible to use lower limit
+    # greater than higher limit in the URDF, e.g. 2.5..0.73.
+    # MoveIt however will detect an angle of 3.0 as invalid if we have limits such as -3.9..0.73.
+    # So we need to publish angles between -3.9..0.73. This has to be done for all revolute joints
+    # with such limits where lower_limit is greater than higher_limit.
+    <arg name="preserve_original_angles" default="arm_1_joint, arm_2_joint"/>
 
     # set the joint state topic such that any subscribers can read it from parameter	
-    <param if="$(arg load_joint_state_publisher)" name="jaco_joint_state_control_topic" value="$(arg joint_state_publisher_topic)"/>
+    <param name="joint_state_control_topic" value="$(arg joint_state_publisher_topic)"/>
 
-    # set the joint states topic as ROS parameter    
-    <param name="jaco_joint_states_topic" value="$(arg jaco_joint_states_topic)"/>
+    # Parameter required for gazebo_joint_control/GazeboJointStatePublisher.
+    # set the joint states topic as ROS parameter: The joint state publisher
+    # will publish the joint states on this topic. 
+    <param name="publish_joint_states_topic" value="$(arg joint_states_topic)"/>
+    
+    # Parameter required for gazebo_joint_control/GazeboJointStatePublisher.
+    # Separated by commas, specify the joint names for which the published values
+    # should *not* be capped between -PI and PI, and instead the original values
+    # in gazebo should be published.
+    <param name="preserve_original_angles" value="$(arg preserve_original_angles)"/>
 
 
     ##############################################
@@ -120,7 +138,7 @@
 	# come in, and then start MoveIt.
 	###############################################
 	<node if="$(arg load_robot_state_publisher)" name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen">
-		<remap from="joint_states" to="$(arg jaco_joint_states_topic)"/>
+		<remap from="joint_states" to="$(arg joint_states_topic)"/>
 		<param name="publish_frequency" type="double" value="100.0"/>
 	</node>
 

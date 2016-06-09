@@ -26,6 +26,25 @@ jaco:
         - 1.506298
         - 3.135861
 
+    # Maximum velocities for arm
+    arm_joint_max_vel:
+        - 0.8
+        - 0.8
+        - 0.8
+        - 0.8
+        - 0.8
+        - 0.8
+
+    # Maximum forces for arm
+    arm_joint_max_force:
+        - 8 
+        - 8
+        - 4
+        - 2
+        - 2
+        - 2
+
+
     # All links which are in-between (and directly before and after)
     # the arm_joints. It does however *not* include the palm_link
     # because this is specified separately.
@@ -59,6 +78,20 @@ jaco:
         - 0
         - 0
     # -0.0043633
+
+    # Maximum velocities for gripper
+    gripper_joint_max_vel:
+        - 0.3 
+        - 0.3 
+        - 0.3 
+
+    # Maximum forces for gripper
+    gripper_joint_max_force:
+        - 2
+        - 2 
+        - 2
+
+
 
     # All links which are in-between (and directly before and after)
     # the gripper_joints. It does however *not* include the palm_link

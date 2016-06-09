@@ -50,6 +50,7 @@ public:
         return true;
     }
 
+
 protected:
 
     virtual std::string getDefaultPalmLink() const;
@@ -59,6 +60,10 @@ protected:
     virtual std::vector<float> getDefaultGripperJointsInitPose() const;
     virtual std::vector<std::string> getDefaultGripperJoints() const;
     virtual std::vector<std::string> getDefaultGripperLinks() const;
+    virtual std::vector<float> getDefaultArmJointsMaxVel() const; 
+    virtual std::vector<float> getDefaultArmJointsMaxForce() const; 
+    virtual std::vector<float> getDefaultGripperJointsMaxVel() const; 
+    virtual std::vector<float> getDefaultGripperJointsMaxForce() const; 
     
 };
 
