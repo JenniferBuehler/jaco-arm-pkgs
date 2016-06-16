@@ -143,9 +143,15 @@ private:
 
     /**
      * Sends a command to kinova to set these target angles.
+     * \param useAdvancedMode if true, uses KnvSendAdvanceTrajectory for each trajectory point, else
+     *      it uses KnvSendBasicTrajectory
+     * \param clearPreviousTrajectories clear any trajectory which may currently be executed
+     * \param resetAngularControl reset the arm to "angular" control using KnvSetAngularControl
+     * \param tolerance function blocks until the target values are reached with an accuracy of this tolerance
      * \return 0 on success, -1 if these angles can't be set, -2 if execution failed
      */
-    int sendKinovaAngles(std::vector<float>& target_angles, const bool& stopWaitFlag, bool clearPreviousTrajectories, float tolerance);
+    int sendKinovaAngles(std::vector<float>& target_angles, const bool& stopWaitFlag, bool clearPreviousTrajectories,
+            float tolerance, bool useAdvancedMode = true, bool resetAngularControl = false);
 
     /**
      * Sends the trajectory points to the kinova driver
@@ -153,6 +159,12 @@ private:
     bool sendTrajectoryToKinova(const trajectory_msgs::JointTrajectory& traj, const std::vector<int>& joint_indices, const int group);
 
 
+    /**
+     * \param useAdvanceTrajectory if true, uses KnvSendAdvanceTrajectory for each trajectory point, else
+     *      it uses KnvSendBasicTrajectory
+     * \param clearExistingExecution clear any trajectory which may currently be executed
+     * \param resetAngularControl reset the arm to "angular" control using KnvSetAngularControl
+     */
     bool executeOnKinova(const std::vector<TrajectoryPoint*>& kinovaTrajectory, bool clearExistingExecution,
                          bool useAdvanceTrajectory, bool resetAngularControl = false);
 

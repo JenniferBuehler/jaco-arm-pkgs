@@ -273,6 +273,22 @@ bool getCurrentState(std::vector<FloatT>& states, JacoTrajectoryActionServerKino
 }
 
 
+std::string PointToString(const TrajectoryPoint& tp)
+{
+    std::stringstream str;
+    str<<"Point: "<< 
+            tp.Position.Actuators.Actuator1 <<", "<<
+            tp.Position.Actuators.Actuator2 <<", "<<
+            tp.Position.Actuators.Actuator3 <<", "<<
+            tp.Position.Actuators.Actuator4 <<", "<<
+            tp.Position.Actuators.Actuator5 <<", "<<
+            tp.Position.Actuators.Actuator6 <<
+            " Fingers: " <<
+            tp.Position.Fingers.Finger1 <<", "<<
+            tp.Position.Fingers.Finger2 <<", "<<
+            tp.Position.Fingers.Finger3;
+    return str.str();
+}
 
 
 }  // namespace
@@ -856,7 +872,10 @@ void JacoTrajectoryActionServerKinova::playTrajectoryKinovaSimple(const trajecto
                 correctToWrite(endPoint, true);
                 adaptKinovaAngles(currStateUncorr, endPoint, *added);
                 //ROS_INFO_STREAM("Corr: "<<toString(*added));
-                if (!executeOnKinova(kinovaTrajectory, true, true))
+                bool clearExisting = true;
+                bool useAdvanceTraj = true;
+                bool resetAngularControl = false;
+                if (!executeOnKinova(kinovaTrajectory, clearExisting, useAdvanceTraj, resetAngularControl))
                 {
                     ROS_WARN("Could not execute last point on trajectory to correct possible velocity inaccuracies in earlier points.");
                 }
@@ -1057,7 +1076,9 @@ int JacoTrajectoryActionServerKinova::setKinovaVelocities(const std::vector<floa
     }
 
     //ROS_INFO("Executing target velocities");
-    if (!executeOnKinova(kinovaTrajectory, clearPoints, false))
+    bool useAdvancedMode=false;
+    bool resetAngularControl=false;
+    if (!executeOnKinova(kinovaTrajectory, clearPoints, useAdvancedMode, resetAngularControl))
     {
         ROS_ERROR("Error with execution of kinova velocities");
         return -2;
@@ -1069,7 +1090,8 @@ int JacoTrajectoryActionServerKinova::setKinovaVelocities(const std::vector<floa
 
 }
 
-int JacoTrajectoryActionServerKinova::sendKinovaAngles(std::vector<float>& target_angles, const bool& stopWaitFlag, bool clearPreviousTrajectories, float tolerance)
+int JacoTrajectoryActionServerKinova::sendKinovaAngles(std::vector<float>& target_angles, const bool& stopWaitFlag, bool clearPreviousTrajectories, float tolerance,
+    bool useAdvancedMode, bool resetAngularControl)
 {
 
     AngularPosition startStateUncorr;
@@ -1080,7 +1102,6 @@ int JacoTrajectoryActionServerKinova::sendKinovaAngles(std::vector<float>& targe
     }
 
 
-    //ROS_INFO("Target: %f",target.joint1);
     std::vector<TrajectoryPoint*> kinovaTrajectory;
     if (!addTrajectoryPoint(target_angles, kinovaTrajectory, true, -1))
     {
@@ -1091,7 +1112,15 @@ int JacoTrajectoryActionServerKinova::sendKinovaAngles(std::vector<float>& targe
     adaptKinovaAngles(startStateUncorr, kinovaTrajectory);
 
     ROS_INFO("Executing angles goal");
-    if (!executeOnKinova(kinovaTrajectory, clearPreviousTrajectories, true))
+    // XXX Just a debug print for now:
+    for (std::vector<TrajectoryPoint*>::const_iterator it=kinovaTrajectory.begin(); it!=kinovaTrajectory.end(); ++it)
+    {
+        TrajectoryPoint* tp=*it;
+        ROS_INFO_STREAM(PointToString(*tp));
+    }
+    // XXX End debug print
+ 
+    if (!executeOnKinova(kinovaTrajectory, clearPreviousTrajectories, useAdvancedMode, resetAngularControl))
     {
         ROS_ERROR("Error with execution of arm angles");
         return -2;
@@ -1102,7 +1131,6 @@ int JacoTrajectoryActionServerKinova::sendKinovaAngles(std::vector<float>& targe
     ros::Rate r(10);
 
     bool success = true;
-
     while (true)
     {
         if (stopWaitFlag || !ros::ok())
@@ -1123,10 +1151,6 @@ int JacoTrajectoryActionServerKinova::sendKinovaAngles(std::vector<float>& targe
         }
 
         MathFunctions::capToPI(state);
-
-        //ROS_INFO("Target: %f - curr %f ",targetA.joint1,curr_angles.joint1);
-        //setValues(state,feedback.angles);
-        //angle_server->publishFeedback(feedback);
 
         if (equalJointFloats(state, target_angles, tolerance, true))
         {
@@ -1157,11 +1181,15 @@ int JacoTrajectoryActionServerKinova::sendKinovaAngles(std::vector<float>& targe
             ROS_WARN("Trajectory played, but target not reached yet with tolerance %f",tolerance);
             //success=false;
         }*/
-        /*ROS_INFO("Still waiting for target to be reached");
+
+        // XXX BEGIN DEBUG PRINT        
+        ROS_INFO("Still waiting for target to be reached");
         ROS_INFO("Target : %f %f %f %f %f %f %f %f %f",
-            target_angles[0], target_angles[1], target_angles[2], target_angles[3], target_angles[4],target_angles[5], target_angles[6],target_angles[7], target_angles[8]);
+            target_angles[0], target_angles[1], target_angles[2], target_angles[3], target_angles[4],
+            target_angles[5], target_angles[6],target_angles[7], target_angles[8]);
         ROS_INFO("State : %f %f %f %f %f %f %f %f %f",
-            state[0], state[1], state[2], state[3], state[4],state[5], state[6],state[7], state[8]);*/
+            state[0], state[1], state[2], state[3], state[4],state[5], state[6],state[7], state[8]);
+        // XXX END DEBUG PRINT        
 
         r.sleep();
     }
@@ -1271,7 +1299,10 @@ bool JacoTrajectoryActionServerKinova::sendTrajectoryToKinova(const trajectory_m
 
 
     ROS_INFO("Executing goal");
-    success = executeOnKinova(kinovaTrajectory, true, usePositionMode());
+    bool clearExisting=true;
+    bool useAdvanceTraj = usePositionMode();
+    bool resetAngularControl = false;
+    success = executeOnKinova(kinovaTrajectory, clearExisting, useAdvanceTraj, resetAngularControl);
 
     for (std::vector<TrajectoryPoint*>::iterator it = kinovaTrajectory.begin(); it != kinovaTrajectory.end(); ++it) delete *it;
 
@@ -1495,7 +1526,6 @@ void JacoTrajectoryActionServerKinova::armAnglesCallback(AnglesGoalHandle& goal)
     }
     setHasCurrentGoal(true);
 
-    typename JacoArmAnglesServerT::Feedback feedback;
     typename JacoArmAnglesServerT::Result result;
 
     ROS_INFO("Got an angular goal for the arm.");// Joints: %s",joints.toString().c_str());
@@ -1574,7 +1604,6 @@ void JacoTrajectoryActionServerKinova::fingerAnglesCallback(FingersGoalHandle& g
     }
     setHasCurrentGoal(true);
 
-    typename JacoFingerAnglesServerT::Feedback feedback;
     typename JacoFingerAnglesServerT::Result result;
 
     ROS_INFO("Got an angular goal for the fingers.");// Joints: %s",joints.toString().c_str());
