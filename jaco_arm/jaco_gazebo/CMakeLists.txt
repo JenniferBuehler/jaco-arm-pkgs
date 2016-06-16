@@ -23,7 +23,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-   INCLUDE_DIRS include
+#   INCLUDE_DIRS include
    #LIBRARIES 
    CATKIN_DEPENDS  gazebo_joint_control jaco_joints
    #   DEPENDS Boost
@@ -36,7 +36,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include
+#  include
   #${Boost_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
 )
