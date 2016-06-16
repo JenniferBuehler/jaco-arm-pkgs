@@ -1,0 +1,55 @@
+<!-- launches joint trajectory action server using the kinova drivers -->
+<launch>
+
+    <arg name="load_ros_params" default="true"/>
+
+    # config file for arm component names
+    <arg name="names_config_file" default="$(find jaco_joints)/config/JacoJoints.yaml"/>
+    # namespace in names_config_file
+    <arg name="arm_components_namespace" default="jaco"/>
+
+    # config file with trajectory execution parameters
+    <arg name="traj_config_file" default="$(find jaco_kinova)/config/JointTrajectoryParams.yaml"/>
+    # namespace in traj_config_file
+    <arg name="trajectory_params_namespace" default="jaco_trajectory"/>
+
+	#####################################
+    # Joint trajectory server parameters
+	#####################################
+    <rosparam file="$(find jaco_gazebo)/config/JointTrajectoryParams.yaml" command="load" ns=""/>
+    
+    ########################################
+    # Load arm joint and gripper joint names
+    ########################################
+    <include if="$(arg load_ros_params)" file="$(find jaco_joints)/launch/init_jaco_joints.launch">
+        <arg name="names_config_file" value="$(arg names_config_file)"/>
+    </include>
+	
+    ########################################
+	# velocity limitation (in RAD per second) for joints 1,2,3 and 4,5,6	
+	# This only applies if use_angle_poses is set to true, in
+    # the parameters loaded by the yaml file above,
+    # and then indicates the speed at which the trajectory is played.
+    # The parameters overwrite what is else specified
+    # in the trajectory parameters loaded above,
+    # as it is specific to the Kinova drivers
+    # (and doesn't apply to Gazebo version)
+    ########################################
+	<arg name="max_speed_123" default="0.3"/>
+	<arg name="max_speed_456" default="0.3"/>
+	<arg name="max_speed_fingers" default="0.1"/>
+	
+	<!-- joint_states topic, this is where sensor_msgs::JointState messages of the whole arm including fingers are published -->
+    <arg name="joint_states_topic" default="jaco/joint_states" />
+ 
+	<node name="jaco_trajectory_action_kinova" pkg="jaco_kinova" type="jaco_trajectory_action_server_kinova_node" respawn="false" output="screen">
+		<param name="joint_states_topic" value="$(arg joint_states_topic)" />
+		<param name="joint_states_freq" value="25" />
+		<param name="max_speed_123" value="$(arg max_speed_123)"/>
+		<param name="max_speed_456" value="$(arg max_speed_456)"/>
+		<param name="max_speed_fingers" value="$(arg max_speed_fingers)"/>
+        <param name="trajectory_params_namespace" value="$(arg trajectory_params_namespace)"/>
+        <param name="arm_components_namespace" value="$(arg arm_components_namespace)"/>
+	</node>
+
+</launch>
