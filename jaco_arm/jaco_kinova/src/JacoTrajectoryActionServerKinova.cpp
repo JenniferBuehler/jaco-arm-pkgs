@@ -188,8 +188,8 @@ FloatT normalize(const FloatT& value) {
     val+=M_PI;
     return val;
     // XXX TODO REMOVE THIS COMMENT. New test: use MathFunctions::capToPI instead.
-    
-/*    FloatT val=value;
+    /*
+    FloatT val=value;
     static FloatT pi_2=2.0*M_PI;
     while (val > pi_2)
         val -= pi_2;
@@ -313,8 +313,18 @@ std::string AngularPositionToString(const AngularPosition& p)
     return str.str();
 }
 
-
-
+std::string AngularInfoToString(const AngularInfo& a)
+{
+    std::stringstream str;
+    str<<"AngularInfo: "<< 
+            a.Actuator1 <<", "<<
+            a.Actuator2 <<", "<<
+            a.Actuator3 <<", "<<
+            a.Actuator4 <<", "<<
+            a.Actuator5 <<", "<<
+            a.Actuator6;
+    return str.str();
+}
 
 
 }  // namespace
@@ -582,6 +592,10 @@ bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition * a
         ROS_ERROR("Could not obtain angles");
     }
     knv_lock.unlock();
+    if (angles)
+    {
+        ROS_INFO_STREAM("XXX TEST: Angles "<<AngularPositionToString(*angles));
+    }
     return success;
 }
 
@@ -600,9 +614,11 @@ bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition& cu
             ROS_ERROR("Could not obtain current position of arm");
             return false;
         }
+        ROS_INFO_STREAM("XXX1 TEST: Angles uncorr"<<AngularPositionToString(currP));
         if (correct)
         {
             correctFromRead(currP, true); //angles coming from jaco arm have to be corrected.
+            ROS_INFO_STREAM("XXX2 TEST: Angles corr"<<AngularPositionToString(currP));
         }
         break;
     }
@@ -1693,8 +1709,8 @@ void JacoTrajectoryActionServerKinova::fingerAnglesCallback(FingersGoalHandle& g
         suspendVelocityUpdates = true;
         ROS_INFO("Sending target values...");
         bool clearPrevious = true;
-        bool useAdvancedMode=false;  /// XXX TEST: This was true initially (@Dito: change this to test)
-        bool resetAngularControl=true;  /// XXX TEST: This was false initially (@Dito: change this to test)
+        bool useAdvancedMode=true;  /// XXX TEST: This was true initially (@Dito: change this to test)
+        bool resetAngularControl=false;  /// XXX TEST: This was false initially (@Dito: change this to test)
         int ret = sendKinovaAngles(target_angles, stopKinovaAngles, clearPrevious,
             std::max(GOAL_TOLERANCE, (float)3e-02), useAdvancedMode, resetAngularControl);  //this function can't be more accurate than 3e-01.
         ROS_INFO("... values reached");
