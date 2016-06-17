@@ -28,9 +28,9 @@ int main (int argc, char **argv)
 
   // send a goal to the action
   jaco_msgs::FingerPosition jointAngles;
-  jointAngles.finger1 = atoi(argv[1]);
-  jointAngles.finger2 = atoi(argv[2]);
-  jointAngles.finger3 = atoi(argv[3]);
+  jointAngles.finger1 = atof(argv[1]);
+  jointAngles.finger2 = atof(argv[2]);
+  jointAngles.finger3 = atof(argv[3]);
  
   ROS_INFO("Action server started, sending goal.");
   ROS_INFO_STREAM(jointAngles);

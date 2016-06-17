@@ -276,7 +276,7 @@ bool getCurrentState(std::vector<FloatT>& states, JacoTrajectoryActionServerKino
 std::string PointToString(const TrajectoryPoint& tp)
 {
     std::stringstream str;
-    str<<"Point: "<< 
+    str<<"Arm: "<< 
             tp.Position.Actuators.Actuator1 <<", "<<
             tp.Position.Actuators.Actuator2 <<", "<<
             tp.Position.Actuators.Actuator3 <<", "<<
@@ -1093,14 +1093,12 @@ int JacoTrajectoryActionServerKinova::setKinovaVelocities(const std::vector<floa
 int JacoTrajectoryActionServerKinova::sendKinovaAngles(std::vector<float>& target_angles, const bool& stopWaitFlag, bool clearPreviousTrajectories, float tolerance,
     bool useAdvancedMode, bool resetAngularControl)
 {
-
     AngularPosition startStateUncorr;
     if (!getCurrentState(startStateUncorr, POSE, false))
     {
         ROS_ERROR("Could not get current state of robot arm to assess if Trajectory is ok");
         return -1;
     }
-
 
     std::vector<TrajectoryPoint*> kinovaTrajectory;
     if (!addTrajectoryPoint(target_angles, kinovaTrajectory, true, -1))
@@ -1640,7 +1638,10 @@ void JacoTrajectoryActionServerKinova::fingerAnglesCallback(FingersGoalHandle& g
         suspendVelocityUpdates = true;
         ROS_INFO("Sending target values...");
         bool clearPrevious = true;
-        int ret = sendKinovaAngles(target_angles, stopKinovaAngles, clearPrevious, std::max(GOAL_TOLERANCE, (float)3e-02)); //this function can't be more accurate than 3e-01.
+        bool useAdvancedMode=false;  /// XXX TEST: This was true initially (@Dito: change this to test)
+        bool resetAngularControl=true;  /// XXX TEST: This was false initially (@Dito: change this to test)
+        int ret = sendKinovaAngles(target_angles, stopKinovaAngles, clearPrevious,
+            std::max(GOAL_TOLERANCE, (float)3e-02), useAdvancedMode, resetAngularControl);  //this function can't be more accurate than 3e-01.
         ROS_INFO("... values reached");
         suspendVelocityUpdates = false;
         if (ret < 0)
