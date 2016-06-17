@@ -183,14 +183,20 @@ bool setValues(const std::vector<FloatT>& values, UserPosition& p)
 template<typename FloatT>
 FloatT normalize(const FloatT& value) {
     if (fabs(value) > 100000) ROS_ERROR("Too high value in normalize(): %f",value);
-    FloatT val=value;
+        
+    FloatT val = MathFunctions::capToPI(value);
+    val+=M_PI;
+    return val;
+    // XXX TODO REMOVE THIS COMMENT. New test: use MathFunctions::capToPI instead.
+    
+/*    FloatT val=value;
     static FloatT pi_2=2.0*M_PI;
     while (val > pi_2)
         val -= pi_2;
     while (val < 0)
         val += pi_2;
 
-    return val;
+    return val;*/
 }
 
 //cut back values to 0..2PI
@@ -289,6 +295,26 @@ std::string PointToString(const TrajectoryPoint& tp)
             tp.Position.Fingers.Finger3;
     return str.str();
 }
+
+std::string AngularPositionToString(const AngularPosition& p)
+{
+    std::stringstream str;
+    str<<"Arm: "<< 
+            p.Actuators.Actuator1 <<", "<<
+            p.Actuators.Actuator2 <<", "<<
+            p.Actuators.Actuator3 <<", "<<
+            p.Actuators.Actuator4 <<", "<<
+            p.Actuators.Actuator5 <<", "<<
+            p.Actuators.Actuator6 <<
+            " Fingers: " <<
+            p.Fingers.Finger1 <<", "<<
+            p.Fingers.Finger2 <<", "<<
+            p.Fingers.Finger3;
+    return str.str();
+}
+
+
+
 
 
 }  // namespace
@@ -1100,6 +1126,8 @@ int JacoTrajectoryActionServerKinova::sendKinovaAngles(std::vector<float>& targe
         return -1;
     }
 
+    ROS_INFO_STREAM("Current state uncorrected: "<<AngularPositionToString(startStateUncorr));
+
     std::vector<TrajectoryPoint*> kinovaTrajectory;
     if (!addTrajectoryPoint(target_angles, kinovaTrajectory, true, -1))
     {
@@ -1107,16 +1135,29 @@ int JacoTrajectoryActionServerKinova::sendKinovaAngles(std::vector<float>& targe
         return -1;
     }
 
-    adaptKinovaAngles(startStateUncorr, kinovaTrajectory);
-
-    ROS_INFO("Executing angles goal");
     // XXX Just a debug print for now:
+    ROS_INFO("Trajectory before adaptKinovaAngles():");
     for (std::vector<TrajectoryPoint*>::const_iterator it=kinovaTrajectory.begin(); it!=kinovaTrajectory.end(); ++it)
     {
         TrajectoryPoint* tp=*it;
         ROS_INFO_STREAM(PointToString(*tp));
     }
     // XXX End debug print
+ 
+
+    adaptKinovaAngles(startStateUncorr, kinovaTrajectory);
+
+    ROS_INFO("Executing angles goal");
+    // XXX Just a debug print for now:
+    ROS_INFO("Trajectory after adaptKinovaAngles():");
+    for (std::vector<TrajectoryPoint*>::const_iterator it=kinovaTrajectory.begin(); it!=kinovaTrajectory.end(); ++it)
+    {
+        TrajectoryPoint* tp=*it;
+        ROS_INFO_STREAM(PointToString(*tp));
+    }
+    // XXX End debug print
+
+    ROS_INFO("Now executing...");
  
     if (!executeOnKinova(kinovaTrajectory, clearPreviousTrajectories, useAdvancedMode, resetAngularControl))
     {
@@ -1604,7 +1645,7 @@ void JacoTrajectoryActionServerKinova::fingerAnglesCallback(FingersGoalHandle& g
 
     typename JacoFingerAnglesServerT::Result result;
 
-    ROS_INFO("Got an angular goal for the fingers.");// Joints: %s",joints.toString().c_str());
+    ROS_INFO("Got an angular goal for the fingers.");
 
     std::vector<float> curr_angles;
     if (!jaco_kinova::getCurrentState(curr_angles, POSE, true, this))
@@ -1614,6 +1655,14 @@ void JacoTrajectoryActionServerKinova::fingerAnglesCallback(FingersGoalHandle& g
         return;
     }
 
+    if (curr_angles.size() < 9)
+    {
+        ROS_ERROR("Current state too small");
+        return;
+    }
+    ROS_INFO("Current state: %f %f %f %f %f %f %f %f %f", curr_angles[0], curr_angles[1], curr_angles[2], curr_angles[3],
+        curr_angles[4], curr_angles[5], curr_angles[6], curr_angles[7], curr_angles[8]);
+
     std::vector<float> target_angles = curr_angles;
     jaco_msgs::FingerPosition fp = goal.getGoal()->fingers;
     if (!setValues(fp, target_angles))
@@ -1622,8 +1671,14 @@ void JacoTrajectoryActionServerKinova::fingerAnglesCallback(FingersGoalHandle& g
         goal.setAborted();
         return;
     }
+    
+    ROS_INFO("Target state: %f %f %f %f %f %f %f %f %f", target_angles[0], target_angles[1], target_angles[2], target_angles[3],
+        target_angles[4], target_angles[5], target_angles[6], target_angles[7], target_angles[8]);
 
     MathFunctions::capToPI(target_angles);
+    
+    ROS_INFO("Target state capped: %f %f %f %f %f %f %f %f %f", target_angles[0], target_angles[1], target_angles[2], target_angles[3],
+        target_angles[4], target_angles[5], target_angles[6], target_angles[7], target_angles[8]);
 
     ROS_INFO("Setting finger goal to accepted");
     goal.setAccepted();
@@ -1839,7 +1894,7 @@ void JacoTrajectoryActionServerKinova::correctToWrite(AngularInfo &a, bool posit
 }
 
 
-void JacoTrajectoryActionServerKinova::correctToWrite(FingersPosition &p, bool positionMode)const
+void JacoTrajectoryActionServerKinova::correctToWrite(FingersPosition &p, bool positionMode) const
 {
     if (positionMode)
     {
@@ -1858,7 +1913,7 @@ void JacoTrajectoryActionServerKinova::correctToWrite(FingersPosition &p, bool p
     }
 }
 
-void JacoTrajectoryActionServerKinova::correctFromRead(AngularInfo &a, bool isPosition)const
+void JacoTrajectoryActionServerKinova::correctFromRead(AngularInfo &a, bool isPosition) const
 {
     if (isPosition)
     {
