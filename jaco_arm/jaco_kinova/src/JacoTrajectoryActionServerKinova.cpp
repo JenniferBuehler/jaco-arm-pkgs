@@ -31,6 +31,8 @@
 #define HIGH_LIMIT_1 0.81
 #define LOW_LIMIT_2 -4.395
 #define HIGH_LIMIT_2 1.252
+    
+float conv_ratio=0.012;
 
 using jaco_kinova::JacoTrajectoryActionServerKinova;
 using convenience_math_functions::MathFunctions;
@@ -331,14 +333,9 @@ std::string AngularInfoToString(const AngularInfo& a)
 
 
 
-
-
 /*******************************************
  **  JacoTrajectoryActionServerKinova   ****
  *******************************************/
-
-
-
 
 
 
@@ -1709,7 +1706,7 @@ void JacoTrajectoryActionServerKinova::fingerAnglesCallback(FingersGoalHandle& g
         suspendVelocityUpdates = true;
         ROS_INFO("Sending target values...");
         bool clearPrevious = true;
-        bool useAdvancedMode=true;  /// XXX TEST: This was true initially (@Dito: change this to test)
+        bool useAdvancedMode=true;   /// XXX TEST: This was true initially (@Dito: change this to test)
         bool resetAngularControl=false;  /// XXX TEST: This was false initially (@Dito: change this to test)
         int ret = sendKinovaAngles(target_angles, stopKinovaAngles, clearPrevious,
             std::max(GOAL_TOLERANCE, (float)3e-02), useAdvancedMode, resetAngularControl);  //this function can't be more accurate than 3e-01.
@@ -1877,6 +1874,9 @@ void JacoTrajectoryActionServerKinova::correctToWrite(std::vector<float>& a, boo
         a[7] = a[7] * RAD_TO_DEG;
         a[8] = a[8] * RAD_TO_DEG;
     }
+    a[6]/=conv_ratio;
+    a[7]/=conv_ratio;
+    a[8]/=conv_ratio;
 }
 
 
@@ -1927,6 +1927,10 @@ void JacoTrajectoryActionServerKinova::correctToWrite(FingersPosition &p, bool p
         p.Finger2 = (double)p.Finger2 * RAD_TO_DEG;
         p.Finger3 = (double)p.Finger3 * RAD_TO_DEG;
     }
+    /*
+    p.Finger1/=conv_ratio;
+    p.Finger2/=conv_ratio;
+    p.Finger3/=conv_ratio;*/
 }
 
 void JacoTrajectoryActionServerKinova::correctFromRead(AngularInfo &a, bool isPosition) const
@@ -1958,6 +1962,9 @@ void JacoTrajectoryActionServerKinova::correctFromRead(AngularPosition &a, bool 
     a.Fingers.Finger1 *= DEG_TO_RAD;
     a.Fingers.Finger2 *= DEG_TO_RAD;
     a.Fingers.Finger3 *= DEG_TO_RAD;
+    a.Fingers.Finger1*=conv_ratio;
+    a.Fingers.Finger2*=conv_ratio;
+    a.Fingers.Finger3*=conv_ratio;
     normalize(a.Fingers);
 }
 
@@ -1966,8 +1973,6 @@ void JacoTrajectoryActionServerKinova::correctFromRead(AngularPosition &a, bool 
 
 void JacoTrajectoryActionServerKinova::jointStatePublish(const ros::TimerEvent& t)
 {
-
-
     if (JointState_pub.getNumSubscribers() < 1)
     {
         //ROS_INFO("No subscribers");
