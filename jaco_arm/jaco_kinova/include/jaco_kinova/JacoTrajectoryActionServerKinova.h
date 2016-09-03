@@ -388,6 +388,10 @@ private:
     boost::thread * actionThread;
 
     bool useRosControllers;
+    // finger_angle_conv_ratio used to display finger position properly in Rviz
+    // Approximative conversion ratio from finger position (0..6400) to joint angle
+    // in radians (0.. 1.4) for 3 finger hand
+    float finger_conv_ratio;
 };
 
 }  //namespace

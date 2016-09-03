@@ -30,8 +30,8 @@
 #define LOW_LIMIT_2 -4.395
 #define HIGH_LIMIT_2 1.252
     
-float conv_ratio=0.012;
-
+#define FINGER_CONV_RATIO 1.4 / 6400.0
+    
 using jaco_kinova::JacoTrajectoryActionServerKinova;
 using convenience_math_functions::MathFunctions;
 using joint_trajectory_execution::TrajectoryActionServer;
@@ -377,7 +377,8 @@ JacoTrajectoryActionServerKinova::JacoTrajectoryActionServerKinova(
     lastCmdVelTime(0),
     useRosControllers(_useRosControllers),
     lastRawUpdateOK(true),
-    actionThread(NULL)
+    actionThread(NULL),
+    finger_conv_ratio(FINGER_CONV_RATIO)
 {
     if (JOINT_STATES_TOPIC != "")
     {
@@ -585,21 +586,6 @@ bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition * a
     else
     {
         ROS_ERROR("Could not obtain angles");
-    }
-    // now get the fingers, for which we need to to use GetCartesianPosition()
-    CartesianPosition kinova_cartesian_position;
-    memset(&kinova_cartesian_position, 0, sizeof(kinova_cartesian_position));  // zero structure
-    int cartResult = (*KnvGetCartesianPosition)(kinova_cartesian_position);
-    if (cartResult != NO_ERROR_KINOVA)
-    {
-        if (angles)
-        {
-            angles->Fingers = kinova_cartesian_position.Fingers;
-        }
-    }
-    else
-    {
-        ROS_ERROR("Could not read fingers");
     }
     knv_lock.unlock();
     if (angles)
@@ -1871,9 +1857,9 @@ void JacoTrajectoryActionServerKinova::correctToWrite(std::vector<float>& a, boo
         a[3] = fmod(180.0 - (a[3] * RAD_TO_DEG), 360);
         a[4] = fmod(180.0 - (a[4] * RAD_TO_DEG), 360);
         a[5] = fmod(260.0 - (a[5] * RAD_TO_DEG), 360);
-        a[6] = fmod(a[6] * RAD_TO_DEG, 360);
-        a[7] = fmod(a[7] * RAD_TO_DEG, 360);
-        a[8] = fmod(a[8] * RAD_TO_DEG, 360);
+        a[6] = fmod(a[6] / finger_conv_ratio, 360);
+        a[7] = fmod(a[7] / finger_conv_ratio, 360);
+        a[8] = fmod(a[8] / finger_conv_ratio, 360);
     }
     else
     {
@@ -1883,13 +1869,10 @@ void JacoTrajectoryActionServerKinova::correctToWrite(std::vector<float>& a, boo
         a[3] = -a[3] * RAD_TO_DEG;
         a[4] = -a[4] * RAD_TO_DEG;
         a[5] = -a[5] * RAD_TO_DEG;
-        a[6] = a[6] * RAD_TO_DEG;
-        a[7] = a[7] * RAD_TO_DEG;
-        a[8] = a[8] * RAD_TO_DEG;
+        a[6] = a[6] / finger_conv_ratio;
+        a[7] = a[7] / finger_conv_ratio;
+        a[8] = a[8] / finger_conv_ratio;
     }
-    a[6]/=conv_ratio;
-    a[7]/=conv_ratio;
-    a[8]/=conv_ratio;
 }
 
 
@@ -1930,20 +1913,16 @@ void JacoTrajectoryActionServerKinova::correctToWrite(FingersPosition &p, bool p
         p.Finger1 = MathFunctions::capToPI((double) p.Finger1);
         p.Finger2 = MathFunctions::capToPI((double) p.Finger2);
         p.Finger3 = MathFunctions::capToPI((double) p.Finger3);
-        p.Finger1 = fmod(((double) p.Finger1 * RAD_TO_DEG), 360);
-        p.Finger2 = fmod(((double) p.Finger2 * RAD_TO_DEG), 360);
-        p.Finger3 = fmod(((double) p.Finger3 * RAD_TO_DEG), 360);
+        p.Finger1 = fmod(((double) p.Finger1 / finger_conv_ratio), 360);
+        p.Finger2 = fmod(((double) p.Finger2 / finger_conv_ratio), 360);
+        p.Finger3 = fmod(((double) p.Finger3 / finger_conv_ratio), 360);
     }
     else
     {
-        p.Finger1 = (double)p.Finger1 * RAD_TO_DEG;
-        p.Finger2 = (double)p.Finger2 * RAD_TO_DEG;
-        p.Finger3 = (double)p.Finger3 * RAD_TO_DEG;
+        p.Finger1 = (double)p.Finger1 / finger_conv_ratio;
+        p.Finger2 = (double)p.Finger2 / finger_conv_ratio;
+        p.Finger3 = (double)p.Finger3 / finger_conv_ratio;
     }
-    /*
-    p.Finger1/=conv_ratio;
-    p.Finger2/=conv_ratio;
-    p.Finger3/=conv_ratio;*/
 }
 
 void JacoTrajectoryActionServerKinova::correctFromRead(AngularInfo &a, bool isPosition) const
@@ -1972,12 +1951,9 @@ void JacoTrajectoryActionServerKinova::correctFromRead(AngularInfo &a, bool isPo
 void JacoTrajectoryActionServerKinova::correctFromRead(AngularPosition &a, bool isPosition) const
 {
     correctFromRead(a.Actuators, isPosition);
-    a.Fingers.Finger1 *= DEG_TO_RAD;
-    a.Fingers.Finger2 *= DEG_TO_RAD;
-    a.Fingers.Finger3 *= DEG_TO_RAD;
-    a.Fingers.Finger1*=conv_ratio;
-    a.Fingers.Finger2*=conv_ratio;
-    a.Fingers.Finger3*=conv_ratio;
+    a.Fingers.Finger1 *= finger_conv_ratio;
+    a.Fingers.Finger2 *= finger_conv_ratio;
+    a.Fingers.Finger3 *= finger_conv_ratio;
     normalize(a.Fingers);
 }
 
