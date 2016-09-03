@@ -7,7 +7,7 @@ using jaco_joints::JacoFingersActionServer;
 JacoFingersActionServer::JacoFingersActionServer(
     ros::NodeHandle &n,
     std::string& action_topic_name,
-    jaco_msgs::FingerPosition& _targetF,
+    kinova_msgs::FingerPosition& _targetF,
     JacoJoints& _joints,
     boost::mutex& _lock) :
 
@@ -31,17 +31,17 @@ bool JacoFingersActionServer::equalFlt(float first, float second, float toleranc
 }
 
 
-bool JacoFingersActionServer::equalAngles(const jaco_msgs::FingerPosition& first, const jaco_msgs::FingerPosition & second, float tolerance)
+bool JacoFingersActionServer::equalAngles(const kinova_msgs::FingerPosition& first, const kinova_msgs::FingerPosition & second, float tolerance)
 {
     return equalFlt(first.finger1, second.finger1, tolerance)
            && equalFlt(first.finger2, second.finger2, tolerance)
            && equalFlt(first.finger3, second.finger3, tolerance);
 }
 
-void JacoFingersActionServer::ActionCallback(const jaco_msgs::SetFingersPositionGoalConstPtr &goal)
+void JacoFingersActionServer::ActionCallback(const kinova_msgs::SetFingersPositionGoalConstPtr &goal)
 {
-    jaco_msgs::SetFingersPositionFeedback feedback;
-    jaco_msgs::SetFingersPositionResult result;
+    kinova_msgs::SetFingersPositionFeedback feedback;
+    kinova_msgs::SetFingersPositionResult result;
 
     ROS_DEBUG("Got an angular goal for the fingers. Joints: %s", joints.toString().c_str());
 
@@ -54,7 +54,7 @@ void JacoFingersActionServer::ActionCallback(const jaco_msgs::SetFingersPosition
         return;
     }*/
 
-    jaco_msgs::FingerPosition target = goal->fingers;
+    kinova_msgs::FingerPosition target = goal->fingers;
 
     //ROS_INFO("Target: %f",target.finger1);
 
@@ -86,7 +86,7 @@ void JacoFingersActionServer::ActionCallback(const jaco_msgs::SetFingersPosition
 
         lock.lock();
         bool valid;
-        jaco_msgs::FingerPosition curr_angles = joints.Fingers(valid);
+        kinova_msgs::FingerPosition curr_angles = joints.Fingers(valid);
         lock.unlock();
 
         feedback.fingers = curr_angles;

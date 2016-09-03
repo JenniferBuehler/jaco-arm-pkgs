@@ -42,7 +42,8 @@
 	<!-- joint_states topic, this is where sensor_msgs::JointState messages of the whole arm including fingers are published -->
     <arg name="joint_states_topic" default="jaco/joint_states" />
  
-	<node name="jaco_trajectory_action_kinova" pkg="jaco_kinova" type="jaco_trajectory_action_server_kinova_node" respawn="false" output="screen">
+	<node name="jaco_trajectory_action_kinova" pkg="jaco_kinova" type="jaco_trajectory_action_server_kinova_node"
+            respawn="false" output="screen">
 		<param name="joint_states_topic" value="$(arg joint_states_topic)" />
 		<param name="joint_states_freq" value="25" />
 		<param name="max_speed_123" value="$(arg max_speed_123)"/>

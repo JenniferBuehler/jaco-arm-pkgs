@@ -6,9 +6,9 @@
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
-#include <jaco_msgs/SetFingersPositionAction.h>
-#include <jaco_msgs/ArmJointAnglesGoal.h>
-#include <jaco_msgs/JointAngles.h>
+#include <kinova_msgs/SetFingersPositionAction.h>
+#include <kinova_msgs/ArmJointAnglesGoal.h>
+#include <kinova_msgs/JointAngles.h>
 
 #define FINGER_POS_ACTION_TOPIC "/jaco/finger_joint_angles"
 
@@ -20,14 +20,14 @@ int main (int argc, char **argv)
     
   // create the action client
   // true causes the client to spin its own thread
-  actionlib::SimpleActionClient<jaco_msgs::SetFingersPositionAction> ac(FINGER_POS_ACTION_TOPIC, true);
+  actionlib::SimpleActionClient<kinova_msgs::SetFingersPositionAction> ac(FINGER_POS_ACTION_TOPIC, true);
 
   ROS_INFO("Waiting for action server to start.");
   // wait for the action server to start
   ac.waitForServer(); //will wait for infinite time
 
   // send a goal to the action
-  jaco_msgs::FingerPosition jointAngles;
+  kinova_msgs::FingerPosition jointAngles;
   jointAngles.finger1 = atof(argv[1]);
   jointAngles.finger2 = atof(argv[2]);
   jointAngles.finger3 = atof(argv[3]);
@@ -35,7 +35,7 @@ int main (int argc, char **argv)
   ROS_INFO("Action server started, sending goal.");
   ROS_INFO_STREAM(jointAngles);
  
-  jaco_msgs::SetFingersPositionGoal goal;
+  kinova_msgs::SetFingersPositionGoal goal;
   goal.fingers = jointAngles;
   ac.sendGoal(goal);
 

@@ -6,9 +6,9 @@
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
-#include <jaco_msgs/ArmJointAnglesAction.h>
-#include <jaco_msgs/ArmJointAnglesGoal.h>
-#include <jaco_msgs/JointAngles.h>
+#include <kinova_msgs/ArmJointAnglesAction.h>
+#include <kinova_msgs/ArmJointAnglesGoal.h>
+#include <kinova_msgs/JointAngles.h>
 
 
 #define ACTION_TOPIC_NAME "jaco/arm_joint_angles"
@@ -21,7 +21,7 @@ int main (int argc, char **argv)
   
   // create the action client
   // true causes the client to spin its own thread
-  actionlib::SimpleActionClient<jaco_msgs::ArmJointAnglesAction> ac(ACTION_TOPIC_NAME, true);
+  actionlib::SimpleActionClient<kinova_msgs::ArmJointAnglesAction> ac(ACTION_TOPIC_NAME, true);
 
   ROS_INFO("Waiting for action server to start.");
   // wait for the action server to start
@@ -29,7 +29,7 @@ int main (int argc, char **argv)
 
   ROS_INFO("Action server started, sending goal.");
   // send a goal to the action
-  jaco_msgs::JointAngles jointAngles;
+  kinova_msgs::JointAngles jointAngles;
   jointAngles.joint1 = atof(argv[1]);
   jointAngles.joint2 = atof(argv[2]);
   jointAngles.joint3 = atof(argv[3]);
@@ -37,7 +37,7 @@ int main (int argc, char **argv)
   jointAngles.joint5 = atof(argv[5]);
   jointAngles.joint6 = atof(argv[6]);
  
-  jaco_msgs::ArmJointAnglesGoal goal;
+  kinova_msgs::ArmJointAnglesGoal goal;
   goal.angles = jointAngles;
   ac.sendGoal(goal);
 

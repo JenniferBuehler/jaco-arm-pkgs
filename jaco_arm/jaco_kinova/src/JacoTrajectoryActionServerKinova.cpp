@@ -114,7 +114,7 @@ bool setValues(const FingersPosition& a, std::vector<FloatT>& values)
 
 
 template<typename FloatT>
-bool setValues(const std::vector<FloatT>& values, jaco_msgs::FingerPosition& a) 
+bool setValues(const std::vector<FloatT>& values, kinova_msgs::FingerPosition& a) 
 {
     if (values.size() != 9) return false;
     a.finger1 = values[6];
@@ -124,7 +124,7 @@ bool setValues(const std::vector<FloatT>& values, jaco_msgs::FingerPosition& a)
 }
 
 template<typename FloatT>
-bool setValues(const jaco_msgs::FingerPosition& a, std::vector<FloatT>& values) 
+bool setValues(const kinova_msgs::FingerPosition& a, std::vector<FloatT>& values) 
 {
     if (values.size() != 9) return false;
     values[6] = a.finger1;
@@ -147,7 +147,7 @@ bool setValues(const std::vector<FloatT>& values, AngularInfo& a)
 }
 
 template<typename FloatT>
-void setValues(const std::vector<FloatT>& values, jaco_msgs::JointAngles& a) 
+void setValues(const std::vector<FloatT>& values, kinova_msgs::JointAngles& a) 
 {
     a.joint1 = values[0];
     a.joint2 = values[1];
@@ -158,7 +158,7 @@ void setValues(const std::vector<FloatT>& values, jaco_msgs::JointAngles& a)
 }
 
 template<typename FloatT>
-void setValues(const jaco_msgs::JointAngles& a, std::vector<FloatT>& values) 
+void setValues(const kinova_msgs::JointAngles& a, std::vector<FloatT>& values) 
 {
     if (values.size() < 6) values.resize(6, 0);
     values[0] = a.joint1;
@@ -1677,7 +1677,7 @@ void JacoTrajectoryActionServerKinova::fingerAnglesCallback(FingersGoalHandle& g
         curr_angles[4], curr_angles[5], curr_angles[6], curr_angles[7], curr_angles[8]);
 
     std::vector<float> target_angles = curr_angles;
-    jaco_msgs::FingerPosition fp = goal.getGoal()->fingers;
+    kinova_msgs::FingerPosition fp = goal.getGoal()->fingers;
     if (!setValues(fp, target_angles))
     {
         ROS_ERROR("Could not set target finger angles");

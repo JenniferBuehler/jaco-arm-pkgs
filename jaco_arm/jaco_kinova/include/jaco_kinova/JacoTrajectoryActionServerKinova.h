@@ -5,10 +5,10 @@
 #include <jaco_joints/JacoJointManager.h>
 
 #include <kinova/KinovaTypes.h>
-#include <jaco_msgs/JointAngles.h>
-#include <jaco_msgs/ArmJointAnglesAction.h>
-#include <jaco_msgs/SetFingersPositionAction.h>
-#include <jaco_msgs/FingerPosition.h>
+#include <kinova_msgs/JointAngles.h>
+#include <kinova_msgs/ArmJointAnglesAction.h>
+#include <kinova_msgs/SetFingersPositionAction.h>
+#include <kinova_msgs/FingerPosition.h>
 
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/joint_state_interface.h>
@@ -31,10 +31,10 @@ namespace jaco_kinova
  * \brief Implementation of JacoTrajectoryActionServer which can be used on the real Kinova arm.
  *
  * This class uses the kinova drivers to control the arm, and therefore conflicts with any other
- * libraries which directly use the kinova drivers. It is meant to use *in place of* the jaco_driver::JacoArm
- * (specifically any class using jaco_driver::JacoAPI). Therefore, it supports also the publishing
- * of sensor_msgs::JointState and the support of jaco_msgs/ArmJointAngles.action and
- * jaco_msgs/SetFingersPositionAction.action
+ * libraries which directly use the kinova drivers. It is meant to use *in place of* the kinova_driver::JacoArm
+ * (specifically any class using kinova_driver::JacoAPI). Therefore, it supports also the publishing
+ * of sensor_msgs::JointState and the support of kinova_msgs/ArmJointAngles.action and
+ * kinova_msgs/SetFingersPositionAction.action
  *
  * **Important:**    
  * This class uses jaco_joints::JacoJointManager, which requires the joint names to be loaded via
@@ -46,8 +46,8 @@ namespace jaco_kinova
 class JacoTrajectoryActionServerKinova: public joint_trajectory_execution::TrajectoryActionServer, public hardware_interface::RobotHW
 {
 private:
-    typedef actionlib::ActionServer<jaco_msgs::ArmJointAnglesAction> JacoArmAnglesServerT;
-    typedef actionlib::ActionServer<jaco_msgs::SetFingersPositionAction> JacoFingerAnglesServerT;
+    typedef actionlib::ActionServer<kinova_msgs::ArmJointAnglesAction> JacoArmAnglesServerT;
+    typedef actionlib::ActionServer<kinova_msgs::SetFingersPositionAction> JacoFingerAnglesServerT;
     typedef JacoArmAnglesServerT::GoalHandle AnglesGoalHandle;
     typedef JacoFingerAnglesServerT::GoalHandle FingersGoalHandle;
     enum StateInfoType {POSE, VELOCITY, FORCE};

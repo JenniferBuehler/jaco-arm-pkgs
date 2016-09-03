@@ -7,8 +7,8 @@ project(jaco_kinova)
 find_package(catkin REQUIRED COMPONENTS
   joint_trajectory_execution
   jaco_joints
-  jaco_msgs
-  jaco_driver
+  kinova_msgs
+  kinova_driver
   convenience_math_functions
   controller_manager
   roscpp
@@ -73,6 +73,7 @@ catkin_package(
 ###########
 ## Build ##
 ###########
+add_definitions(-g)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations

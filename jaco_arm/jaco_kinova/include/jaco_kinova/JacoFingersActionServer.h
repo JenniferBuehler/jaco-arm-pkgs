@@ -5,11 +5,11 @@
 
 #include <ros/ros.h>
 #include <actionlib/server/simple_action_server.h>
-#include <jaco_msgs/SetFingersPositionAction.h>
+#include <kinova_msgs/SetFingersPositionAction.h>
 
 #include <jaco_ros/jaco_joints.h>
 
-#include <jaco_msgs/FingerPosition.h>
+#include <kinova_msgs/FingerPosition.h>
 
 namespace jaco_joints
 {
@@ -29,21 +29,21 @@ public:
     JacoFingersActionServer(
         ros::NodeHandle &n,
         std::string& action_topic_name,
-        jaco_msgs::FingerPosition& _targetF,
+        kinova_msgs::FingerPosition& _targetF,
         JacoJoints& _joints, boost::mutex& _lock);
 
     ~JacoFingersActionServer();
-    void ActionCallback(const jaco_msgs::SetFingersPositionGoalConstPtr&);
+    void ActionCallback(const kinova_msgs::SetFingersPositionGoalConstPtr&);
 
 private:
 
     bool equalFlt(float first, float second, float tolerance);
-    bool equalAngles(const jaco_msgs::FingerPosition& first, const jaco_msgs::FingerPosition & second, float tolerance);
+    bool equalAngles(const kinova_msgs::FingerPosition& first, const kinova_msgs::FingerPosition & second, float tolerance);
 
     boost::mutex& lock; //to lock access to the fields joints and targetA
-    jaco_msgs::FingerPosition& targetF;
+    kinova_msgs::FingerPosition& targetF;
     JacoJoints& joints;
-    actionlib::SimpleActionServer<jaco_msgs::SetFingersPositionAction> action_server;
+    actionlib::SimpleActionServer<kinova_msgs::SetFingersPositionAction> action_server;
 
 };
 

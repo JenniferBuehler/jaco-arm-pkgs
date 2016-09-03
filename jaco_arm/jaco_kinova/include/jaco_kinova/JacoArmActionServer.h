@@ -5,8 +5,8 @@
 
 #include <ros/ros.h>
 #include <actionlib/server/simple_action_server.h>
-#include <jaco_msgs/ArmJointAnglesAction.h>
-#include <jaco_msgs/JointAngles.h>
+#include <kinova_msgs/ArmJointAnglesAction.h>
+#include <kinova_msgs/JointAngles.h>
 #include <jaco_ros/jaco_joints.h>
 
 namespace jaco_joints
@@ -26,26 +26,26 @@ public:
     JacoArmActionServer(
         ros::NodeHandle &n,
         std::string& action_topic_name,
-        jaco_msgs::JointAngles& _targetA,
+        kinova_msgs::JointAngles& _targetA,
         JacoJoints& _joints, boost::mutex& _lock);
 
     ~JacoArmActionServer();
-    void ActionCallback(const jaco_msgs::ArmJointAnglesGoalConstPtr &);
+    void ActionCallback(const kinova_msgs::ArmJointAnglesGoalConstPtr &);
 
 private:
 
     bool equalFlt(float first, float second, float tolerance);
-    bool equalAngles(const jaco_msgs::JointAngles& first, const jaco_msgs::JointAngles & second, float tolerance);
+    bool equalAngles(const kinova_msgs::JointAngles& first, const kinova_msgs::JointAngles & second, float tolerance);
 
 
     boost::mutex& lock; //to lock access to the fields joints and targetA
 
     //reference to structure to store target angles at
-    jaco_msgs::JointAngles& targetA;
+    kinova_msgs::JointAngles& targetA;
     //reference to structure storing current joint values
     JacoJoints& joints;
 
-    actionlib::SimpleActionServer<jaco_msgs::ArmJointAnglesAction> action_server;
+    actionlib::SimpleActionServer<kinova_msgs::ArmJointAnglesAction> action_server;
 
 };
 

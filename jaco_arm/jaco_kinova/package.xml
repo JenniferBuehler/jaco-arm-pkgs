@@ -42,15 +42,15 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>jaco_joints</build_depend>
   <build_depend>joint_trajectory_execution</build_depend>
-  <build_depend>jaco_msgs</build_depend>
-  <build_depend>jaco_driver</build_depend>
+  <build_depend>kinova_msgs</build_depend>
+  <build_depend>kinova_driver</build_depend>
   <build_depend>convenience_math_functions</build_depend>
   <build_depend>controller_manager</build_depend>
   <build_depend>roscpp</build_depend>
   <run_depend>joint_trajectory_execution</run_depend>
   <run_depend>jaco_joints</run_depend>
-  <run_depend>jaco_msgs</run_depend>
-  <run_depend>jaco_driver</run_depend>
+  <run_depend>kinova__msgs</run_depend>
+  <run_depend>kinova_driver</run_depend>
   <run_depend>convenience_math_functions</run_depend>
   <run_depend>controller_manager</run_depend>
   <run_depend>roscpp</run_depend>

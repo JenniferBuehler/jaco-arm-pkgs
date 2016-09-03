@@ -6,19 +6,19 @@ The package jaco_kinova provides a ROS joint trajectory action server for the Ki
 ###Installation
 
 You will need to add the [kinova-ros](https://github.com/Kinovarobotics/kinova-ros.git) repository to your catkin workspace.
-It is only required for the message types (package jaco_msgs) and for the [kinova](https://github.com/Kinovarobotics/kinova-ros/tree/master/jaco_driver/include/kinova) 
+It is only required for the message types (package kinova_msgs) and for the [kinova](https://github.com/Kinovarobotics/kinova-ros/tree/master/kinova_driver/include/kinova) 
 API and library.
 
-**You are not meant to use both jaco_driver together with this package to control the arm!**
+**You are not meant to use both kinova_driver together with this package to control the arm!**
 
 *Reason:* This trajectory driver uses the kinova drivers to control the arm directly, and therefore conflicts with any other
-packages which directly use the kinova drivers. It is meant to use *in place of* the API jaco_driver::JacoArm
-(specifically any class using jaco_driver::JacoAPI).
+packages which directly use the kinova drivers. It is meant to use *in place of* the API kinova_driver::JacoArm
+(specifically any class using kinova_driver::JacoAPI).
 Having two separate ROS nodes which control the arm directly
 running at the same time would be a conflict in itself.
-Therefore, *jaco_kinova* supports also the publishing sensor_msgs/JointState and the support of jaco_msgs/ArmJointAngles.action and
-jaco_msgs/SetFingersPositionAction.action.    
-Some time in hopefully near future, a better way can be found to combine functionality of jaco_driver and this package.
+Therefore, *jaco_kinova* supports also the publishing sensor_msgs/JointState and the support of kinova_msgs/ArmJointAngles.action and
+kinova_msgs/SetFingersPositionAction.action.    
+Some time in hopefully near future, a better way can be found to combine functionality of kinova_driver and this package.
 
 
 **[optional] Setting the rules for USB access**
@@ -27,7 +27,7 @@ You *may* need to set the rules for the USB port, but try without this optional 
 
 Edit /etc/udev/rules.d/10-kinova.rules, and rename to 99-kinova.rules.
 
-Alternatively, copy the udev rule file 99-jaco-arm.rules from ``<kinova-ros-repo>/jaco_driver/udev`` to ``/etc/udev/rules.d/``
+Alternatively, copy the udev rule file 99-jaco-arm.rules from ``<kinova-ros-repo>/kinova_driver/udev`` to ``/etc/udev/rules.d/``
 
 In case you create a new one, the following contents have been working:
 ```
@@ -52,12 +52,16 @@ Troubleshooting tips:
 
 **Exposing the USB library**
 
-The library ``<kinova-ros-repo>/jaco_driver/lib/<architecture>/Kinova.API.USBCommandLayerUbuntu.so`` has to 
+The library ``<kinova-ros-repo>/kinova_driver/lib/<architecture>/Kinova.API.USBCommandLayerUbuntu.so`` has to 
 be in a path where it can be found. Add the path to your LD_LIBRARY_PATH.
 
-``export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path-to-kinova-ros>/jaco_driver/lib/x86_64-linux-gnu/``
+``export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path-to-kinova-ros>/kinova_driver/lib/x86_64-linux-gnu/``
 
 or do it in the .bashrc.
+
+###Dependencies
+
+``sudo apt-get install ros-<distro>-controller-manager``
 
 ###Testing
 
@@ -94,7 +98,7 @@ Again, launch *only* the trajectory action server:
 
 ``roslaunch jaco_kinova jaco_trajectory_action_kinova.launch``
 
-Now use the test client to send a jaco_msgs/ArmJointAngles.action to the drivers.
+Now use the test client to send a kinova_msgs/ArmJointAngles.action to the drivers.
 Start with a simple one which will set only the position of the last arm joint (the "wrist"):
 
 ``rosrun jaco_kinova jaco_arm_action_client_node 0 0 0 0 0 0.5`` 

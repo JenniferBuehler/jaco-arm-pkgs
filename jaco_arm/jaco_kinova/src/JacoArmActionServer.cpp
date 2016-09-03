@@ -5,7 +5,7 @@ using jaco_joints::JacoArmActionServer;
 
 JacoArmActionServer::JacoArmActionServer(
     ros::NodeHandle &n, std::string& action_topic_name,
-    jaco_msgs::JointAngles& _targetA,
+    kinova_msgs::JointAngles& _targetA,
     JacoJoints& _joints, boost::mutex& _lock) :
 
     targetA(_targetA), joints(_joints),
@@ -28,7 +28,7 @@ bool JacoArmActionServer::equalFlt(float first, float second, float tolerance)
 }
 
 
-bool JacoArmActionServer::equalAngles(const jaco_msgs::JointAngles& first, const jaco_msgs::JointAngles & second, float tolerance)
+bool JacoArmActionServer::equalAngles(const kinova_msgs::JointAngles& first, const kinova_msgs::JointAngles & second, float tolerance)
 {
     return equalFlt(first.joint1, second.joint1, tolerance)
            && equalFlt(first.joint2, second.joint2, tolerance)
@@ -51,7 +51,7 @@ void capToPI(Flt& v)
             v -= 2.0 * boost::math::constants::pi<Flt>();
     }
 }
-void capToPI(jaco_msgs::JointAngles& v)
+void capToPI(kinova_msgs::JointAngles& v)
 {
     capToPI(v.joint1);
     capToPI(v.joint2);
@@ -65,10 +65,10 @@ void capToPI(jaco_msgs::JointAngles& v)
 
 
 
-void JacoArmActionServer::ActionCallback(const jaco_msgs::ArmJointAnglesGoalConstPtr &goal)
+void JacoArmActionServer::ActionCallback(const kinova_msgs::ArmJointAnglesGoalConstPtr &goal)
 {
-    jaco_msgs::ArmJointAnglesFeedback feedback;
-    jaco_msgs::ArmJointAnglesResult result;
+    kinova_msgs::ArmJointAnglesFeedback feedback;
+    kinova_msgs::ArmJointAnglesResult result;
 
     ROS_INFO("Got an angular goal for the arm.");// Joints: %s",joints.toString().c_str());
 
@@ -81,7 +81,7 @@ void JacoArmActionServer::ActionCallback(const jaco_msgs::ArmJointAnglesGoalCons
         return;
     }*/
 
-    jaco_msgs::JointAngles target = goal->angles;
+    kinova_msgs::JointAngles target = goal->angles;
 
     capToPI(target);
 
@@ -117,7 +117,7 @@ void JacoArmActionServer::ActionCallback(const jaco_msgs::ArmJointAnglesGoalCons
         //ROS_INFO("Getting current angles");
         lock.lock();
         bool valid;
-        jaco_msgs::JointAngles curr_angles = joints.Angles(valid);
+        kinova_msgs::JointAngles curr_angles = joints.Angles(valid);
         lock.unlock();
 
         capToPI(curr_angles);
