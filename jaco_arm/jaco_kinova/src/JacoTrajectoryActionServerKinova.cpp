@@ -1938,7 +1938,7 @@ void JacoTrajectoryActionServerKinova::correctToWrite(FingersPosition &p, bool p
 
 void JacoTrajectoryActionServerKinova::correctFromRead(AngularInfo &a, bool isPosition) const
 {
-    ROS_INFO("Correct from read without fingers");
+    ROS_INFO_STREAM("Correct from read without fingers "<<__LINE__);
     if (isPosition)
     {
         a.Actuator1 = (double)(180.0 - (double)a.Actuator1) * DEG_TO_RAD;
@@ -1962,12 +1962,15 @@ void JacoTrajectoryActionServerKinova::correctFromRead(AngularInfo &a, bool isPo
 
 void JacoTrajectoryActionServerKinova::correctFromRead(AngularPosition &a, bool isPosition) const
 {
-    ROS_INFO("Correct from read with fingers");
+    ROS_INFO_STREAM("Correct from read with fingers"<<__LINE__);
+    ROS_INFO_STREAM("XXX Before correct: Angles "<<AngularPositionToString(a));
     correctFromRead(a.Actuators, isPosition);
     a.Fingers.Finger1 *= finger_conv_ratio;
     a.Fingers.Finger2 *= finger_conv_ratio;
     a.Fingers.Finger3 *= finger_conv_ratio;
+    ROS_INFO_STREAM("XXX After correct: Angles "<<AngularPositionToString(a)<<", conv ratio: "<<finger_conv_ratio);
     normalize(a.Fingers);
+    ROS_INFO_STREAM("XXX After normalize: Angles "<<AngularPositionToString(a));
 }
 
 
