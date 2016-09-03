@@ -251,34 +251,6 @@ void capTo2PI(std::vector<FloatT>& v)
     }
 }
 
-template<typename FloatT>
-bool getCurrentStateKinova(std::vector<FloatT>& states, JacoTrajectoryActionServerKinova::StateInfoType type, bool correct, JacoTrajectoryActionServerKinova* _this)
-{
-    AngularPosition currP;
-    if (!_this->getCurrentState(currP, type, correct))
-    {
-        return false;
-    }
-    getValues(currP, states);
-    return true;
-}
-
-
-
-template<typename FloatT>
-bool getCurrentState(std::vector<FloatT>& states, JacoTrajectoryActionServerKinova::StateInfoType type, bool correct, JacoTrajectoryActionServerKinova * _this)
-{
-    AngularPosition _curr;
-    if (!_this->getCurrentState(_curr, type, correct))
-    {
-        ROS_ERROR("State could not be retrieved");
-        return false;
-    }
-    getValues(_curr, states);
-    return true;
-}
-
-
 std::string PointToString(const TrajectoryPoint& tp)
 {
     std::stringstream str;
@@ -325,6 +297,40 @@ std::string AngularInfoToString(const AngularInfo& a)
             a.Actuator6;
     return str.str();
 }
+
+
+
+template<typename FloatT>
+bool getCurrentStateKinova(std::vector<FloatT>& states, JacoTrajectoryActionServerKinova::StateInfoType type, bool correct, JacoTrajectoryActionServerKinova* _this)
+{
+    AngularPosition currP;
+    if (!_this->getCurrentState(currP, type, correct))
+    {
+        return false;
+    }
+    getValues(currP, states);
+    return true;
+}
+
+
+
+template<typename FloatT>
+bool getCurrentState(std::vector<FloatT>& states, JacoTrajectoryActionServerKinova::StateInfoType type, bool correct, JacoTrajectoryActionServerKinova * _this)
+{
+    AngularPosition _curr;
+    if (!_this->getCurrentState(_curr, type, correct))
+    {
+        ROS_ERROR("State could not be retrieved");
+        return false;
+    }
+
+        
+    ROS_INFO_STREAM("XXX TEST NEW: Angles "<<AngularPositionToString(_curr));
+
+    getValues(_curr, states);
+    return true;
+}
+
 
 
 }  // namespace
