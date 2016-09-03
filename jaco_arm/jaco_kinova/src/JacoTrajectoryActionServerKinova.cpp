@@ -1,8 +1,6 @@
 #include <jaco_kinova/JacoTrajectoryActionServerKinova.h>
 #include <convenience_math_functions/MathFunctions.h>
 
-#include <kinova/KinovaTypes.h>
-
 #include <dlfcn.h>
 #include <math.h>
 
@@ -490,7 +488,7 @@ bool JacoTrajectoryActionServerKinova::initImpl()
     KnvEraseAllTrajectories = (int (*)())dlsym(commandLayer_handle, "EraseAllTrajectories");
     KnvGetGlobalTrajectoryInfo = (int (*)(TrajectoryFIFO &)) dlsym(commandLayer_handle, "GetGlobalTrajectoryInfo");
     KnvGetActualTrajectoryInfo = (int (*)(TrajectoryPoint &)) dlsym(commandLayer_handle, "GetActualTrajectoryInfo");
-    KnvGetCodeVersion = (int (*)(std::vector<int> &)) dlsym(commandLayer_handle, "GetCodeVersion");
+    KnvGetCodeVersion = (int (*)(int[CODE_VERSION_COUNT])) dlsym(commandLayer_handle, "GetCodeVersion");
 
     //If the was loaded correctly
     if ((KnvInitAPI == NULL) || (KnvCloseAPI == NULL) || (KnvSendAdvanceTrajectory == NULL) || (KnvSendBasicTrajectory == NULL) || (KnvStartControlAPI == NULL)
@@ -2277,9 +2275,9 @@ void JacoTrajectoryActionServerKinova::hwUpdate(const ros::TimerEvent& t)
 
 void JacoTrajectoryActionServerKinova::printVersion()
 {
-    std::cout << "The command has been initialized correctly." << std::endl;
+    // std::cout << "The command has been initialized correctly." << std::endl;
 
-    std::vector<int> data;
+    int data[CODE_VERSION_COUNT];
     int result = (*KnvGetCodeVersion)(data);
 
     std::cout << "DSP's firmware version is : " << std::hex << data[0] << "." << std::hex <<  data[1] << "." << std::hex <<  data[2] << "." << std::hex <<  data[30] << std::endl;

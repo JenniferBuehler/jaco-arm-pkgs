@@ -5,6 +5,7 @@
 #include <jaco_joints/JacoJointManager.h>
 
 #include <kinova/KinovaTypes.h>
+#include <kinova/Kinova.API.UsbCommandLayerUbuntu.h>
 #include <kinova_msgs/JointAngles.h>
 #include <kinova_msgs/ArmJointAnglesAction.h>
 #include <kinova_msgs/SetFingersPositionAction.h>
@@ -374,7 +375,7 @@ private:
     int (*KnvEraseAllTrajectories)();
     int (*KnvGetGlobalTrajectoryInfo)(TrajectoryFIFO &);
     int (*KnvGetActualTrajectoryInfo)(TrajectoryPoint &);
-    int (*KnvGetCodeVersion)(std::vector<int> &);
+    int (*KnvGetCodeVersion)(int[CODE_VERSION_COUNT]);
 
     //protects all API calls
     boost::mutex knv_lock;
