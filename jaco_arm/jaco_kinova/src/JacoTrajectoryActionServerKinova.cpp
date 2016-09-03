@@ -1978,11 +1978,12 @@ void JacoTrajectoryActionServerKinova::correctFromRead(AngularPosition &a, bool 
 
 void JacoTrajectoryActionServerKinova::jointStatePublish(const ros::TimerEvent& t)
 {
-    if (JointState_pub.getNumSubscribers() < 1)
+/*    if (JointState_pub.getNumSubscribers() < 1)
     {
         //ROS_INFO("No subscribers");
         return;
-    }
+    }*/
+    ROS_INFO("jointStatePublish(): Remember to take back in the check above");
 
     //ROS_INFO("Publishing joint state");
     sensor_msgs::JointState joint_state;
