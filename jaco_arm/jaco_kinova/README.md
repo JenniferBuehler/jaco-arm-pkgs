@@ -92,6 +92,14 @@ Now, see if the joint states are being published, the default topic should be *j
 Sanity check the values. Do they make sense? Control the arm with the joystick and see if the values change
 accordingly.
 
+Pay special attention to the finger values, as this is something which is not handled directly in degrees/radians
+in the Kinova libraries. You may also search the code of the kinova-ros repository for the word "finger_conv_ratio"
+(should be in kinova_arm.cpp) to read a few comments about this. The documentation in kinova-ros/include/kinova/KinovaTypes.h
+for struct CartesianPosition also mentions something about this (date of this statement: August 2016).
+
+If the finger values do not range between 0 and 1.05 or something around that, you may need to adjust the value
+of the macro FINGER_CONV_RATIO in the file src/JacoTrajectoryActionServerKinova.cpp of this repository.
+
 **Test 2**
 
 Again, launch *only* the trajectory action server:

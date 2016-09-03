@@ -303,6 +303,7 @@ std::string AngularInfoToString(const AngularInfo& a)
 template<typename FloatT>
 bool getCurrentStateKinova(std::vector<FloatT>& states, JacoTrajectoryActionServerKinova::StateInfoType type, bool correct, JacoTrajectoryActionServerKinova* _this)
 {
+    ROS_INFO_STREAM("getCurrentState "<<__LINE__);
     AngularPosition currP;
     if (!_this->getCurrentState(currP, type, correct))
     {
@@ -317,6 +318,7 @@ bool getCurrentStateKinova(std::vector<FloatT>& states, JacoTrajectoryActionServ
 template<typename FloatT>
 bool getCurrentState(std::vector<FloatT>& states, JacoTrajectoryActionServerKinova::StateInfoType type, bool correct, JacoTrajectoryActionServerKinova * _this)
 {
+    ROS_INFO_STREAM("getCurrentState "<<__LINE__);
     AngularPosition _curr;
     if (!_this->getCurrentState(_curr, type, correct))
     {
@@ -573,6 +575,7 @@ void JacoTrajectoryActionServerKinova::shutdownImpl()
 
 bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition * angles, AngularPosition * velocities, AngularPosition * forces)
 {
+    ROS_INFO_STREAM("getCurrentState "<<__LINE__);
     bool success = false;
     knv_lock.lock();
     int retA = angles == NULL ? 1 : (*KnvGetAngularPosition)(*angles);
@@ -604,6 +607,7 @@ bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition * a
 
 bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition& currP, StateInfoType type, bool correct)
 {
+    ROS_INFO_STREAM("getCurrentState "<<__LINE__);
     switch (type)
     {
     case POSE:
@@ -668,6 +672,7 @@ bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition& cu
 
 bool JacoTrajectoryActionServerKinova::getCurrentState(AngularPosition& currP, StateInfoType type, bool correct)
 {
+    ROS_INFO_STREAM("getCurrentState "<<__LINE__);
     rawLock.lock();
     if (!lastRawUpdateOK)
     {
@@ -1933,6 +1938,7 @@ void JacoTrajectoryActionServerKinova::correctToWrite(FingersPosition &p, bool p
 
 void JacoTrajectoryActionServerKinova::correctFromRead(AngularInfo &a, bool isPosition) const
 {
+    ROS_INFO("Correct from read without fingers");
     if (isPosition)
     {
         a.Actuator1 = (double)(180.0 - (double)a.Actuator1) * DEG_TO_RAD;
@@ -1956,6 +1962,7 @@ void JacoTrajectoryActionServerKinova::correctFromRead(AngularInfo &a, bool isPo
 
 void JacoTrajectoryActionServerKinova::correctFromRead(AngularPosition &a, bool isPosition) const
 {
+    ROS_INFO("Correct from read with fingers");
     correctFromRead(a.Actuators, isPosition);
     a.Fingers.Finger1 *= finger_conv_ratio;
     a.Fingers.Finger2 *= finger_conv_ratio;
