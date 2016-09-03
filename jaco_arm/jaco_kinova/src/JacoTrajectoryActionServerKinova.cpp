@@ -586,6 +586,21 @@ bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition * a
     {
         ROS_ERROR("Could not obtain angles");
     }
+    // now get the fingers, for which we need to to use GetCartesianPosition()
+    CartesianPosition kinova_cartesian_position;
+    memset(&kinova_cartesian_position, 0, sizeof(kinova_cartesian_position));  // zero structure
+    int cartResult = (*KnvGetCartesianPosition)(kinova_cartesian_position);
+    if (cartResult != NO_ERROR_KINOVA)
+    {
+        if (angles)
+        {
+            angles->Fingers = kinova_cartesian_position.Fingers;
+        }
+    }
+    else
+    {
+        ROS_ERROR("Could not read fingers");
+    }
     knv_lock.unlock();
     if (angles)
     {
