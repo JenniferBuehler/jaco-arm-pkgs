@@ -184,11 +184,12 @@ template<typename FloatT>
 FloatT normalize(const FloatT& value) {
     if (fabs(value) > 100000) ROS_ERROR("Too high value in normalize(): %f",value);
         
-    FloatT val = MathFunctions::capToPI(value);
+/*    FloatT val = MathFunctions::capToPI(value);
     val+=M_PI;
     return val;
-    // XXX TODO REMOVE THIS COMMENT. New test: use MathFunctions::capToPI instead.
-    /*
+    // XXX TODO New test: use MathFunctions::capToPI instead. As above won't work
+    // as it makes M_PI out of 0.
+    */
     FloatT val=value;
     static FloatT pi_2=2.0*M_PI;
     while (val > pi_2)
@@ -196,7 +197,7 @@ FloatT normalize(const FloatT& value) {
     while (val < 0)
         val += pi_2;
 
-    return val;*/
+    return val;
 }
 
 //cut back values to 0..2PI
