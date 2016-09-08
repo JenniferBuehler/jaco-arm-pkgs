@@ -156,7 +156,6 @@
     <child link="arm_stand"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <!-- Add the JACO arm to the given parent link with the given transforms -->
   <!-- fake cylinder which is actually a box -->
   <!--xacro:macro name="cyl_inertia" params="mass r h ">
       <mass value="${mass}"/>
@@ -178,9 +177,9 @@
   <joint name="jaco_arm_joint" type="fixed">
     <origin rpy="1.57079632679 0 3.14159265359" xyz="-0.000482247085224208 0.08 -0.000503436190578577"/>
     <parent link="arm_stand"/>
-    <child link="0_baseA"/>
+    <child link="jaco_0_baseA"/>
   </joint>
-  <gazebo reference="ring_">
+  <gazebo reference="jaco_ring_">
     <material>Gazebo/Grey</material>
     <implicitSpringDamper>1</implicitSpringDamper>
     <mu1>100000</mu1>
@@ -204,7 +203,7 @@
     <kp>100000000.0</kp>
     <kd>1.0</kd>
   </gazebo>
-  <gazebo reference="0_baseA">
+  <gazebo reference="jaco_0_baseA">
     <material>Gazebo/White</material>
     <implicitSpringDamper>1</implicitSpringDamper>
     <mu1>100000</mu1>
@@ -213,52 +212,52 @@
     <kd>1.0</kd>
   </gazebo>
   <!-- for some reason, material only applies if full name specified -->
-  <gazebo reference="8_finger_thumb">
+  <gazebo reference="jaco_8_finger_thumb">
     <mu1>100000</mu1>
     <mu2>100000</mu2>
     <kp>100000000.0</kp>
     <kd>1.0</kd>
   </gazebo>
-  <gazebo reference="8_finger_index">
+  <gazebo reference="jaco_8_finger_index">
     <mu1>100000</mu1>
     <mu2>100000</mu2>
     <kp>100000000.0</kp>
     <kd>1.0</kd>
   </gazebo>
-  <gazebo reference="8_finger_pinkie">
+  <gazebo reference="jaco_8_finger_pinkie">
     <mu1>100000</mu1>
     <mu2>100000</mu2>
     <kp>100000000.0</kp>
     <kd>1.0</kd>
   </gazebo>
-  <gazebo reference="9_finger_thumb_tip">
+  <gazebo reference="jaco_9_finger_thumb_tip">
     <mu1>100000</mu1>
     <mu2>100000</mu2>
     <kp>100000000.0</kp>
     <kd>1.0</kd>
   </gazebo>
-  <gazebo reference="9_finger_index_tip">
+  <gazebo reference="jaco_9_finger_index_tip">
     <mu1>100000</mu1>
     <mu2>100000</mu2>
     <kp>100000000.0</kp>
     <kd>1.0</kd>
   </gazebo>
-  <gazebo reference="9_finger_pinkie_tip">
+  <gazebo reference="jaco_9_finger_pinkie_tip">
     <mu1>100000</mu1>
     <mu2>100000</mu2>
     <kp>100000000.0</kp>
     <kd>1.0</kd>
   </gazebo>
-  <gazebo reference="finger_joint_0">
+  <gazebo reference="jaco_finger_joint_0">
     <provideFeedback value="true"/>
   </gazebo>
-  <gazebo reference="finger_joint_2">
+  <gazebo reference="jaco_finger_joint_2">
     <provideFeedback value="true"/>
   </gazebo>
-  <gazebo reference="finger_joint_4">
+  <gazebo reference="jaco_finger_joint_4">
     <provideFeedback value="true"/>
   </gazebo>
-  <link name="0_baseA">
+  <link name="jaco_0_baseA">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0.03"/>
       <mass value="0.2844"/>
@@ -281,7 +280,7 @@
     </collision>
   </link>
   <!-- ...........................				-->
-  <link name="0_baseB_limb">
+  <link name="jaco_0_baseB_limb">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0.04725 0"/>
       <mass value="0.2576"/>
@@ -293,7 +292,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/0_baseB_limb.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1"/>
+        <color rgba="0.10 0.10 0.10 1"/>
       </material>
     </visual>
     <collision>
@@ -303,30 +302,27 @@
       </geometry>
     </collision>
   </link>
-  <joint name="base_internal" type="fixed">
-    <dynamics damping="0.5" friction="0.5"/>
+  <joint name="jaco_base_internal" type="fixed">
     <origin rpy="1.57079632679 0 0" xyz="0 0 0.049"/>
-    <parent link="0_baseA"/>
-    <child link="0_baseB_limb"/>
+    <parent link="jaco_0_baseA"/>
+    <child link="jaco_0_baseB_limb"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="ring_1">
+  <link name="jaco_ring_1">
     <inertial>
       <origin rpy="0 0 0" xyz="-3.57503886452221E-16 -1.58125151997128E-15 -5.55111512312578E-17"/>
       <mass value="0.00436"/>
       <inertia ixx="1.889325776e-06" ixy="0" ixz="0" iyy="1.889325776e-06" iyz="0" izz="3.488e-06"/>
     </inertial>
-    <!--
-		<visual>
-			<origin xyz="0 0 0" rpy="0 0 0" />
-			<geometry>
-				<mesh filename="package://jaco_description/meshes/jaco2/ring_1.STL" />
-			</geometry>
-			<material name="">
-				<color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
-			</material>
-		</visual>
--->
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jaco_description/meshes/jaco2/ring_1.STL"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.50 0.50 0.50 1"/>
+      </material>
+    </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
@@ -334,15 +330,14 @@
       </geometry>
     </collision>
   </link>
-  <joint name="ring_1_joint" type="fixed">
-    <dynamics damping="0.5" friction="0.5"/>
+  <joint name="jaco_ring_1_joint" type="fixed">
     <origin rpy="-1.57079632679 0.211499083190217 -3.14159265359" xyz="0 0.104 0"/>
-    <parent link="0_baseB_limb"/>
-    <child link="ring_1"/>
+    <parent link="jaco_0_baseB_limb"/>
+    <child link="jaco_ring_1"/>
     <axis xyz="0 0 0"/>
   </joint>
   <!-- ...........................				-->
-  <link name="1_shoulder_limb">
+  <link name="jaco_1_shoulder_limb">
     <inertial>
       <origin rpy="0 0 0" xyz="0.0120470281905243 0.0657132437750733 0"/>
       <mass value="0.2391"/>
@@ -354,7 +349,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/1_shoulder_limb.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1"/>
+        <color rgba="0.10 0.10 0.10 1"/>
       </material>
     </visual>
     <!--	 	<visual>
@@ -363,7 +358,7 @@
 				<sphere radius="0.005"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 -->
@@ -374,16 +369,16 @@
       </geometry>
     </collision>
   </link>
-  <joint name="arm_0_joint" type="continuous">
+  <joint name="jaco_arm_0_joint" type="continuous">
     <limit effort="8" velocity="1.0"/>
     <dynamics damping="0.5" friction="0.5"/>
     <origin rpy="0 1.57079632679 0" xyz="0 0.104 0"/>
-    <parent link="0_baseB_limb"/>
-    <child link="1_shoulder_limb"/>
+    <parent link="jaco_0_baseB_limb"/>
+    <child link="jaco_1_shoulder_limb"/>
     <axis xyz="0 1 0"/>
   </joint>
   <!-- ...........................				-->
-  <link name="ring_2">
+  <link name="jaco_ring_2">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.00436"/>
@@ -395,7 +390,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/ring_2.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.50 0.50 0.50 1"/>
       </material>
     </visual>
     <collision>
@@ -405,15 +400,14 @@
       </geometry>
     </collision>
   </link>
-  <joint name="ring_2_joint" type="fixed">
-    <dynamics damping="0.5" friction="0.5"/>
+  <joint name="jaco_ring_2_joint" type="fixed">
     <origin rpy="-1.57079632679488 -1.49007956532211 1.57079632679488" xyz="0 0.1225 0"/>
-    <parent link="1_shoulder_limb"/>
-    <child link="ring_2"/>
+    <parent link="jaco_1_shoulder_limb"/>
+    <child link="jaco_ring_2"/>
     <axis xyz="0 0 0"/>
   </joint>
   <!-- ...........................				-->
-  <link name="2_upperarm_limb">
+  <link name="jaco_2_upperarm_limb">
     <inertial>
       <origin rpy="0 0 0" xyz="0.206003857152394 0 -0.0343672381612413"/>
       <mass value="0.685815"/>
@@ -425,7 +419,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/2_upperarm_limb.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1"/>
+        <color rgba="0.10 0.10 0.10 1"/>
       </material>
     </visual>
     <!--	 	<visual>
@@ -434,7 +428,7 @@
 				<sphere radius="0.005"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 -->
@@ -445,16 +439,16 @@
       </geometry>
     </collision>
   </link>
-  <joint name="arm_1_joint" type="revolute">
+  <joint name="jaco_arm_1_joint" type="revolute">
     <dynamics damping="0.5" friction="0.5"/>
     <limit effort="8" lower="-3.943" upper="0.81" velocity="1.0"/>
     <origin rpy="3.14159265359 -1.57079632679 0" xyz="0 0.1225 0"/>
-    <parent link="1_shoulder_limb"/>
-    <child link="2_upperarm_limb"/>
+    <parent link="jaco_1_shoulder_limb"/>
+    <child link="jaco_2_upperarm_limb"/>
     <axis xyz="0 0 1"/>
   </joint>
   <!-- ...........................				-->
-  <link name="ring_3">
+  <link name="jaco_ring_3">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.00436"/>
@@ -466,7 +460,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/ring_3.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.5 0.5 0.5 1"/>
       </material>
     </visual>
     <collision>
@@ -477,14 +471,13 @@
     </collision>
   </link>
   <joint name="ring_3_joint" type="fixed">
-    <dynamics damping="0.5" friction="0.5"/>
     <origin rpy="3.14159265359 0 -3.14159265359" xyz="0.41 0 0"/>
-    <parent link="2_upperarm_limb"/>
-    <child link="ring_3"/>
+    <parent link="jaco_2_upperarm_limb"/>
+    <child link="jaco_ring_3"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <!-- ...........................				-->
-  <link name="3_forearm_limb">
+  <!-- ........................... -->
+  <link name="jaco_3_forearm_limb">
     <inertial>
       <origin rpy="0 0 0" xyz="0.0857562490792731 1.94295959371482E-06 0.0203407295609686"/>
       <mass value="0.337964595"/>
@@ -496,7 +489,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/3_forearm_limb.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1"/>
+        <color rgba="0.1 0.1 0.1 1"/>
       </material>
     </visual>
     <!--	 	<visual>
@@ -505,7 +498,7 @@
 				<sphere radius="0.005"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 -->
@@ -516,16 +509,16 @@
       </geometry>
     </collision>
   </link>
-  <joint name="arm_2_joint" type="revolute">
+  <joint name="jaco_arm_2_joint" type="revolute">
     <limit effort="4" lower="-4.395" upper="1.252" velocity="1.0"/>
     <dynamics damping="0.5" friction="0.5"/>
     <origin rpy="0 0 1.57079632679489" xyz="0.41 0 0"/>
-    <parent link="2_upperarm_limb"/>
-    <child link="3_forearm_limb"/>
+    <parent link="jaco_2_upperarm_limb"/>
+    <child link="jaco_3_forearm_limb"/>
     <axis xyz="0 0 1"/>
   </joint>
   <!-- ...........................				-->
-  <link name="ring_4">
+  <link name="jaco_ring_4">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.00338267061984"/>
@@ -537,7 +530,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/ring_4.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.5 0.5 0.5 1"/>
       </material>
     </visual>
     <collision>
@@ -547,15 +540,14 @@
       </geometry>
     </collision>
   </link>
-  <joint name="ring_4_joint" type="fixed">
-    <dynamics damping="0.5" friction="0.5"/>
+  <joint name="jaco_ring_4_joint" type="fixed">
     <origin rpy="3.14159265359 -1.57079632679 0" xyz="0.2073 0 0.0098"/>
-    <parent link="3_forearm_limb"/>
-    <child link="ring_4"/>
+    <parent link="jaco_3_forearm_limb"/>
+    <child link="jaco_ring_4"/>
     <axis xyz="-1 0 0"/>
   </joint>
   <!-- ...........................				-->
-  <link name="4_upperwrist_limb">
+  <link name="jaco_4_upperwrist_limb">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.0371070560898082 -0.00912675248782567 -2.44092722145872E-08"/>
       <mass value="0.12275168143"/>
@@ -567,7 +559,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/4_upperwrist_limb.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1"/>
+        <color rgba="0.1 0.1 0.1 1"/>
       </material>
     </visual>
     <!--	 	<visual>
@@ -576,7 +568,7 @@
 				<sphere radius="0.005"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 -->
@@ -587,16 +579,16 @@
       </geometry>
     </collision>
   </link>
-  <joint name="arm_3_joint" type="continuous">
+  <joint name="jaco_arm_3_joint" type="continuous">
     <limit effort="1.5" velocity="1.0"/>
     <dynamics damping="0.05" friction="0.05"/>
     <origin rpy="-1.57079632679484 0 -3.14159265358951" xyz="0.2073 0 0.0098"/>
-    <parent link="3_forearm_limb"/>
-    <child link="4_upperwrist_limb"/>
+    <parent link="jaco_3_forearm_limb"/>
+    <child link="jaco_4_upperwrist_limb"/>
     <axis xyz="-1 0 0"/>
   </joint>
   <!-- ...........................				-->
-  <link name="ring_5">
+  <link name="jaco_ring_5">
     <inertial>
       <origin rpy="0 0 0" xyz="-1.54831009124834E-13 4.27435864480685E-15 -2.58654209162046E-13"/>
       <mass value="0.00338267061984"/>
@@ -608,7 +600,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/ring_5.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.5 0.5 0.5 1"/>
       </material>
     </visual>
     <collision>
@@ -619,14 +611,13 @@
     </collision>
   </link>
   <joint name="ring_5_joint" type="fixed">
-    <dynamics damping="0.5" friction="0.5"/>
     <origin rpy="-1.57079632679506 0 -0.610865238196312" xyz="-0.06590490 -0.034307921 0"/>
-    <parent link="4_upperwrist_limb"/>
-    <child link="ring_5"/>
+    <parent link="jaco_4_upperwrist_limb"/>
+    <child link="jaco_ring_5"/>
     <axis xyz="-1 0 0"/>
   </joint>
   <!-- ...........................				-->
-  <link name="5_lowerwrist_limb">
+  <link name="jaco_5_lowerwrist_limb">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.0176083455436658 -0.00912672231835664 -5.99117305766228E-09"/>
       <mass value="0.12275"/>
@@ -638,7 +629,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/5_lowerwrist_limb.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1"/>
+        <color rgba="0.1 0.1 0.1 1"/>
       </material>
     </visual>
     <!--	 	<visual>
@@ -647,7 +638,7 @@
 				<sphere radius="0.005"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 -->
@@ -658,18 +649,18 @@
       </geometry>
     </collision>
   </link>
-  <joint name="arm_4_joint" type="continuous">
+  <joint name="jaco_arm_4_joint" type="continuous">
     <limit effort="1.0" velocity="1.0"/>
     <dynamics damping="0.05" friction="0.05"/>
     <!-- caluclated form DH-Parameter documentation. An iscoceles triangle with tip angle 55 degrees has base angles (gamma) 62.5.
 		   Base has length 74.3. Then sin(gamma)=y/74.3 and cos(gamma)=x/74.3, hence y=65.90590 and x=34.307921963	-->
     <origin rpy="0 0 0.959931089" xyz="-0.06590490 -0.034307921 0"/>
-    <parent link="4_upperwrist_limb"/>
-    <child link="5_lowerwrist_limb"/>
+    <parent link="jaco_4_upperwrist_limb"/>
+    <child link="jaco_5_lowerwrist_limb"/>
     <axis xyz="-1 0 0"/>
   </joint>
   <!-- ...........................				-->
-  <link name="ring_6">
+  <link name="jaco_ring_6">
     <inertial>
       <origin rpy="0 0 0" xyz="2.12629684692711E-10 7.53045514834128E-10 3.03666577994299E-10"/>
       <mass value="0.00338"/>
@@ -681,7 +672,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/ring_6.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.5 0.5 0.5 1"/>
       </material>
     </visual>
     <collision>
@@ -691,15 +682,14 @@
       </geometry>
     </collision>
   </link>
-  <joint name="ring_6_joint" type="fixed">
-    <dynamics damping="0.5" friction="0.5"/>
+  <joint name="jaco_ring_6_joint" type="fixed">
     <origin rpy="1.57079632679 0 2.53072741539211 " xyz="-0.06590490 -0.034307921 0"/>
-    <parent link="5_lowerwrist_limb"/>
-    <child link="ring_6"/>
+    <parent link="jaco_5_lowerwrist_limb"/>
+    <child link="jaco_ring_6"/>
     <axis xyz="0 0 0"/>
   </joint>
   <!-- ...........................				-->
-  <link name="6_hand_limb">
+  <link name="jaco_6_hand_limb">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.0555917045329114 -7.25586546752172E-05 -0.00317411883668722"/>
       <mass value="0.1"/>
@@ -711,7 +701,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/6_hand_limb.STL" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="">
-        <color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1"/>
+        <color rgba="0.1 0.1 0.1 1"/>
       </material>
     </visual>
     <!--	 	<visual>
@@ -720,7 +710,7 @@
 				<sphere radius="0.005"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 -->
@@ -731,17 +721,17 @@
       </geometry>
     </collision>
   </link>
-  <joint name="arm_5_joint" type="continuous">
+  <joint name="jaco_arm_5_joint" type="continuous">
     <limit effort="1.0" velocity="1.0"/>
     <dynamics damping="0.05" friction="0.05"/>
     <!-- added some experimental angle changes to the arm wrist, as this was not accurate .. tried to touch the base with the hand, and it didn't look the same
 		in rviz. I tuned the values so rviz would show same position. However, it's likely this can be better fine tuned -->
     <origin rpy="-1.57079632679 0 0.959931089" xyz="-0.06590490 -0.034307921 0"/>
-    <parent link="5_lowerwrist_limb"/>
-    <child link="6_hand_limb"/>
+    <parent link="jaco_5_lowerwrist_limb"/>
+    <child link="jaco_6_hand_limb"/>
     <axis xyz="-1 0 0"/>
   </joint>
-  <link name="fingers_base_link">
+  <link name="jaco_fingers_base_link">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.0005"/>
@@ -749,15 +739,15 @@
     </inertial>
   </link>
   <!-- this joint is only to align the coordinate system with the kinova specification frame -->
-  <joint name="fingers_base_joint" type="fixed">
+  <joint name="jaco_fingers_base_joint" type="fixed">
     <origin rpy="-1.57079632679 3.14159265359 1.57079632679" xyz="0 0 0"/>
-    <parent link="6_hand_limb"/>
-    <child link="fingers_base_link"/>
+    <parent link="jaco_6_hand_limb"/>
+    <child link="jaco_fingers_base_link"/>
   </joint>
   <!-- ...........................	-->
   <!--			FINGERS					-->
   <!-- ...........................	-->
-  <link name="7_finger_mount_index">
+  <link name="jaco_7_finger_mount_index">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0.00706399246397285 -0.00176078508424846"/>
       <mass value="0.006465"/>
@@ -769,7 +759,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/7_finger_mount_index.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.5 0.5 0.5 1"/>
       </material>
     </visual>
     <collision>
@@ -779,19 +769,19 @@
       </geometry>
     </collision>
   </link>
-  <joint name="finger_mount_index_fixed" type="fixed">
+  <joint name="jaco_finger_mount_index_fixed" type="fixed">
     <!--- remark 2014: damping greater than 0.1 (0.2) lead to model break downs when testing it bit by bit -->
     <!--- remark jan 2016: damping and friction higher than 0.005 required very high forces in order for the fingers
               to move at all, and then they mooved only slowly. -->
     <!--dynamics damping="0.1" friction="1.0"/-->
     <dynamics damping="0.005" friction="0.005"/>
     <origin rpy="0 -0.2293 -0.191986" xyz="-0.034  0.022 0.095"/>
-    <parent link="fingers_base_link"/>
-    <child link="7_finger_mount_index"/>
+    <parent link="jaco_fingers_base_link"/>
+    <child link="jaco_7_finger_mount_index"/>
     <axis xyz="0 0 0"/>
   </joint>
   <!-- ...........................				-->
-  <link name="8_finger_index">
+  <link name="jaco_8_finger_index">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.0181403689626489 0 0.00272470933850985"/>
       <mass value="0.01845"/>
@@ -803,7 +793,7 @@
 				<sphere radius="0.005"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 -->
@@ -813,7 +803,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/8_finger_index.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.50 0.50 0.50 1"/>
       </material>
     </visual>
     <collision>
@@ -823,20 +813,20 @@
       </geometry>
     </collision>
   </link>
-  <joint name="finger_joint_0" type="revolute">
+  <joint name="jaco_finger_joint_0" type="revolute">
     <!--- remark 2014: damping greater than 0.1 (0.2) lead to model break downs when testing it bit by bit -->
     <!--- remark jan 2016: damping and friction higher than 0.005 required very high forces in order for the fingers
               to move at all, and then they mooved only slowly. -->
     <!--dynamics damping="0.1" friction="1.0"/-->
     <dynamics damping="0.005" friction="0.005"/>
     <origin rpy="0 -0.34 -0.191986" xyz="-0.0276  0.0204 0.11"/>
-    <parent link="fingers_base_link"/>
-    <child link="8_finger_index"/>
+    <parent link="jaco_fingers_base_link"/>
+    <child link="jaco_8_finger_index"/>
     <axis xyz="0 1 0"/>
     <limit effort="1.5" lower="-0.0045" upper="1.05" velocity="0.2"/>
   </joint>
   <!-- ...........................				-->
-  <link name="9_finger_index_tip">
+  <link name="jaco_9_finger_index_tip">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.01340812509202 -4.52693266978291E-07 0.0118561361126153"/>
       <mass value="0.0122"/>
@@ -848,7 +838,7 @@
 				<sphere radius="0.005"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 -->
@@ -858,7 +848,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/9_finger_index_tip.STL" scale="1 1 1"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.5 0.5 0.5 1"/>
       </material>
     </visual>
     <collision>
@@ -868,18 +858,18 @@
       </geometry>
     </collision>
   </link>
-  <joint name="finger_joint_1" type="fixed">
+  <joint name="jaco_finger_joint_1" type="fixed">
     <!--- remark 2014: damping greater than 0.1 (0.2) lead to model break downs when testing it bit by bit -->
     <!--- remark jan 2016: damping and friction higher than 0.005 required very high forces in order for the fingers
               to move at all, and then they mooved only slowly. -->
     <!--dynamics damping="0.1" friction="1.0"/-->
     <dynamics damping="0.005" friction="0.005"/>
     <origin rpy="0 0 0" xyz="0 0 0.0441"/>
-    <parent link="8_finger_index"/>
-    <child link="9_finger_index_tip"/>
+    <parent link="jaco_8_finger_index"/>
+    <child link="jaco_9_finger_index_tip"/>
   </joint>
   <!-- ...........................				-->
-  <link name="7_finger_mount_thumb">
+  <link name="jaco_7_finger_mount_thumb">
     <inertial>
       <origin rpy="0 0 0" xyz="-2.65251193937339E-07 0.00706398229186052 -0.00176078674955921"/>
       <mass value="0.006465"/>
@@ -891,7 +881,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/7_finger_mount_thumb.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.50 0.50 0.50 1"/>
       </material>
     </visual>
     <collision>
@@ -901,18 +891,18 @@
       </geometry>
     </collision>
   </link>
-  <joint name="finger_mount_thumb_fixed" type="fixed">
+  <joint name="jaco_finger_mount_thumb_fixed" type="fixed">
     <!--- remark 2014: damping greater than 0.1 (0.2) lead to model break downs when testing it bit by bit -->
     <!--- remark jan 2016: damping and friction higher than 0.005 required very high forces in order for the fingers
               to move at all, and then they mooved only slowly. -->
     <!--dynamics damping="0.1" friction="1.0"/-->
     <dynamics damping="0.005" friction="0.005"/>
     <origin rpy="0 -0.2658 2.91470065359" xyz=" 0.037  0.001  0.095"/>
-    <parent link="fingers_base_link"/>
-    <child link="7_finger_mount_thumb"/>
+    <parent link="jaco_fingers_base_link"/>
+    <child link="jaco_7_finger_mount_thumb"/>
   </joint>
   <!-- ...........................				-->
-  <link name="8_finger_thumb">
+  <link name="jaco_8_finger_thumb">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.0181403317517619 -3.13818432741766E-07 0.00272473343106584"/>
       <mass value="0.0184"/>
@@ -924,7 +914,7 @@
 				<sphere radius="0.005"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 -->
@@ -934,7 +924,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/8_finger_thumb.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.5 0.5 0.5 1"/>
       </material>
     </visual>
     <collision>
@@ -944,20 +934,20 @@
       </geometry>
     </collision>
   </link>
-  <joint name="finger_joint_2" type="revolute">
+  <joint name="jaco_finger_joint_2" type="revolute">
     <!--- remark 2014: damping greater than 0.1 (0.2) lead to model break downs when testing it bit by bit -->
     <!--- remark jan 2016: damping and friction higher than 0.005 required very high forces in order for the fingers
               to move at all, and then they mooved only slowly. -->
     <!--dynamics damping="0.1" friction="1.0"/-->
     <dynamics damping="0.005" friction="0.005"/>
     <origin rpy="0 -0.37 2.91470065359" xyz=" 0.0319  0.003  0.11"/>
-    <parent link="fingers_base_link"/>
-    <child link="8_finger_thumb"/>
+    <parent link="jaco_fingers_base_link"/>
+    <child link="jaco_8_finger_thumb"/>
     <axis xyz="0 1 0"/>
     <limit effort="1.5" lower="-0.0045" upper="1.05" velocity="0.2"/>
   </joint>
   <!-- ...........................				-->
-  <link name="9_finger_thumb_tip">
+  <link name="jaco_9_finger_thumb_tip">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.0134080639046228 -4.56622786070351E-07 0.0118561154422042"/>
       <mass value="0.0122"/>
@@ -969,7 +959,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/9_finger_thumb_tip.STL" scale="1 1 1"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.5 0.5 0.5 1"/>
       </material>
     </visual>
     <collision>
@@ -979,18 +969,18 @@
       </geometry>
     </collision>
   </link>
-  <joint name="finger_joint_3" type="fixed">
+  <joint name="jaco_finger_joint_3" type="fixed">
     <!--- remark 2014: damping greater than 0.1 (0.2) lead to model break downs when testing it bit by bit -->
     <!--- remark jan 2016: damping and friction higher than 0.005 required very high forces in order for the fingers
               to move at all, and then they mooved only slowly. -->
     <!--dynamics damping="0.1" friction="1.0"/-->
     <dynamics damping="0.005" friction="0.005"/>
     <origin rpy="0 0 0" xyz="0 0 0.0441"/>
-    <parent link="8_finger_thumb"/>
-    <child link="9_finger_thumb_tip"/>
+    <parent link="jaco_8_finger_thumb"/>
+    <child link="jaco_9_finger_thumb_tip"/>
   </joint>
   <!-- ...........................				-->
-  <link name="7_finger_mount_pinkie">
+  <link name="jaco_7_finger_mount_pinkie">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0.00706399455294665 -0.00176077690193762"/>
       <mass value="0.00646"/>
@@ -1002,7 +992,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/7_finger_mount_pinkie.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.5 0.5 0.5 1"/>
       </material>
     </visual>
     <collision>
@@ -1012,18 +1002,18 @@
       </geometry>
     </collision>
   </link>
-  <joint name="finger_mount_pinkie_fixed" type="fixed">
+  <joint name="jaco_finger_mount_pinkie_fixed" type="fixed">
     <!--- remark 2014: damping greater than 0.1 (0.2) lead to model break downs when testing it bit by bit -->
     <!--- remark jan 2016: damping and friction higher than 0.005 required very high forces in order for the fingers
               to move at all, and then they mooved only slowly. -->
     <!--dynamics damping="0.1" friction="1.0"/-->
     <dynamics damping="0.005" friction="0.005"/>
     <origin rpy="0 -0.2293 0.191986" xyz="-0.034 -0.022 0.095"/>
-    <parent link="fingers_base_link"/>
-    <child link="7_finger_mount_pinkie"/>
+    <parent link="jaco_fingers_base_link"/>
+    <child link="jaco_7_finger_mount_pinkie"/>
   </joint>
   <!-- ...........................				-->
-  <link name="8_finger_pinkie">
+  <link name="jaco_8_finger_pinkie">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.0181404164708055 -2.87009015777565E-07 0.00272467774606585"/>
       <mass value="0.01845"/>
@@ -1035,7 +1025,7 @@
 				<sphere radius="0.005"/>
 			</geometry>
 			<material name="">
-				<color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+				<color rgba="0.10 0.10 0.10 1" />
 			</material>
 		</visual>
 -->
@@ -1045,7 +1035,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/8_finger_pinkie.STL"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.5 0.5 0.5 1"/>
       </material>
     </visual>
     <collision>
@@ -1055,20 +1045,20 @@
       </geometry>
     </collision>
   </link>
-  <joint name="finger_joint_4" type="revolute">
+  <joint name="jaco_finger_joint_4" type="revolute">
     <!--- remark 2014: damping greater than 0.1 (0.2) lead to model break downs when testing it bit by bit -->
     <!--- remark jan 2016: damping and friction higher than 0.005 required very high forces in order for the fingers
               to move at all, and then they mooved only slowly. -->
     <!--dynamics damping="0.1" friction="1.0"/-->
     <dynamics damping="0.005" friction="0.005"/>
     <origin rpy="0 -0.34 0.191986" xyz="-0.0276 -0.0204 0.11"/>
-    <parent link="fingers_base_link"/>
-    <child link="8_finger_pinkie"/>
+    <parent link="jaco_fingers_base_link"/>
+    <child link="jaco_8_finger_pinkie"/>
     <axis xyz="0 1 0"/>
     <limit effort="1.5" lower="-0.0045" upper="1.05" velocity="0.2"/>
   </joint>
   <!-- ...........................				-->
-  <link name="9_finger_pinkie_tip">
+  <link name="jaco_9_finger_pinkie_tip">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.0134 0 0.01185"/>
       <mass value="0.0122"/>
@@ -1080,7 +1070,7 @@
         <mesh filename="package://jaco_description/meshes/jaco2/9_finger_pinkie_tip.STL" scale="1 1 1"/>
       </geometry>
       <material name="">
-        <color rgba="0.501960784313725 0.501960784313725 0.501960784313725 1"/>
+        <color rgba="0.5 0.5 0.5 1"/>
       </material>
     </visual>
     <collision>
@@ -1090,16 +1080,15 @@
       </geometry>
     </collision>
   </link>
-  <joint name="finger_joint_5" type="fixed">
+  <joint name="jaco_finger_joint_5" type="fixed">
     <!--- remark 2014: damping greater than 0.1 (0.2) lead to model break downs when testing it bit by bit -->
     <!--- remark jan 2016: damping and friction higher than 0.005 required very high forces in order for the fingers
               to move at all, and then they mooved only slowly. -->
     <!--dynamics damping="0.1" friction="1.0"/-->
     <dynamics damping="0.005" friction="0.005"/>
     <origin rpy="0 0 0" xyz="0 0 0.0441"/>
-    <parent link="8_finger_pinkie"/>
-    <child link="9_finger_pinkie_tip"/>
+    <parent link="jaco_8_finger_pinkie"/>
+    <child link="jaco_9_finger_pinkie_tip"/>
   </joint>
-  <!-- Optional: Add the Xtion to the table to observe the real arm -->
 </robot>
 

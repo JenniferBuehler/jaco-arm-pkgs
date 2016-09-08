@@ -63,6 +63,9 @@
     # by the robot.
 	<arg name="joint_states_topic" default="jaco/joint_state"/>
 
+    # Prefix name in URDF
+    <arg name="jaco_prefix_name" default="jaco"/>
+
     # Parameter required for gazebo_joint_control/GazeboJointStatePublisher.
     # We need to publish values NOT between -PI and PI for arm joints 1 and 2, because
     # its lower limit is lower than -PI. When using Gazebo, it was not possible to use lower limit
@@ -70,7 +73,7 @@
     # MoveIt however will detect an angle of 3.0 as invalid if we have limits such as -3.9..0.73.
     # So we need to publish angles between -3.9..0.73. This has to be done for all revolute joints
     # with such limits where lower_limit is greater than higher_limit.
-    <arg name="preserve_original_angles" default="arm_1_joint, arm_2_joint"/>
+    <arg name="preserve_original_angles" default="$(arg jaco_prefix_name)_arm_1_joint, $(arg jaco_prefix_name)_arm_2_joint"/>
 
     # set the joint state topic such that any subscribers can read it from parameter	
     <param name="joint_state_control_topic" value="$(arg joint_state_publisher_topic)"/>

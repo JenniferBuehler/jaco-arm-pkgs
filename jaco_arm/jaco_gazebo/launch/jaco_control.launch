@@ -2,9 +2,9 @@
 
     <arg name="config_file" default="$(find jaco_gazebo)/config/JacoControl.yaml"/>
 
+    <arg name="jaco_prefix_name" default="jaco"/>
     <arg name="load_position_controllers" default="true"/>
     <arg name="load_velocity_controllers" default="false"/>
-
     <arg name="load_joint_state_controller" default="true"/>
 
     # if set to false, will only initialize parameter server
@@ -24,29 +24,29 @@
 
     <arg if="$(arg load_position_controllers)"
        name="position_controllers" value=
-          "arm_0_joint_position_controller 
-          arm_1_joint_position_controller 
-          arm_2_joint_position_controller 
-          arm_3_joint_position_controller
-          arm_4_joint_position_controller 
-          arm_5_joint_position_controller
-          finger_joint_0_position_controller
-          finger_joint_2_position_controller
-          finger_joint_4_position_controller"/>
+          "$(arg jaco_prefix_name)_arm_0_joint_position_controller 
+          $(arg jaco_prefix_name)_arm_1_joint_position_controller 
+          $(arg jaco_prefix_name)_arm_2_joint_position_controller 
+          $(arg jaco_prefix_name)_arm_3_joint_position_controller
+          $(arg jaco_prefix_name)_arm_4_joint_position_controller 
+          $(arg jaco_prefix_name)_arm_5_joint_position_controller
+          $(arg jaco_prefix_name)_finger_joint_0_position_controller
+          $(arg jaco_prefix_name)_finger_joint_2_position_controller
+          $(arg jaco_prefix_name)_finger_joint_4_position_controller"/>
     <arg unless="$(arg load_position_controllers)"
        name="position_controllers" value=""/>
 
     <arg if="$(arg load_velocity_controllers)"
        name="velocity_controllers" value=
-          "arm_0_joint_velocity_controller 
-          arm_1_joint_velocity_controller 
-          arm_2_joint_velocity_controller 
-          arm_3_joint_velocity_controller
-          arm_4_joint_velocity_controller 
-          arm_5_joint_velocity_controller
-          finger_joint_0_velocity_controller
-          finger_joint_2_velocity_controller
-          finger_joint_4_velocity_controller"/>
+          "$(arg jaco_prefix_name)_arm_0_joint_velocity_controller 
+          $(arg jaco_prefix_name)_arm_1_joint_velocity_controller 
+          $(arg jaco_prefix_name)_arm_2_joint_velocity_controller 
+          $(arg jaco_prefix_name)_arm_3_joint_velocity_controller
+          $(arg jaco_prefix_name)_arm_4_joint_velocity_controller 
+          $(arg jaco_prefix_name)_arm_5_joint_velocity_controller
+          $(arg jaco_prefix_name)_finger_joint_0_velocity_controller
+          $(arg jaco_prefix_name)_finger_joint_2_velocity_controller
+          $(arg jaco_prefix_name)_finger_joint_4_velocity_controller"/>
     <arg unless="$(arg load_velocity_controllers)"
        name="velocity_controllers" value=""/>
 

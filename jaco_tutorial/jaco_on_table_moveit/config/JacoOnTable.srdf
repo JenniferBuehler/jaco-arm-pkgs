@@ -10,238 +10,238 @@
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
     <group name="Arm">
-        <chain base_link="0_baseA" tip_link="6_hand_limb" />
+        <chain base_link="jaco_0_baseA" tip_link="jaco_6_hand_limb" />
     </group>
     <group name="Hand">
-        <link name="6_hand_limb" />
-        <link name="8_finger_index" />
-        <link name="9_finger_index_tip" />
-        <link name="8_finger_thumb" />
-        <link name="9_finger_thumb_tip" />
-        <link name="8_finger_pinkie" />
-        <link name="9_finger_pinkie_tip" />
-        <link name="7_finger_mount_index" />
-        <link name="7_finger_mount_pinkie" />
-        <link name="7_finger_mount_thumb" />
+        <link name="jaco_6_hand_limb" />
+        <link name="jaco_8_finger_index" />
+        <link name="jaco_9_finger_index_tip" />
+        <link name="jaco_8_finger_thumb" />
+        <link name="jaco_9_finger_thumb_tip" />
+        <link name="jaco_8_finger_pinkie" />
+        <link name="jaco_9_finger_pinkie_tip" />
+        <link name="jaco_7_finger_mount_index" />
+        <link name="jaco_7_finger_mount_pinkie" />
+        <link name="jaco_7_finger_mount_thumb" />
     </group>
     <group name="All">
-        <link name="0_baseA" />
-        <link name="0_baseB_limb" />
-        <link name="1_shoulder_limb" />
-        <link name="2_upperarm_limb" />
-        <link name="3_forearm_limb" />
-        <link name="4_upperwrist_limb" />
-        <link name="5_lowerwrist_limb" />
-        <link name="6_hand_limb" />
-        <link name="fingers_base_link" />
-        <link name="8_finger_index" />
-        <link name="9_finger_index_tip" />
-        <link name="8_finger_thumb" />
-        <link name="9_finger_thumb_tip" />
-        <link name="8_finger_pinkie" />
-        <link name="9_finger_pinkie_tip" />
-        <link name="7_finger_mount_index" />
-        <link name="7_finger_mount_pinkie" />
-        <link name="7_finger_mount_thumb" />
-        <link name="ring_6" />
-        <link name="ring_5" />
-        <link name="ring_4" />
-        <link name="ring_3" />
-        <link name="ring_2" />
-        <link name="ring_1" />
+        <link name="jaco_0_baseA" />
+        <link name="jaco_0_baseB_limb" />
+        <link name="jaco_1_shoulder_limb" />
+        <link name="jaco_2_upperarm_limb" />
+        <link name="jaco_3_forearm_limb" />
+        <link name="jaco_4_upperwrist_limb" />
+        <link name="jaco_5_lowerwrist_limb" />
+        <link name="jaco_6_hand_limb" />
+        <link name="jaco_fingers_base_link" />
+        <link name="jaco_8_finger_index" />
+        <link name="jaco_9_finger_index_tip" />
+        <link name="jaco_8_finger_thumb" />
+        <link name="jaco_9_finger_thumb_tip" />
+        <link name="jaco_8_finger_pinkie" />
+        <link name="jaco_9_finger_pinkie_tip" />
+        <link name="jaco_7_finger_mount_index" />
+        <link name="jaco_7_finger_mount_pinkie" />
+        <link name="jaco_7_finger_mount_thumb" />
+        <link name="jaco_ring_6" />
+        <link name="jaco_ring_5" />
+        <link name="jaco_ring_4" />
+        <link name="jaco_ring_3" />
+        <link name="jaco_ring_2" />
+        <link name="jaco_ring_1" />
     </group>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="Wrist" parent_link="6_hand_limb" group="Arm" />
-    <end_effector name="Fingers" parent_link="6_hand_limb" group="Hand" />
+    <end_effector name="Wrist" parent_link="jaco_6_hand_limb" group="Arm" />
+    <end_effector name="Fingers" parent_link="jaco_6_hand_limb" group="Hand" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <disable_collisions link1="0_baseA" link2="0_baseB_limb" reason="Adjacent" />
-    <disable_collisions link1="0_baseA" link2="1_shoulder_limb" reason="Never" />
-    <disable_collisions link1="0_baseA" link2="2_upperarm_limb" reason="Never" />
-    <disable_collisions link1="0_baseA" link2="3_forearm_limb" reason="Never" />
-    <disable_collisions link1="0_baseA" link2="ring_1" reason="Never" />
-    <disable_collisions link1="0_baseA" link2="ring_2" reason="Never" />
-    <disable_collisions link1="0_baseA" link2="ring_3" reason="Never" />
-    <disable_collisions link1="0_baseA" link2="ring_4" reason="Never" />
-    <disable_collisions link1="0_baseA" link2="table_base" reason="Never" />
-    <disable_collisions link1="0_baseA" link2="table_top" reason="Adjacent" />
-    <disable_collisions link1="0_baseB_limb" link2="1_shoulder_limb" reason="Adjacent" />
-    <disable_collisions link1="0_baseB_limb" link2="2_upperarm_limb" reason="Never" />
-    <disable_collisions link1="0_baseB_limb" link2="3_forearm_limb" reason="Never" />
-    <disable_collisions link1="0_baseB_limb" link2="ring_1" reason="Adjacent" />
-    <disable_collisions link1="0_baseB_limb" link2="ring_2" reason="Never" />
-    <disable_collisions link1="0_baseB_limb" link2="ring_3" reason="Never" />
-    <disable_collisions link1="0_baseB_limb" link2="ring_4" reason="Never" />
-    <disable_collisions link1="0_baseB_limb" link2="table_base" reason="Never" />
-    <disable_collisions link1="0_baseB_limb" link2="table_top" reason="Never" />
-    <disable_collisions link1="1_shoulder_limb" link2="2_upperarm_limb" reason="Adjacent" />
-    <disable_collisions link1="1_shoulder_limb" link2="3_forearm_limb" reason="Never" />
-    <disable_collisions link1="1_shoulder_limb" link2="4_upperwrist_limb" reason="Never" />
-    <disable_collisions link1="1_shoulder_limb" link2="ring_1" reason="Never" />
-    <disable_collisions link1="1_shoulder_limb" link2="ring_2" reason="Adjacent" />
-    <disable_collisions link1="1_shoulder_limb" link2="ring_3" reason="Never" />
-    <disable_collisions link1="1_shoulder_limb" link2="ring_4" reason="Never" />
-    <disable_collisions link1="1_shoulder_limb" link2="ring_5" reason="Never" />
-    <disable_collisions link1="1_shoulder_limb" link2="table_base" reason="Never" />
-    <disable_collisions link1="1_shoulder_limb" link2="table_top" reason="Never" />
-    <disable_collisions link1="2_upperarm_limb" link2="3_forearm_limb" reason="Adjacent" />
-    <disable_collisions link1="2_upperarm_limb" link2="4_upperwrist_limb" reason="Never" />
-    <disable_collisions link1="2_upperarm_limb" link2="ring_1" reason="Never" />
-    <disable_collisions link1="2_upperarm_limb" link2="ring_2" reason="Default" />
-    <disable_collisions link1="2_upperarm_limb" link2="ring_3" reason="Adjacent" />
-    <disable_collisions link1="2_upperarm_limb" link2="ring_4" reason="Never" />
-    <disable_collisions link1="2_upperarm_limb" link2="table_base" reason="Never" />
-    <disable_collisions link1="2_upperarm_limb" link2="table_top" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="4_upperwrist_limb" reason="Adjacent" />
-    <disable_collisions link1="3_forearm_limb" link2="5_lowerwrist_limb" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="6_hand_limb" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="7_finger_mount_index" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="7_finger_mount_pinkie" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="7_finger_mount_thumb" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="8_finger_index" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="8_finger_pinkie" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="8_finger_thumb" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="9_finger_index_tip" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="9_finger_pinkie_tip" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="9_finger_thumb_tip" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="ring_1" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="ring_2" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="ring_3" reason="Default" />
-    <disable_collisions link1="3_forearm_limb" link2="ring_4" reason="Adjacent" />
-    <disable_collisions link1="3_forearm_limb" link2="ring_5" reason="Never" />
-    <disable_collisions link1="3_forearm_limb" link2="ring_6" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="5_lowerwrist_limb" reason="Adjacent" />
-    <disable_collisions link1="4_upperwrist_limb" link2="6_hand_limb" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="7_finger_mount_index" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="7_finger_mount_pinkie" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="7_finger_mount_thumb" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="8_finger_index" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="8_finger_pinkie" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="8_finger_thumb" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="9_finger_index_tip" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="9_finger_pinkie_tip" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="9_finger_thumb_tip" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="ring_1" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="ring_2" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="ring_3" reason="Never" />
-    <disable_collisions link1="4_upperwrist_limb" link2="ring_4" reason="Default" />
-    <disable_collisions link1="4_upperwrist_limb" link2="ring_5" reason="Adjacent" />
-    <disable_collisions link1="4_upperwrist_limb" link2="ring_6" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="6_hand_limb" reason="Adjacent" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="7_finger_mount_index" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="7_finger_mount_pinkie" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="7_finger_mount_thumb" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="8_finger_index" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="8_finger_pinkie" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="8_finger_thumb" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="9_finger_index_tip" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="9_finger_pinkie_tip" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="9_finger_thumb_tip" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="ring_2" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="ring_3" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="ring_4" reason="Never" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="ring_5" reason="Default" />
-    <disable_collisions link1="5_lowerwrist_limb" link2="ring_6" reason="Adjacent" />
-    <disable_collisions link1="6_hand_limb" link2="7_finger_mount_index" reason="Adjacent" />
-    <disable_collisions link1="6_hand_limb" link2="7_finger_mount_pinkie" reason="Adjacent" />
-    <disable_collisions link1="6_hand_limb" link2="7_finger_mount_thumb" reason="Adjacent" />
-    <disable_collisions link1="6_hand_limb" link2="8_finger_index" reason="Adjacent" />
-    <disable_collisions link1="6_hand_limb" link2="8_finger_pinkie" reason="Adjacent" />
-    <disable_collisions link1="6_hand_limb" link2="8_finger_thumb" reason="Adjacent" />
-    <disable_collisions link1="6_hand_limb" link2="9_finger_index_tip" reason="Never" />
-    <disable_collisions link1="6_hand_limb" link2="9_finger_pinkie_tip" reason="Never" />
-    <disable_collisions link1="6_hand_limb" link2="9_finger_thumb_tip" reason="Never" />
-    <disable_collisions link1="6_hand_limb" link2="ring_3" reason="Never" />
-    <disable_collisions link1="6_hand_limb" link2="ring_4" reason="Never" />
-    <disable_collisions link1="6_hand_limb" link2="ring_5" reason="Never" />
-    <disable_collisions link1="6_hand_limb" link2="ring_6" reason="Default" />
-    <disable_collisions link1="7_finger_mount_index" link2="7_finger_mount_pinkie" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_index" link2="7_finger_mount_thumb" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_index" link2="8_finger_index" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_index" link2="8_finger_pinkie" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_index" link2="8_finger_thumb" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_index" link2="9_finger_index_tip" reason="Never" />
-    <disable_collisions link1="7_finger_mount_index" link2="9_finger_pinkie_tip" reason="Never" />
-    <disable_collisions link1="7_finger_mount_index" link2="9_finger_thumb_tip" reason="Never" />
-    <disable_collisions link1="7_finger_mount_index" link2="ring_3" reason="Never" />
-    <disable_collisions link1="7_finger_mount_index" link2="ring_4" reason="Never" />
-    <disable_collisions link1="7_finger_mount_index" link2="ring_5" reason="Never" />
-    <disable_collisions link1="7_finger_mount_index" link2="ring_6" reason="Never" />
-    <disable_collisions link1="7_finger_mount_pinkie" link2="7_finger_mount_thumb" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_pinkie" link2="8_finger_index" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_pinkie" link2="8_finger_pinkie" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_pinkie" link2="8_finger_thumb" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_pinkie" link2="9_finger_index_tip" reason="Never" />
-    <disable_collisions link1="7_finger_mount_pinkie" link2="9_finger_pinkie_tip" reason="Never" />
-    <disable_collisions link1="7_finger_mount_pinkie" link2="9_finger_thumb_tip" reason="Never" />
-    <disable_collisions link1="7_finger_mount_pinkie" link2="ring_3" reason="Never" />
-    <disable_collisions link1="7_finger_mount_pinkie" link2="ring_4" reason="Never" />
-    <disable_collisions link1="7_finger_mount_pinkie" link2="ring_5" reason="Never" />
-    <disable_collisions link1="7_finger_mount_pinkie" link2="ring_6" reason="Never" />
-    <disable_collisions link1="7_finger_mount_thumb" link2="8_finger_index" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_thumb" link2="8_finger_pinkie" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_thumb" link2="8_finger_thumb" reason="Adjacent" />
-    <disable_collisions link1="7_finger_mount_thumb" link2="9_finger_index_tip" reason="Never" />
-    <disable_collisions link1="7_finger_mount_thumb" link2="9_finger_pinkie_tip" reason="Never" />
-    <disable_collisions link1="7_finger_mount_thumb" link2="9_finger_thumb_tip" reason="Never" />
-    <disable_collisions link1="7_finger_mount_thumb" link2="ring_3" reason="Never" />
-    <disable_collisions link1="7_finger_mount_thumb" link2="ring_4" reason="Never" />
-    <disable_collisions link1="7_finger_mount_thumb" link2="ring_5" reason="Never" />
-    <disable_collisions link1="7_finger_mount_thumb" link2="ring_6" reason="Never" />
-    <disable_collisions link1="8_finger_index" link2="8_finger_pinkie" reason="Adjacent" />
-    <disable_collisions link1="8_finger_index" link2="8_finger_thumb" reason="Adjacent" />
-    <disable_collisions link1="8_finger_index" link2="9_finger_index_tip" reason="Adjacent" />
-    <disable_collisions link1="8_finger_index" link2="9_finger_pinkie_tip" reason="Never" />
-    <disable_collisions link1="8_finger_index" link2="9_finger_thumb_tip" reason="Never" />
-    <disable_collisions link1="8_finger_index" link2="ring_3" reason="Never" />
-    <disable_collisions link1="8_finger_index" link2="ring_4" reason="Never" />
-    <disable_collisions link1="8_finger_index" link2="ring_5" reason="Never" />
-    <disable_collisions link1="8_finger_index" link2="ring_6" reason="Never" />
-    <disable_collisions link1="8_finger_pinkie" link2="8_finger_thumb" reason="Adjacent" />
-    <disable_collisions link1="8_finger_pinkie" link2="9_finger_index_tip" reason="Never" />
-    <disable_collisions link1="8_finger_pinkie" link2="9_finger_pinkie_tip" reason="Adjacent" />
-    <disable_collisions link1="8_finger_pinkie" link2="9_finger_thumb_tip" reason="Never" />
-    <disable_collisions link1="8_finger_pinkie" link2="ring_3" reason="Never" />
-    <disable_collisions link1="8_finger_pinkie" link2="ring_4" reason="Never" />
-    <disable_collisions link1="8_finger_pinkie" link2="ring_5" reason="Never" />
-    <disable_collisions link1="8_finger_pinkie" link2="ring_6" reason="Never" />
-    <disable_collisions link1="8_finger_thumb" link2="9_finger_pinkie_tip" reason="Never" />
-    <disable_collisions link1="8_finger_thumb" link2="9_finger_thumb_tip" reason="Adjacent" />
-    <disable_collisions link1="8_finger_thumb" link2="ring_3" reason="Never" />
-    <disable_collisions link1="8_finger_thumb" link2="ring_4" reason="Never" />
-    <disable_collisions link1="8_finger_thumb" link2="ring_5" reason="Never" />
-    <disable_collisions link1="8_finger_thumb" link2="ring_6" reason="Never" />
-    <disable_collisions link1="9_finger_index_tip" link2="9_finger_pinkie_tip" reason="Never" />
-    <disable_collisions link1="9_finger_index_tip" link2="ring_3" reason="Never" />
-    <disable_collisions link1="9_finger_index_tip" link2="ring_4" reason="Never" />
-    <disable_collisions link1="9_finger_index_tip" link2="ring_5" reason="Never" />
-    <disable_collisions link1="9_finger_index_tip" link2="ring_6" reason="Never" />
-    <disable_collisions link1="9_finger_pinkie_tip" link2="9_finger_thumb_tip" reason="Never" />
-    <disable_collisions link1="9_finger_pinkie_tip" link2="ring_3" reason="Never" />
-    <disable_collisions link1="9_finger_pinkie_tip" link2="ring_4" reason="Never" />
-    <disable_collisions link1="9_finger_pinkie_tip" link2="ring_5" reason="Never" />
-    <disable_collisions link1="9_finger_pinkie_tip" link2="ring_6" reason="Never" />
-    <disable_collisions link1="9_finger_thumb_tip" link2="ring_3" reason="Never" />
-    <disable_collisions link1="9_finger_thumb_tip" link2="ring_4" reason="Never" />
-    <disable_collisions link1="9_finger_thumb_tip" link2="ring_5" reason="Never" />
-    <disable_collisions link1="9_finger_thumb_tip" link2="ring_6" reason="Never" />
-    <disable_collisions link1="ring_1" link2="ring_2" reason="Never" />
-    <disable_collisions link1="ring_1" link2="ring_3" reason="Never" />
-    <disable_collisions link1="ring_1" link2="ring_4" reason="Never" />
-    <disable_collisions link1="ring_1" link2="table_base" reason="Never" />
-    <disable_collisions link1="ring_1" link2="table_top" reason="Never" />
-    <disable_collisions link1="ring_2" link2="ring_3" reason="Never" />
-    <disable_collisions link1="ring_2" link2="ring_4" reason="Never" />
-    <disable_collisions link1="ring_2" link2="ring_5" reason="Never" />
-    <disable_collisions link1="ring_2" link2="ring_6" reason="Never" />
-    <disable_collisions link1="ring_2" link2="table_base" reason="Never" />
-    <disable_collisions link1="ring_2" link2="table_top" reason="Never" />
-    <disable_collisions link1="ring_3" link2="ring_4" reason="Never" />
-    <disable_collisions link1="ring_3" link2="ring_5" reason="Never" />
-    <disable_collisions link1="ring_3" link2="ring_6" reason="Never" />
-    <disable_collisions link1="ring_3" link2="table_base" reason="Never" />
-    <disable_collisions link1="ring_3" link2="table_top" reason="Never" />
-    <disable_collisions link1="ring_4" link2="ring_5" reason="Never" />
-    <disable_collisions link1="ring_4" link2="ring_6" reason="Never" />
-    <disable_collisions link1="ring_5" link2="ring_6" reason="Never" />
+    <disable_collisions link1="jaco_0_baseA" link2="jaco_0_baseB_limb" reason="Adjacent" />
+    <disable_collisions link1="jaco_0_baseA" link2="jaco_1_shoulder_limb" reason="Never" />
+    <disable_collisions link1="jaco_0_baseA" link2="jaco_2_upperarm_limb" reason="Never" />
+    <disable_collisions link1="jaco_0_baseA" link2="jaco_3_forearm_limb" reason="Never" />
+    <disable_collisions link1="jaco_0_baseA" link2="jaco_ring_1" reason="Never" />
+    <disable_collisions link1="jaco_0_baseA" link2="jaco_ring_2" reason="Never" />
+    <disable_collisions link1="jaco_0_baseA" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_0_baseA" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_0_baseA" link2="table_base" reason="Never" />
+    <disable_collisions link1="jaco_0_baseA" link2="table_top" reason="Adjacent" />
+    <disable_collisions link1="jaco_0_baseB_limb" link2="jaco_1_shoulder_limb" reason="Adjacent" />
+    <disable_collisions link1="jaco_0_baseB_limb" link2="jaco_2_upperarm_limb" reason="Never" />
+    <disable_collisions link1="jaco_0_baseB_limb" link2="jaco_3_forearm_limb" reason="Never" />
+    <disable_collisions link1="jaco_0_baseB_limb" link2="jaco_ring_1" reason="Adjacent" />
+    <disable_collisions link1="jaco_0_baseB_limb" link2="jaco_ring_2" reason="Never" />
+    <disable_collisions link1="jaco_0_baseB_limb" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_0_baseB_limb" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_0_baseB_limb" link2="table_base" reason="Never" />
+    <disable_collisions link1="jaco_0_baseB_limb" link2="table_top" reason="Never" />
+    <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_2_upperarm_limb" reason="Adjacent" />
+    <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_3_forearm_limb" reason="Never" />
+    <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_4_upperwrist_limb" reason="Never" />
+    <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_ring_1" reason="Never" />
+    <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_ring_2" reason="Adjacent" />
+    <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_1_shoulder_limb" link2="table_base" reason="Never" />
+    <disable_collisions link1="jaco_1_shoulder_limb" link2="table_top" reason="Never" />
+    <disable_collisions link1="jaco_2_upperarm_limb" link2="jaco_3_forearm_limb" reason="Adjacent" />
+    <disable_collisions link1="jaco_2_upperarm_limb" link2="jaco_4_upperwrist_limb" reason="Never" />
+    <disable_collisions link1="jaco_2_upperarm_limb" link2="jaco_ring_1" reason="Never" />
+    <disable_collisions link1="jaco_2_upperarm_limb" link2="jaco_ring_2" reason="Default" />
+    <disable_collisions link1="jaco_2_upperarm_limb" link2="jaco_ring_3" reason="Adjacent" />
+    <disable_collisions link1="jaco_2_upperarm_limb" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_2_upperarm_limb" link2="table_base" reason="Never" />
+    <disable_collisions link1="jaco_2_upperarm_limb" link2="table_top" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_4_upperwrist_limb" reason="Adjacent" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_5_lowerwrist_limb" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_6_hand_limb" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_7_finger_mount_index" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_7_finger_mount_pinkie" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_7_finger_mount_thumb" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_8_finger_index" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_8_finger_pinkie" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_8_finger_thumb" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_9_finger_index_tip" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_9_finger_pinkie_tip" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_9_finger_thumb_tip" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_ring_1" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_ring_2" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_ring_3" reason="Default" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_ring_4" reason="Adjacent" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_3_forearm_limb" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_5_lowerwrist_limb" reason="Adjacent" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_6_hand_limb" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_7_finger_mount_index" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_7_finger_mount_pinkie" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_7_finger_mount_thumb" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_8_finger_index" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_8_finger_pinkie" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_8_finger_thumb" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_9_finger_index_tip" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_9_finger_pinkie_tip" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_9_finger_thumb_tip" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_ring_1" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_ring_2" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_ring_4" reason="Default" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_ring_5" reason="Adjacent" />
+    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_6_hand_limb" reason="Adjacent" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_7_finger_mount_index" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_7_finger_mount_pinkie" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_7_finger_mount_thumb" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_8_finger_index" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_8_finger_pinkie" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_8_finger_thumb" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_9_finger_index_tip" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_9_finger_pinkie_tip" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_9_finger_thumb_tip" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_ring_2" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_ring_5" reason="Default" />
+    <disable_collisions link1="jaco_5_lowerwrist_limb" link2="jaco_ring_6" reason="Adjacent" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_7_finger_mount_index" reason="Adjacent" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_7_finger_mount_pinkie" reason="Adjacent" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_7_finger_mount_thumb" reason="Adjacent" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_8_finger_index" reason="Adjacent" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_8_finger_pinkie" reason="Adjacent" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_8_finger_thumb" reason="Adjacent" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_9_finger_index_tip" reason="Never" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_9_finger_pinkie_tip" reason="Never" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_9_finger_thumb_tip" reason="Never" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_6_hand_limb" link2="jaco_ring_6" reason="Default" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_7_finger_mount_pinkie" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_7_finger_mount_thumb" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_8_finger_index" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_8_finger_pinkie" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_8_finger_thumb" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_9_finger_index_tip" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_9_finger_pinkie_tip" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_9_finger_thumb_tip" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_index" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_pinkie" link2="jaco_7_finger_mount_thumb" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_pinkie" link2="jaco_8_finger_index" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_pinkie" link2="jaco_8_finger_pinkie" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_pinkie" link2="jaco_8_finger_thumb" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_pinkie" link2="jaco_9_finger_index_tip" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_pinkie" link2="jaco_9_finger_pinkie_tip" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_pinkie" link2="jaco_9_finger_thumb_tip" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_pinkie" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_pinkie" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_pinkie" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_pinkie" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_thumb" link2="jaco_8_finger_index" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_thumb" link2="jaco_8_finger_pinkie" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_thumb" link2="jaco_8_finger_thumb" reason="Adjacent" />
+    <disable_collisions link1="jaco_7_finger_mount_thumb" link2="jaco_9_finger_index_tip" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_thumb" link2="jaco_9_finger_pinkie_tip" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_thumb" link2="jaco_9_finger_thumb_tip" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_thumb" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_thumb" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_thumb" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_7_finger_mount_thumb" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_index" link2="jaco_8_finger_pinkie" reason="Adjacent" />
+    <disable_collisions link1="jaco_8_finger_index" link2="jaco_8_finger_thumb" reason="Adjacent" />
+    <disable_collisions link1="jaco_8_finger_index" link2="jaco_9_finger_index_tip" reason="Adjacent" />
+    <disable_collisions link1="jaco_8_finger_index" link2="jaco_9_finger_pinkie_tip" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_index" link2="jaco_9_finger_thumb_tip" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_index" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_index" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_index" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_index" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_pinkie" link2="jaco_8_finger_thumb" reason="Adjacent" />
+    <disable_collisions link1="jaco_8_finger_pinkie" link2="jaco_9_finger_index_tip" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_pinkie" link2="jaco_9_finger_pinkie_tip" reason="Adjacent" />
+    <disable_collisions link1="jaco_8_finger_pinkie" link2="jaco_9_finger_thumb_tip" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_pinkie" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_pinkie" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_pinkie" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_pinkie" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_thumb" link2="jaco_9_finger_pinkie_tip" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_thumb" link2="jaco_9_finger_thumb_tip" reason="Adjacent" />
+    <disable_collisions link1="jaco_8_finger_thumb" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_thumb" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_thumb" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_8_finger_thumb" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_index_tip" link2="jaco_9_finger_pinkie_tip" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_index_tip" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_index_tip" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_index_tip" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_index_tip" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_pinkie_tip" link2="jaco_9_finger_thumb_tip" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_pinkie_tip" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_pinkie_tip" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_pinkie_tip" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_pinkie_tip" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_thumb_tip" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_thumb_tip" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_thumb_tip" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_9_finger_thumb_tip" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_ring_1" link2="jaco_ring_2" reason="Never" />
+    <disable_collisions link1="jaco_ring_1" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_ring_1" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_ring_1" link2="table_base" reason="Never" />
+    <disable_collisions link1="jaco_ring_1" link2="table_top" reason="Never" />
+    <disable_collisions link1="jaco_ring_2" link2="jaco_ring_3" reason="Never" />
+    <disable_collisions link1="jaco_ring_2" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_ring_2" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_ring_2" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_ring_2" link2="table_base" reason="Never" />
+    <disable_collisions link1="jaco_ring_2" link2="table_top" reason="Never" />
+    <disable_collisions link1="jaco_ring_3" link2="jaco_ring_4" reason="Never" />
+    <disable_collisions link1="jaco_ring_3" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_ring_3" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_ring_3" link2="table_base" reason="Never" />
+    <disable_collisions link1="jaco_ring_3" link2="table_top" reason="Never" />
+    <disable_collisions link1="jaco_ring_4" link2="jaco_ring_5" reason="Never" />
+    <disable_collisions link1="jaco_ring_4" link2="jaco_ring_6" reason="Never" />
+    <disable_collisions link1="jaco_ring_5" link2="jaco_ring_6" reason="Never" />
     <disable_collisions link1="table_base" link2="table_top" reason="Adjacent" />
 </robot>

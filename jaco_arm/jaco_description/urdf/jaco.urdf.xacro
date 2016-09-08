@@ -186,15 +186,15 @@
 	
 
 	<!-- MACRO FOR THE ROBOT ARM -->
-	<xacro:macro name="jaco_arm" params="parent mass_divider finger_mass_divider *origin">
+	<xacro:macro name="jaco_arm" params="parent mass_divider finger_mass_divider *origin jaco_prefix:=jaco">
 
-	<joint name="jaco_arm_joint" type="fixed">
+    <joint name="${jaco_prefix}_arm_joint" type="fixed">
 		<xacro:insert_block name="origin" />
 		<parent link="${parent}" />
-		<child link="0_baseA" />
+        <child link="${jaco_prefix}_0_baseA" />
 	</joint>
 
-	<gazebo reference="ring_">
+    <gazebo reference="${jaco_prefix}_ring_">
 		<material>Gazebo/Grey</material>
 		<implicitSpringDamper>1</implicitSpringDamper>
 		<xacro:default_material/>
@@ -209,53 +209,53 @@
 		<implicitSpringDamper>1</implicitSpringDamper>
 		<xacro:default_material/>
 	</gazebo>
-	<gazebo reference="0_baseA">
+    <gazebo reference="${jaco_prefix}_0_baseA">
 		<material>Gazebo/White</material>
 		<implicitSpringDamper>1</implicitSpringDamper>
 		<xacro:default_material/>
 	</gazebo>
 
 	<!-- for some reason, material only applies if full name specified -->
-	<gazebo reference="8_finger_thumb">
+    <gazebo reference="${jaco_prefix}_8_finger_thumb">
 		<xacro:default_material/>
 	</gazebo>
-	<gazebo reference="8_finger_index">
+    <gazebo reference="${jaco_prefix}_8_finger_index">
 		<xacro:default_material/>
 	</gazebo>
-	<gazebo reference="8_finger_pinkie">
+    <gazebo reference="${jaco_prefix}_8_finger_pinkie">
 		<xacro:default_material/>
 	</gazebo>
-	<gazebo reference="9_finger_thumb_tip">
+    <gazebo reference="${jaco_prefix}_9_finger_thumb_tip">
 		<xacro:default_material/>
 	</gazebo>
-	<gazebo reference="9_finger_index_tip">
+    <gazebo reference="${jaco_prefix}_9_finger_index_tip">
 		<xacro:default_material/>
 	</gazebo>
-	<gazebo reference="9_finger_pinkie_tip">
+    <gazebo reference="${jaco_prefix}_9_finger_pinkie_tip">
 		<xacro:default_material/>
 	</gazebo>
 
-	<gazebo reference="finger_joint_0">
+    <gazebo reference="${jaco_prefix}_finger_joint_0">
 		<provideFeedback value="true"/>
 	</gazebo>
-	<gazebo reference="finger_joint_2">
+    <gazebo reference="${jaco_prefix}_finger_joint_2">
 		<provideFeedback value="true"/>
 	</gazebo>
-	<gazebo reference="finger_joint_4">
+    <gazebo reference="${jaco_prefix}_finger_joint_4">
 		<provideFeedback value="true"/>
 	</gazebo>
 
     <xacro:if value="$(arg add_transmission_pos)">
         <xacro:include filename="$(find jaco_description)/urdf/jaco_joint_control.xacro"/>
-        <xacro:jaco_joint_control/>
+        <xacro:jaco_joint_control jaco_prefix="${jaco_prefix}"/>
     </xacro:if>
 
     <xacro:if value="$(arg add_transmission_vel)">
         <xacro:include filename="$(find jaco_description)/urdf/jaco_joint_control_vel.xacro"/>
-        <xacro:jaco_joint_control_vel/>
+        <xacro:jaco_joint_control_vel jaco_prefix="${jaco_prefix}"/>
     </xacro:if>
 
-	<link name="0_baseA">
+    <link name="${jaco_prefix}_0_baseA">
 		<inertial>
 			<origin xyz="0 0 0.03" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.5688/mass_divider}" h="0.059" r="0.036"/>
@@ -280,7 +280,7 @@
 
 	<!-- ...........................				-->
 
-	<link name="0_baseB_limb">
+    <link name="${jaco_prefix}_0_baseB_limb">
 		<inertial>
 			<origin xyz="0 0.04725 0" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.5152/mass_divider}" h="0.0945" r="0.04"/>
@@ -301,14 +301,14 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="base_internal" type="fixed">
+    <joint name="${jaco_prefix}_base_internal" type="fixed">
 		<origin xyz="0 0 ${0.049 + base_height_corr}" rpy="${M_PI_2} 0 0" /> 
-		<parent link="0_baseA" />
-		<child link="0_baseB_limb" />
+        <parent link="${jaco_prefix}_0_baseA" />
+        <child link="${jaco_prefix}_0_baseB_limb" />
 		<axis xyz="0 0 0" />
 	</joint>
 
-	<link name="ring_1">
+    <link name="${jaco_prefix}_ring_1">
 		<inertial>
 			<origin xyz="-3.57503886452221E-16 -1.58125151997128E-15 -5.55111512312578E-17" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.00872/mass_divider}" h="0.02" r="0.04"/>
@@ -329,10 +329,10 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="ring_1_joint" type="fixed">
+    <joint name="${jaco_prefix}_ring_1_joint" type="fixed">
 		<origin xyz="0 0.104 0" rpy="-${M_PI_2} 0.211499083190217 -${M_PI}" />
-		<parent link="0_baseB_limb" />
-		<child link="ring_1" />
+        <parent link="${jaco_prefix}_0_baseB_limb" />
+        <child link="${jaco_prefix}_ring_1" />
 		<axis xyz="0 0 0" />
 	</joint>
 
@@ -340,7 +340,7 @@
 	<!-- ...........................				-->
 
 
-	<link name="1_shoulder_limb">
+    <link name="${jaco_prefix}_1_shoulder_limb">
 		<inertial>
 			<origin xyz="0.0120470281905243 0.0657132437750733 0" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.4782/mass_divider}" h="0.159" r="0.04"/>
@@ -362,12 +362,12 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="arm_0_joint" type="continuous"> 
+    <joint name="${jaco_prefix}_arm_0_joint" type="continuous"> 
 		<xacro:arm_0_limits/> 
 	 	<xacro:default_damping_medium/>
 		<origin xyz="0 0.104 0" rpy="0 ${M_PI_2} 0" />
-		<parent link="0_baseB_limb" />
-		<child link="1_shoulder_limb" />
+        <parent link="${jaco_prefix}_0_baseB_limb" />
+        <child link="${jaco_prefix}_1_shoulder_limb" />
 		<axis xyz="0 1 0" />
 	</joint>
 
@@ -376,7 +376,7 @@
 	<!-- ...........................				-->
 
 
-	<link name="ring_2">
+    <link name="${jaco_prefix}_ring_2">
 		<inertial>
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.00872/mass_divider}" h="0.02" r="0.04"/>
@@ -397,10 +397,10 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="ring_2_joint" type="fixed">
+    <joint name="${jaco_prefix}_ring_2_joint" type="fixed">
 		<origin xyz="0 0.1225 0" rpy="-1.57079632679488 -1.49007956532211 1.57079632679488" />
-		<parent link="1_shoulder_limb" />
-		<child link="ring_2" />
+        <parent link="${jaco_prefix}_1_shoulder_limb" />
+        <child link="${jaco_prefix}_ring_2" />
 		<axis xyz="0 0 0" />
 	</joint>
 
@@ -409,7 +409,7 @@
 	<!-- ...........................				-->
 
 
-	<link name="2_upperarm_limb">
+    <link name="${jaco_prefix}_2_upperarm_limb">
 		<inertial>
 			<origin xyz="0.206003857152394 0 -0.0343672381612413" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${1.37163/mass_divider}" h="0.49" r="0.049"/>
@@ -431,12 +431,12 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="arm_1_joint" type="revolute"><!-- gazebo has a problem with joint limits where lower limit > higher limit (it internally swaps them around). That's why it's limits under -PI. If I chose 2.5..0.73 as limit, gazebo would only let me move the joints within 0.73..2.5. For now, keep it at -3.943..0.81 and publish joint angles NOT between -PI and PI for this joint (otherwise moveit! would recognise e.g. 3. as illegal, although it's legal).-->
+    <joint name="${jaco_prefix}_arm_1_joint" type="revolute"><!-- gazebo has a problem with joint limits where lower limit > higher limit (it internally swaps them around). That's why it's limits under -PI. If I chose 2.5..0.73 as limit, gazebo would only let me move the joints within 0.73..2.5. For now, keep it at -3.943..0.81 and publish joint angles NOT between -PI and PI for this joint (otherwise moveit! would recognise e.g. 3. as illegal, although it's legal).-->
 	 	<xacro:default_damping_medium/>
 		<xacro:arm_1_limits l="-3.943" u="0.81"/> 
 		<origin xyz="0 0.1225 0" rpy="${M_PI} -${M_PI_2} 0" />
-		<parent link="1_shoulder_limb" />
-		<child link="2_upperarm_limb" />
+        <parent link="${jaco_prefix}_1_shoulder_limb" />
+        <child link="${jaco_prefix}_2_upperarm_limb" />
 		<axis xyz="0 0 1" />
 	</joint>
 
@@ -446,7 +446,7 @@
 
 
 
-	<link name="ring_3">
+    <link name="${jaco_prefix}_ring_3">
 		<inertial>
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.00872/mass_divider}" h="0.02" r="0.04"/>
@@ -469,14 +469,14 @@
 	</link>
 	<joint name="ring_3_joint" type="fixed">
 		<origin xyz="0.41 0 0" rpy="${M_PI} 0 -${M_PI}" />
-		<parent link="2_upperarm_limb" />
-		<child link="ring_3"/>
+        <parent link="${jaco_prefix}_2_upperarm_limb" />
+        <child link="${jaco_prefix}_ring_3"/>
 		<axis xyz="0 0 0"/>
 	</joint>
 	 
 	<!-- ........................... -->
 	 
-	<link name="3_forearm_limb">
+    <link name="${jaco_prefix}_3_forearm_limb">
 		<inertial>
 			<origin xyz="0.0857562490792731 1.94295959371482E-06 0.0203407295609686" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.67592919/mass_divider}" h="0.24" r="0.031"/>
@@ -498,18 +498,18 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="arm_2_joint" type="revolute">	<!-- see arm_1_joint for commmetns about limits -->
+    <joint name="${jaco_prefix}_arm_2_joint" type="revolute">	<!-- see arm_1_joint for commmetns about limits -->
 		<xacro:arm_2_limits l="-4.395" u="1.252"/> 
 	 	<xacro:default_damping_medium/>
 		<origin xyz="0.41 0 0" rpy="0 0 1.57079632679489" /> 
-		<parent link="2_upperarm_limb" />
-		<child link="3_forearm_limb" />
+        <parent link="${jaco_prefix}_2_upperarm_limb" />
+        <child link="${jaco_prefix}_3_forearm_limb" />
 		<axis xyz="0 0 1" />
 	</joint>
 	
 	<!-- ...........................				-->
 
-	<link name="ring_4">
+    <link name="${jaco_prefix}_ring_4">
 		<inertial>
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.00676534123968923/mass_divider}" h="0.022" r="0.033"/>
@@ -530,17 +530,17 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="ring_4_joint" type="fixed">
+    <joint name="${jaco_prefix}_ring_4_joint" type="fixed">
 		<origin xyz="0.2073 0 0.0098" rpy="${M_PI} -${M_PI_2} 0" />
-		<parent link="3_forearm_limb" />
-		<child link="ring_4" />
+        <parent link="${jaco_prefix}_3_forearm_limb" />
+        <child link="${jaco_prefix}_ring_4" />
 		<axis xyz="-1 0 0" />
 	</joint>
  
 
 	<!-- ...........................				-->
 
-	<link name="4_upperwrist_limb">
+    <link name="${jaco_prefix}_4_upperwrist_limb">
 		<inertial>
 			<origin xyz="-0.0371070560898082 -0.00912675248782567 -2.44092722145872E-08" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.245503362859736/mass_divider}" h="0.1" r="0.0332"/>
@@ -562,19 +562,19 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="arm_3_joint" type="continuous"> 
+    <joint name="${jaco_prefix}_arm_3_joint" type="continuous"> 
 		<xacro:arm_3_limits/> 
 	 	<xacro:default_damping_low/>
 		<origin xyz="0.2073 0 0.0098" rpy="-1.57079632679484 0 -3.14159265358951" />
-		<parent link="3_forearm_limb" />
-		<child link="4_upperwrist_limb" />
+        <parent link="${jaco_prefix}_3_forearm_limb" />
+        <child link="${jaco_prefix}_4_upperwrist_limb" />
 		<axis xyz="-1 0 0" />
 	</joint>
 
 
 	<!-- ...........................				-->
 
-	<link name="ring_5">
+    <link name="${jaco_prefix}_ring_5">
 		<inertial>
 			<origin xyz="-1.54831009124834E-13 4.27435864480685E-15 -2.58654209162046E-13" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.00676534123968923/mass_divider}" h="0.022" r="0.033"/>
@@ -597,15 +597,15 @@
 	</link>
 	<joint name="ring_5_joint" type="fixed">
 		<origin xyz="-0.06590490 -0.034307921 0" rpy="-1.57079632679506 0 -0.610865238196312" />
-		<parent link="4_upperwrist_limb" />
-		<child link="ring_5" />
+        <parent link="${jaco_prefix}_4_upperwrist_limb" />
+        <child link="${jaco_prefix}_ring_5" />
 		<axis xyz="-1 0 0" />
 	</joint>
 
  
 	<!-- ...........................				-->
 
-	<link name="5_lowerwrist_limb">
+    <link name="${jaco_prefix}_5_lowerwrist_limb">
 		<inertial>
 			<origin xyz="-0.0176083455436658 -0.00912672231835664 -5.99117305766228E-09" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.2455/mass_divider}" h="0.1" r="0.0332"/>
@@ -627,21 +627,21 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="arm_4_joint" type="continuous"> 
+    <joint name="${jaco_prefix}_arm_4_joint" type="continuous"> 
 	<xacro:arm_4_limits/> 
 	 	<xacro:default_damping_low/>
 		<!-- caluclated form DH-Parameter documentation. An iscoceles triangle with tip angle 55 degrees has base angles (gamma) 62.5.
 		   Base has length 74.3. Then sin(gamma)=y/74.3 and cos(gamma)=x/74.3, hence y=65.90590 and x=34.307921963	-->
 		<origin xyz="-0.06590490 -0.034307921 0" rpy="0 0 0.959931089" />
-		<parent link="4_upperwrist_limb" />
-		<child link="5_lowerwrist_limb" />
+        <parent link="${jaco_prefix}_4_upperwrist_limb" />
+        <child link="${jaco_prefix}_5_lowerwrist_limb" />
 		<axis xyz="-1 0 0" />
 	</joint>
 
 
 	<!-- ...........................				-->
 	 
-	<link name="ring_6">
+    <link name="${jaco_prefix}_ring_6">
 		<inertial>
 			<origin xyz="2.12629684692711E-10 7.53045514834128E-10 3.03666577994299E-10" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.00676/mass_divider}" h="0.022" r="0.033"/>
@@ -662,10 +662,10 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="ring_6_joint" type="fixed">
+    <joint name="${jaco_prefix}_ring_6_joint" type="fixed">
 		<origin xyz="-0.06590490 -0.034307921 0" rpy="${M_PI_2} 0 2.53072741539211 " />
-		<parent link="5_lowerwrist_limb" />
-		<child link="ring_6" />
+        <parent link="${jaco_prefix}_5_lowerwrist_limb" />
+        <child link="${jaco_prefix}_ring_6" />
 		<axis xyz="0 0 0" />
 	</joint>
 	
@@ -674,7 +674,7 @@
 	<!-- ...........................				-->
 	 
  
-	<link name="6_hand_limb">
+    <link name="${jaco_prefix}_6_hand_limb">
 		<inertial>
 			<origin xyz="-0.0555917045329114 -7.25586546752172E-05 -0.00317411883668722" rpy="0 0 0" />
 			<!-- ORIGINAL: xacro:cyl_inertia mass="${0.58366/mass_divider}" h="0.104" r="0.11"/-->
@@ -697,30 +697,30 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="arm_5_joint" type="continuous"> 
+    <joint name="${jaco_prefix}_arm_5_joint" type="continuous"> 
 	    <xacro:arm_5_limits/> 
 	 	<xacro:default_damping_low/>
 		<!-- added some experimental angle changes to the arm wrist, as this was not accurate .. tried to touch the base with the hand, and it didn't look the same
 		in rviz. I tuned the values so rviz would show same position. However, it's likely this can be better fine tuned -->
 		<origin xyz="-0.06590490 -0.034307921 0" rpy="-${M_PI_2} 0 0.959931089" />
-		<parent link="5_lowerwrist_limb" />
-		<child link="6_hand_limb" />
+        <parent link="${jaco_prefix}_5_lowerwrist_limb" />
+        <child link="${jaco_prefix}_6_hand_limb" />
 		<axis xyz="-1 0 0" />
 	</joint>
 
 
 
-	<link name="fingers_base_link">
+    <link name="${jaco_prefix}_fingers_base_link">
 		<inertial>
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.001/mass_divider}" h="0.01" r="0.01"/>
 		</inertial>
 	</link>
 	<!-- this joint is only to align the coordinate system with the kinova specification frame -->
-	<joint name="fingers_base_joint" type="fixed"> 
+    <joint name="${jaco_prefix}_fingers_base_joint" type="fixed"> 
 		<origin xyz="0 0 0" rpy="${-M_PI_2} ${M_PI} ${M_PI_2}" />
-		<parent link="6_hand_limb" />
-		<child link="fingers_base_link" />
+        <parent link="${jaco_prefix}_6_hand_limb" />
+        <child link="${jaco_prefix}_fingers_base_link" />
 	</joint>
 
  
@@ -729,7 +729,7 @@
 	<!-- ...........................	-->
 
 	 
-	<link name="7_finger_mount_index">
+    <link name="${jaco_prefix}_7_finger_mount_index">
 		<inertial>
 			<origin xyz="0 0.00706399246397285 -0.00176078508424846" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.006465/finger_mass_divider}" h="0.022" r="0.018"/>
@@ -751,11 +751,11 @@
 		</collision>
 	</link>
 	
-	<joint name="finger_mount_index_fixed" type="fixed">
+    <joint name="${jaco_prefix}_finger_mount_index_fixed" type="fixed">
 	 	<xacro:damping_fingers/>
 		<origin xyz="${f_idx_m_xyz}" rpy="${f_idx_m_rpy}" />
-		<parent link="fingers_base_link" />
-		<child link="7_finger_mount_index" />
+        <parent link="${jaco_prefix}_fingers_base_link" />
+        <child link="${jaco_prefix}_7_finger_mount_index" />
 		<axis xyz="0 0 0" />
 	</joint>
  
@@ -763,7 +763,7 @@
 	<!-- ...........................				-->
 
 
-	<link name="8_finger_index">
+    <link name="${jaco_prefix}_8_finger_index">
 		<inertial>
 			<origin xyz="-0.0181403689626489 0 0.00272470933850985" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.01845/finger_mass_divider}" h="0.06" r="0.0135"/>
@@ -785,11 +785,11 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="finger_joint_0" type="revolute">
+    <joint name="${jaco_prefix}_finger_joint_0" type="revolute">
 	 	<xacro:damping_fingers/>
 		<origin xyz="${f_idx_xyz}" rpy="${f_idx_rpy}" />
-		<parent link="fingers_base_link" />
-		<child link="8_finger_index" />
+        <parent link="${jaco_prefix}_fingers_base_link" />
+        <child link="${jaco_prefix}_8_finger_index" />
 		<axis xyz="0 1 0" />
 		<xacro:default_finger_limits/>
 	</joint>
@@ -798,7 +798,7 @@
 	<!-- ...........................				-->
 
 
-	<link name="9_finger_index_tip">
+    <link name="${jaco_prefix}_9_finger_index_tip">
 		<inertial>
 			<origin xyz="-0.01340812509202 -4.52693266978291E-07 0.0118561361126153" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.0122/finger_mass_divider}" h="0.047" r="0.012"/>
@@ -820,11 +820,11 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="finger_joint_1" type="fixed">
+    <joint name="${jaco_prefix}_finger_joint_1" type="fixed">
 	 	<xacro:damping_fingers/>
 		<origin xyz="0 0 0.0441" rpy="0 0 0" />
-		<parent link="8_finger_index" />
-		<child link="9_finger_index_tip" />
+        <parent link="${jaco_prefix}_8_finger_index" />
+        <child link="${jaco_prefix}_9_finger_index_tip" />
 	</joint>
 
 
@@ -832,7 +832,7 @@
 	<!-- ...........................				-->
 
 
-	<link name="7_finger_mount_thumb">
+    <link name="${jaco_prefix}_7_finger_mount_thumb">
 		<inertial>
 			<origin xyz="-2.65251193937339E-07 0.00706398229186052 -0.00176078674955921" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.006465/finger_mass_divider}" h="0.022" r="0.018"/>
@@ -853,11 +853,11 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="finger_mount_thumb_fixed" type="fixed">
+    <joint name="${jaco_prefix}_finger_mount_thumb_fixed" type="fixed">
 	 	<xacro:damping_fingers/>
 		<origin xyz="${f_thb_m_xyz}" rpy="${f_thb_m_rpy}" />
-		<parent link="fingers_base_link" />
-		<child link="7_finger_mount_thumb" />
+        <parent link="${jaco_prefix}_fingers_base_link" />
+        <child link="${jaco_prefix}_7_finger_mount_thumb" />
 	</joint>
 
 
@@ -865,7 +865,7 @@
 	<!-- ...........................				-->
 
 
-	<link name="8_finger_thumb">
+    <link name="${jaco_prefix}_8_finger_thumb">
 		<inertial>
 			<origin xyz="-0.0181403317517619 -3.13818432741766E-07 0.00272473343106584" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.0184/finger_mass_divider}" h="0.06" r="0.0135"/>
@@ -887,11 +887,11 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="finger_joint_2" type="revolute">
+    <joint name="${jaco_prefix}_finger_joint_2" type="revolute">
 	 	<xacro:damping_fingers/>
 		<origin xyz="${f_thb_xyz}" rpy="${f_thb_rpy}" />
-		<parent link="fingers_base_link" />
-		<child link="8_finger_thumb" />
+        <parent link="${jaco_prefix}_fingers_base_link" />
+        <child link="${jaco_prefix}_8_finger_thumb" />
 		<axis xyz="0 1 0" />
 		<xacro:default_finger_limits/>
 	</joint>
@@ -899,7 +899,7 @@
 
 	<!-- ...........................				-->
 
-	<link name="9_finger_thumb_tip">
+    <link name="${jaco_prefix}_9_finger_thumb_tip">
 		<inertial>
 			<origin xyz="-0.0134080639046228 -4.56622786070351E-07 0.0118561154422042" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.0122/finger_mass_divider}" h="0.047" r="0.012"/>
@@ -920,16 +920,16 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="finger_joint_3" type="fixed">
+    <joint name="${jaco_prefix}_finger_joint_3" type="fixed">
 	 	<xacro:damping_fingers/>
 		<origin xyz="0 0 0.0441" rpy="0 0 0" />
-		<parent link="8_finger_thumb" />
-		<child link="9_finger_thumb_tip" />
+        <parent link="${jaco_prefix}_8_finger_thumb" />
+        <child link="${jaco_prefix}_9_finger_thumb_tip" />
 	</joint>
 	
 	<!-- ...........................				-->
 
-	<link name="7_finger_mount_pinkie">
+    <link name="${jaco_prefix}_7_finger_mount_pinkie">
 		<inertial>
 			<origin xyz="0 0.00706399455294665 -0.00176077690193762" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.00646/finger_mass_divider}" h="0.022" r="0.018"/>
@@ -950,17 +950,17 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="finger_mount_pinkie_fixed" type="fixed">
+    <joint name="${jaco_prefix}_finger_mount_pinkie_fixed" type="fixed">
 	 	<xacro:damping_fingers/>
 		<origin xyz="${f_pnk_m_xyz}" rpy="${f_pnk_m_rpy}" />
-		<parent link="fingers_base_link" />
-		<child link="7_finger_mount_pinkie" />
+        <parent link="${jaco_prefix}_fingers_base_link" />
+        <child link="${jaco_prefix}_7_finger_mount_pinkie" />
 	</joint>
 
 
 	<!-- ...........................				-->
 
-	<link name="8_finger_pinkie">
+    <link name="${jaco_prefix}_8_finger_pinkie">
 		<inertial>
 			<origin xyz="-0.0181404164708055 -2.87009015777565E-07 0.00272467774606585" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.01845/finger_mass_divider}" h="0.06" r="0.0135"/>
@@ -982,11 +982,11 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="finger_joint_4" type="revolute">
+    <joint name="${jaco_prefix}_finger_joint_4" type="revolute">
 		<xacro:damping_fingers/>
 		<origin xyz="${f_pnk_xyz}" rpy="${f_pnk_rpy}" />
-		<parent link="fingers_base_link" />
-		<child link="8_finger_pinkie" />
+        <parent link="${jaco_prefix}_fingers_base_link" />
+        <child link="${jaco_prefix}_8_finger_pinkie" />
 		<axis xyz="0 1 0" />
 		<xacro:default_finger_limits/>
 	</joint>
@@ -994,7 +994,7 @@
 
 	<!-- ...........................				-->
 
-	<link name="9_finger_pinkie_tip">
+    <link name="${jaco_prefix}_9_finger_pinkie_tip">
 		<inertial>
 			<origin xyz="-0.0134 0 0.01185" rpy="0 0 0" />
 			<xacro:cyl_inertia mass="${0.0122/finger_mass_divider}" h="0.047" r="0.012"/>
@@ -1015,11 +1015,11 @@
 			</geometry>
 		</collision>
 	</link>
-	<joint name="finger_joint_5" type="fixed">
+    <joint name="${jaco_prefix}_finger_joint_5" type="fixed">
 		<xacro:damping_fingers/>
 		<origin xyz="0 0 0.0441" rpy="0 0 0" />
-		<parent link="8_finger_pinkie" />
-		<child link="9_finger_pinkie_tip" />
+        <parent link="${jaco_prefix}_8_finger_pinkie" />
+        <child link="${jaco_prefix}_9_finger_pinkie_tip" />
 	</joint>
 	
 	</xacro:macro>
