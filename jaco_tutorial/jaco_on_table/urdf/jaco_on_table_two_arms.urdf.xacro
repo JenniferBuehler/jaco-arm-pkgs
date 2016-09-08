@@ -33,44 +33,38 @@
 	</joint>
 
     <xacro:include filename="$(find jaco_on_table)/urdf/objects/arm_stand.xacro" />
-    <xacro:arm_stand_link link_name="arm_stand"/>
+    <xacro:arm_stand_link link_name="arm_stand_left"/>
+    <xacro:arm_stand_link link_name="arm_stand_right"/>
 
-	<joint name="j2b" type="fixed">
-		<origin xyz="0 -0.035 0" rpy="-1.57079632679 -3.14159265358979 0" /> <!-- set the arm "inside" the table for now because of the rim along the real table. creating a bit of a buffer zone so moveit trajectories are within safe distance of the table edges. -->
+	<joint name="j2b1" type="fixed">
+        <origin xyz="0 -0.035 0" rpy="-1.57079632679 -3.14159265358979 0" /> 
 		<parent link="tabletop_corner" />
-		<child link="arm_stand" />
+		<child link="arm_stand_left" />
 		<axis xyz="0 0 0" />
 	</joint>
-
+	<joint name="j2b2" type="fixed">
+        <origin xyz="0.5 -0.035 0" rpy="-1.57079632679 -3.14159265358979 0" />
+		<parent link="tabletop_corner" />
+		<child link="arm_stand_right" />
+		<axis xyz="0 0 0" />
+	</joint>
 	
 	<!-- Add the JACO arm to the given parent link with the given transforms -->
-	<xacro:include filename="$(find jaco_description)/urdf/jaco.urdf.xacro"/>
-    <xacro:jaco_arm parent="arm_stand" mass_divider="2" finger_mass_divider="1">
+    <xacro:include filename="$(find jaco_description)/urdf/jaco.urdf.xacro"/>
+
+    <xacro:jaco_arm parent="arm_stand_left" mass_divider="2" finger_mass_divider="1" jaco_prefix="jaco1">
+		<origin xyz="-0.000482247085224208 0.08 -0.000503436190578577" rpy="1.57079632679 0 3.14159265359" />
+        <xacro:arg name="add_transmission_pos" default="$(arg add_transmission_pos)"/>
+        <xacro:arg name="add_transmission_vel" default="$(arg add_transmission_vel)"/>
+    </xacro:jaco_arm>
+
+    <xacro:jaco_arm parent="arm_stand_right" mass_divider="2" finger_mass_divider="1" jaco_prefix="jaco2">
 		<origin xyz="-0.000482247085224208 0.08 -0.000503436190578577" rpy="1.57079632679 0 3.14159265359" />
         <xacro:arg name="add_transmission_pos" default="$(arg add_transmission_pos)"/>
         <xacro:arg name="add_transmission_vel" default="$(arg add_transmission_vel)"/>
 	</xacro:jaco_arm>
 
 
-<!-- Optional: Add the Xtion to the table to observe the real arm -->
-    <xacro:if value="$(arg sensor_on_table)">
-        <joint name="toxtion_base" type="fixed">
-            <origin xyz="0 -0.89 -0.01" rpy="0 0 -1.57079632679" /> 
-            <parent link="tabletop_corner" />
-            <child link="xtion_base" />
-        </joint>
-        <link name="xtion_base">
-            <visual>
-                <origin xyz="0 0 0" rpy="0 0 0" /> 
-                <geometry>
-                    <box size="0.02 0.02 0.02"/>
-                </geometry>
-                <material name="orange"/>
-            </visual>
-        </link>
-        <xacro:include filename="$(find common_sensors)/urdf/sensors/xtion_xtended_stand.urdf.xacro" /> 
-        <xacro:xtion_stand parent="xtion_base"/>
-    </xacro:if>
 </xacro:macro>
 </root>
 

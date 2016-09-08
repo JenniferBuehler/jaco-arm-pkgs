@@ -470,7 +470,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="ring_3_joint" type="fixed">
+  <joint name="jaco_ring_3_joint" type="fixed">
     <origin rpy="3.14159265359 0 -3.14159265359" xyz="0.41 0 0"/>
     <parent link="jaco_2_upperarm_limb"/>
     <child link="jaco_ring_3"/>
@@ -610,7 +610,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="ring_5_joint" type="fixed">
+  <joint name="jaco_ring_5_joint" type="fixed">
     <origin rpy="-1.57079632679506 0 -0.610865238196312" xyz="-0.06590490 -0.034307921 0"/>
     <parent link="jaco_4_upperwrist_limb"/>
     <child link="jaco_ring_5"/>
