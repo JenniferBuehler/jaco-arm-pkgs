@@ -6,12 +6,12 @@ controller_list:
     type: FollowJointTrajectory
     default: true
     joints:
-      - arm_0_joint
-      - arm_1_joint
-      - arm_2_joint
-      - arm_3_joint
-      - arm_4_joint
-      - arm_5_joint
-      - finger_joint_0
-      - finger_joint_2
-      - finger_joint_4
+      - jaco_arm_0_joint
+      - jaco_arm_1_joint
+      - jaco_arm_2_joint
+      - jaco_arm_3_joint
+      - jaco_arm_4_joint
+      - jaco_arm_5_joint
+      - jaco_finger_joint_0
+      - jaco_finger_joint_2
+      - jaco_finger_joint_4

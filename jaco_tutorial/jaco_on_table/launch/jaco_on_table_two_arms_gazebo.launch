@@ -1,0 +1,16 @@
+<launch>
+    # the robot's xacro file
+	<arg name="robot_xacro" default="$(find jaco_on_table)/urdf/jaco_on_table_two_arms_robot.urdf.xacro"/>
+
+    # Specify a name for the robot
+	<arg name="robot_name" default="jaco_on_table_two_arms"/>
+
+	# if the xacro file (robot_xacro) needs additional arguments to xacro.py, put them in here.
+	<arg name="xacro_arguments" default="sensor_on_table:=false"/>
+
+	<include file="$(find jaco_on_table)/launch/jaco_on_table_gazebo.launch">
+        <arg name="robot_xacro" value="$(arg robot_xacro)"/>
+        <arg name="robot_name" value="$(arg robot_name)"/>
+        <arg name="xacro_arguments" value="$(arg xacro_arguments)"/>
+	</include>
+</launch>

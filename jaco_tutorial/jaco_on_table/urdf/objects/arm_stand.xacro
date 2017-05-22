@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns:xacro="http://ros.org/wiki/xacro">
-    <gazebo reference="arm_stand">
-        <material>Gazebo/FlatBlack</material>
-    </gazebo>
-    
-    <link name="arm_stand">
-        <inertial>
-            <origin xyz="2.55087129061304E-06 0.0160653225793 0.0184477855302965" rpy="0 0 0" />
-            <mass value="0.355288327861601" />
-            <inertia ixx="0.000857343821996639" ixy="6.2983660131078E-08" ixz="-3.19177822902163E-08" iyy="0.0019174970781523" iyz="-8.19713905978223E-05" izz="0.00176131215859239" />
-        </inertial>
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-                <mesh filename="package://jaco_on_table/meshes/objects/arm_stand.STL" />
-            </geometry>
-            <material name="">
-                <color rgba="0.192156862745098 0.203921568627451 0.203921568627451 1" />
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-                <mesh filename="package://jaco_on_table/meshes/objects/arm_stand.STL" />
-            </geometry>
-        </collision>
-    </link>
+
+    <xacro:macro name="arm_stand_link" params="link_name">
+        <gazebo reference="${link_name}">
+            <material>Gazebo/FlatBlack</material>
+        </gazebo>
+        <link name="${link_name}">
+            <inertial>
+                <origin xyz="2.55087129061304E-06 0.0160653225793 0.0184477855302965" rpy="0 0 0" />
+                <mass value="0.355288327861601" />
+                <inertia ixx="0.000857343821996639" ixy="6.2983660131078E-08" ixz="-3.19177822902163E-08" iyy="0.0019174970781523" iyz="-8.19713905978223E-05" izz="0.00176131215859239" />
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="package://jaco_on_table/meshes/objects/arm_stand.STL" />
+                </geometry>
+                <material name="">
+                    <color rgba="0.192156862745098 0.203921568627451 0.203921568627451 1" />
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="package://jaco_on_table/meshes/objects/arm_stand.STL" />
+                </geometry>
+            </collision>
+        </link>
+    </xacro:macro>
 </root>

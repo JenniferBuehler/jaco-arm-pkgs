@@ -25,16 +25,16 @@
 #include <string>
 #include <vector>
 
-#define J0_NAME  "arm_0_joint"
-#define J1_NAME  "arm_1_joint"
-#define J2_NAME  "arm_2_joint"
-#define J3_NAME  "arm_3_joint"
-#define J4_NAME  "arm_4_joint"
-#define J5_NAME  "arm_5_joint"
+#define J0_NAME  "jaco_arm_0_joint"
+#define J1_NAME  "jaco_arm_1_joint"
+#define J2_NAME  "jaco_arm_2_joint"
+#define J3_NAME  "jaco_arm_3_joint"
+#define J4_NAME  "jaco_arm_4_joint"
+#define J5_NAME  "jaco_arm_5_joint"
 
-#define JF0_NAME  "finger_joint_0"
-#define JF1_NAME  "finger_joint_2"
-#define JF2_NAME  "finger_joint_4"
+#define JF0_NAME  "jaco_finger_joint_0"
+#define JF1_NAME  "jaco_finger_joint_2"
+#define JF2_NAME  "jaco_finger_joint_4"
 
 
 #define J0_INIT 4.5532045
@@ -47,12 +47,13 @@
 #define JF_INIT 0
 
 
-#define HAND_LINK "6_hand_limb"
-#define ARM_LINKS "0_baseA", "0_base_limb", "1_shoulder_limb", "2_upperarm_limb",\
-    "3_forearm_limb", "4_upperwrist_limb", "5_lowerwrist_limb", "ring_1", "ring_2", "ring_3", "ring_4", "ring_5", "ring_6"
-#define FINGER_LINKS "grippers_base_link", "7_gripper_mount_index", "8_gripper_index",\
-    "9_gripper_index_tip", "7_gripper_mount_thumb", "8_gripper_thumb", "9_gripper_thumb_tip",\
-    "7_gripper_mount_pinkie", "8_gripper_pinkie", "9_gripper_pinkie_tip"
+#define HAND_LINK "jaco_6_hand_limb"
+#define ARM_LINKS "jaco_0_baseA", "jaco_0_base_limb", "jaco_1_shoulder_limb", "jaco_2_upperarm_limb",\
+    "jaco_3_forearm_limb", "jaco_4_upperwrist_limb", "jaco_5_lowerwrist_limb", "jaco_ring_1", \
+    "jaco_ring_2", "jaco_ring_3", "jaco_ring_4", "jaco_ring_5", "jaco_ring_6"
+#define FINGER_LINKS "jaco_grippers_base_link", "jaco_7_gripper_mount_index", "jaco_8_gripper_index",\
+    "jaco_9_gripper_index_tip", "jaco_7_gripper_mount_thumb", "jaco_8_gripper_thumb", "jaco_9_gripper_thumb_tip",\
+    "jaco_7_gripper_mount_pinkie", "jaco_8_gripper_pinkie", "jaco_9_gripper_pinkie_tip"
 
 // A value of 5 for MAX_FORCE proved to work with high
 // KP values so the hand could just stay up. So shouldn't

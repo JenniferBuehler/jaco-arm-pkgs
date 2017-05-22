@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot name="JacoOnTable" xmlns:xacro="http://ros.org/wiki/xacro">
+<!--
+	<link name="jaco_on_table_root">
+		<static>false</static>
+	</link>
+-->
+	<link name="world"/>
+	<xacro:include filename="$(find jaco_on_table)/urdf/jaco_on_table_two_arms.urdf.xacro" />
+    <xacro:jaco_on_table parent="world">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:jaco_on_table>
+</robot>
+
