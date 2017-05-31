@@ -116,7 +116,7 @@ int main(int argc, char ** argv)
                      intermediateTrajectoryAnglesTolerance);
 
     ROS_INFO("Now initializing trajectory server");
-    if (!jte.init())
+    if (!jte.initServer())
     {
         ROS_ERROR("Failed to initialize JacoTrajectoryActionServerKinova. Exit.");
     }
@@ -125,5 +125,5 @@ int main(int argc, char ** argv)
         ROS_INFO("Joint trajectory action server running.");
         ros::spin();
     }
-    jte.shutdown();
+    jte.shutdownServer();
 }

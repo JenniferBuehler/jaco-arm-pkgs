@@ -5,7 +5,7 @@
 #include <jaco_joints/JacoJointManager.h>
 
 #include <kinova/KinovaTypes.h>
-#include <kinova/Kinova.API.UsbCommandLayerUbuntu.h>
+#include <kinova/Kinova.API.USBCommandLayerUbuntu.h>
 #include <kinova_msgs/JointAngles.h>
 #include <kinova_msgs/ArmJointAnglesAction.h>
 #include <kinova_msgs/SetFingersPositionAction.h>
@@ -37,14 +37,16 @@ namespace jaco_kinova
  * of sensor_msgs::JointState and the support of kinova_msgs/ArmJointAngles.action and
  * kinova_msgs/SetFingersPositionAction.action
  *
- * **Important:**    
+ * **Important:**
  * This class uses jaco_joints::JacoJointManager, which requires the joint names to be loaded via
  * ROS parameter. Please see JacoJointManager class (and its base class) for documentation.
- * 
+ *
  * \author Jennifer Buehler
  * \date 2014, revised 05/2016
  */
-class JacoTrajectoryActionServerKinova: public joint_trajectory_execution::TrajectoryActionServer, public hardware_interface::RobotHW
+class JacoTrajectoryActionServerKinova:
+  public joint_trajectory_execution::TrajectoryActionServer,
+  public hardware_interface::RobotHW
 {
 private:
     typedef actionlib::ActionServer<kinova_msgs::ArmJointAnglesAction> JacoArmAnglesServerT;

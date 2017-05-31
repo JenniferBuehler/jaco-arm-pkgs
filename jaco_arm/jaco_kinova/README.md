@@ -3,11 +3,15 @@
 The package jaco_kinova provides a ROS joint trajectory action server for the Kinova Jaco arm.
 
 
-###Installation
+### Installation
 
 You will need to add the [kinova-ros](https://github.com/Kinovarobotics/kinova-ros.git) repository to your catkin workspace.
-It is only required for the message types (package kinova_msgs) and for the [kinova](https://github.com/Kinovarobotics/kinova-ros/tree/master/kinova_driver/include/kinova) 
+It is only required for the message types (package ``kinova_msgs``) and for the [kinova](https://github.com/Kinovarobotics/kinova-ros/tree/master/kinova_driver/include/kinova) 
 API and library.
+If you get problems compiling any packages with ``catkin_make`` in your
+workspace, you may delete all directories except ``kinova_msgs`` and ``kinova_driver``.
+
+
 
 **You are not meant to use both kinova_driver together with this package to control the arm!**
 
@@ -59,11 +63,11 @@ be in a path where it can be found. Add the path to your LD_LIBRARY_PATH.
 
 or do it in the .bashrc.
 
-###Dependencies
+### Dependencies
 
 ``sudo apt-get install ros-<distro>-controller-manager``
 
-###Testing
+### Testing
 
 **Connecting the arm**
 

@@ -81,7 +81,7 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
-
+  
 ## Declare a C++ library
 add_library(jaco_trajectory_action_server_kinova
   src/JacoTrajectoryActionServerKinova.cpp
