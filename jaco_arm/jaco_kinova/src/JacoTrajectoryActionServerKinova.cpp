@@ -302,12 +302,17 @@ std::string AngularInfoToString(const AngularInfo& a)
 
 
 template<typename FloatT>
-bool getCurrentStateKinova(std::vector<FloatT>& states, JacoTrajectoryActionServerKinova::StateInfoType type, bool correct, JacoTrajectoryActionServerKinova* _this)
+bool getCurrentStateKinova(std::vector<FloatT>& states,
+                           JacoTrajectoryActionServerKinova::StateInfoType type,
+                           bool correct,
+                           JacoTrajectoryActionServerKinova* _this)
 {
     ROS_INFO_STREAM("getCurrentState "<<__LINE__);
     AngularPosition currP;
     if (!_this->getCurrentState(currP, type, correct))
     {
+        ROS_ERROR_STREAM("State could not be retrieved. "
+                         << __FILE__ << ", " << __LINE__);
         return false;
     }
     getValues(currP, states);
@@ -323,18 +328,15 @@ bool getCurrentState(std::vector<FloatT>& states, JacoTrajectoryActionServerKino
     AngularPosition _curr;
     if (!_this->getCurrentState(_curr, type, correct))
     {
-        ROS_ERROR("State could not be retrieved");
+        ROS_ERROR_STREAM("State could not be retrieved. "
+                         << __FILE__ << ", " << __LINE__);
         return false;
     }
-
         
     ROS_INFO_STREAM("XXX TEST NEW: Angles "<<AngularPositionToString(_curr));
-
     getValues(_curr, states);
     return true;
 }
-
-
 
 }  // namespace
 
@@ -574,7 +576,10 @@ void JacoTrajectoryActionServerKinova::shutdownImpl()
 
 
 
-bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition * angles, AngularPosition * velocities, AngularPosition * forces)
+bool JacoTrajectoryActionServerKinova::getCurrentStateKinova
+    (AngularPosition * angles,
+     AngularPosition * velocities,
+     AngularPosition * forces)
 {
     ROS_INFO_STREAM("getCurrentState "<<__LINE__);
     bool success = false;
@@ -606,7 +611,10 @@ bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition * a
 }
 
 
-bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition& currP, StateInfoType type, bool correct)
+bool JacoTrajectoryActionServerKinova::getCurrentStateKinova
+    (AngularPosition& currP,
+     StateInfoType type,
+     bool correct)
 {
     ROS_INFO_STREAM("getCurrentState "<<__LINE__);
     switch (type)
@@ -670,8 +678,8 @@ bool JacoTrajectoryActionServerKinova::getCurrentStateKinova(AngularPosition& cu
     return true;
 }
 
-
-bool JacoTrajectoryActionServerKinova::getCurrentState(AngularPosition& currP, StateInfoType type, bool correct)
+bool JacoTrajectoryActionServerKinova::getCurrentState(AngularPosition& currP,
+                                             StateInfoType type, bool correct)
 {
     ROS_INFO_STREAM("getCurrentState "<<__LINE__);
     rawLock.lock();
@@ -721,9 +729,19 @@ void JacoTrajectoryActionServerKinova::refreshCurrentState(const ros::TimerEvent
     bool updVel = false;
     bool updEff = false;
 
-    //we have to be sure that we really want all the values regularly. Getting the values will block the knvLock, which can
-    //prevent regular velocity updated (with sendBasicTrajectory) to be too slow.
-    bool ok = getCurrentStateKinova(updAng ? &_currentAnglesRaw : NULL, updVel ? &_currentVelocitiesRaw : NULL, updEff ? &_currentEffortsRaw : NULL);
+    // we have to be sure that we really want all the values regularly.
+    // Getting the values will block the knvLock, which can
+    // prevent regular velocity updated (with sendBasicTrajectory)
+    // to be too slow.
+    bool ok = getCurrentStateKinova(updAng ? &_currentAnglesRaw : NULL,
+                                    updVel ? &_currentVelocitiesRaw : NULL,
+                                    updEff ? &_currentEffortsRaw : NULL);
+
+    if (!ok)
+    {
+      ROS_ERROR_STREAM("Could not get state from Kinova arm. "
+                       << __FILE __ << ", " << __LINE__)
+    }
 
     if (!updVel)
     {

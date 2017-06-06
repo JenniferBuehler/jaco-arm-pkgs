@@ -11,8 +11,6 @@ API and library.
 If you get problems compiling any packages with ``catkin_make`` in your
 workspace, you may delete all directories except ``kinova_msgs`` and ``kinova_driver``.
 
-
-
 **You are not meant to use both kinova_driver together with this package to control the arm!**
 
 *Reason:* This trajectory driver uses the kinova drivers to control the arm directly, and therefore conflicts with any other
@@ -23,7 +21,6 @@ running at the same time would be a conflict in itself.
 Therefore, *jaco_kinova* supports also the publishing sensor_msgs/JointState and the support of kinova_msgs/ArmJointAngles.action and
 kinova_msgs/SetFingersPositionAction.action.    
 Some time in hopefully near future, a better way can be found to combine functionality of kinova_driver and this package.
-
 
 **[optional] Setting the rules for USB access**
 
