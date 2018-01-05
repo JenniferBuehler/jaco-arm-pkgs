@@ -7,12 +7,6 @@ controller_list:
       - jaco_arm_3_joint
       - jaco_arm_4_joint
       - jaco_arm_5_joint
-  - name: fake_Hand_controller
-    joints:
-      - jaco_arm_5_joint
-      - jaco_finger_joint_0
-      - jaco_finger_joint_2
-      - jaco_finger_joint_4
   - name: fake_All_controller
     joints:
       - jaco_arm_0_joint

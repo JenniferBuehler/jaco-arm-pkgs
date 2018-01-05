@@ -1,137 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns:xacro="http://ros.org/wiki/xacro">
 
-    <xacro:macro name="default_material">
-	<mu1>0.9</mu1>
-	<mu2>0.9</mu2>
-    	<kp>1000000.0</kp>
-    	<kd>1.0</kd>
-	<dynamics damping="0.7" friction="100.0" />
-    </xacro:macro>
+	<xacro:macro name="default_material">
+	  <mu1>0.9</mu1>
+	  <mu2>0.9</mu2>
+		  <kp>1000000.0</kp>
+		  <kd>1.0</kd>
+	  <dynamics damping="0.7" friction="100.0" />
+	</xacro:macro>
 
-
-
-    <gazebo reference="table_base">
-        <material>Gazebo/FlatBlack</material>
-    </gazebo>
-    <gazebo reference="table_top">
-        <material>Gazebo/White</material>
-    </gazebo>
-    
-    <xacro:property name="table_width" value="0.8" />
-    <xacro:property name="table_length" value="1.05" />
-    
-    
-    <link name="table_base">
-        <inertial>
-            <origin xyz="0.018511509179121 0.23251932391586 1.175991980646075" rpy="0 0 0" />
-            <mass value="12.6503207764878" />
-            <inertia ixx="1.69157982834144" ixy="-1.62908934773947E-14" ixz="-9.74479440236252E-15" iyy="3.23322704330012" iyz="-1.84123364573924E-14" izz="2.59218197995528" />
-        </inertial>
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-                <mesh filename="package://jaco_on_table/meshes/objects/table_base.STL" />
-            </geometry>
-            <material name="">
-                <color rgba="0.192156862745098 0.203921568627451 0.203921568627451 1" />
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-                <mesh filename="package://jaco_on_table/meshes/objects/table_base.STL" />
-            </geometry>
-        </collision>
-    </link>
+	<gazebo reference="table_base">
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
+	<gazebo reference="table_top">
+		<material>Gazebo/White</material>
+	</gazebo>
+	
+	<xacro:property name="table_width" value="0.8" />
+	<xacro:property name="table_length" value="1.05" />
+	
+	
+	<link name="table_base">
+		<inertial>
+			<origin xyz="0.018511509179121 0.23251932391586 1.175991980646075" rpy="0 0 0" />
+			<mass value="12.6503207764878" />
+			<inertia ixx="1.69157982834144" ixy="-1.62908934773947E-14" ixz="-9.74479440236252E-15" iyy="3.23322704330012" iyz="-1.84123364573924E-14" izz="2.59218197995528" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<mesh filename="package://jaco_on_table/meshes/objects/table_base.STL" />
+			</geometry>
+			<material name="">
+				<color rgba="0.192156862745098 0.203921568627451 0.203921568627451 1" />
+			</material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<mesh filename="package://jaco_on_table/meshes/objects/table_base.STL" />
+			</geometry>
+		</collision>
+	</link>
 
 	
-   <xacro:property name="t_width" value="1.05"/>
-   <xacro:property name="t_height" value="0.8"/>
-   <xacro:property name="t_thickness" value="0.03"/>
-   
-   <xacro:property name="rim_height" value="0.015"/>
-   <xacro:property name="rim_thickness" value="0.005"/>
-	
-
-    <link name="table_top">
-        <inertial>
-            <origin xyz="2.18575157973078E-16 0.0165 -1.11022302462516E-16" rpy="0 0 0" />
-            <mass value="27.72" />
-            <inertia ixx="1.48091559" ixy="-4.70197740328915E-35" ixz="1.33744867033177E-16" iyy="4.025175" iyz="0" izz="2.54929059" />
-        </inertial>
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-                <mesh filename="package://jaco_on_table/meshes/objects/table_top.STL" />
-            </geometry>
-            <material name="">
-                <color rgba="1 1 1 1" />
-            </material>
-        </visual>
-        <visual>
-            <origin xyz="0 ${t_thickness+rim_height/2} ${-t_height/2+rim_thickness/2}" rpy="0 0 0" />
-            <geometry>
-                <box size="${t_width} ${rim_height} ${rim_thickness}"/>
-            </geometry>
-            <material name="">
-                <color rgba="0.8 0.8 1 1" />
-            </material>
-        </visual>
-        <visual>
-            <origin xyz="${t_width/2-rim_thickness/2} ${t_thickness+rim_height/2} 0" rpy="0 0 0" />
-            <geometry>
-                <box size="${rim_thickness} ${rim_height} ${t_height}"/>
-            </geometry>
-            <material name="">
-                <color rgba="0.8 0.8 1 1" />
-            </material>
-        </visual>
-
-        <collision>
-            <origin xyz="0 ${t_thickness+rim_height/2} ${-t_height/2+rim_thickness/2}" rpy="0 0 0" />
-            <geometry>
-                <box size="${t_width} ${rim_height} ${rim_thickness}"/>
-            </geometry>
-        </collision>
-        <collision>
-            <origin xyz="${t_width/2-rim_thickness/2} ${t_thickness+rim_height/2} 0" rpy="0 0 0" />
-            <geometry>
-                <box size="${rim_thickness} ${rim_height} ${t_height}"/>
-            </geometry>
-        </collision>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-                <mesh filename="package://jaco_on_table/meshes/objects/table_top.STL" />
-            </geometry>
-        </collision>
-    </link>
-    <joint name="j1" type="fixed">
-        <origin xyz="0.0185115091791201 -0.175991980646074 0.397575968372377" rpy="1.5707963267949 0 0" />
-        <parent link="table_base" />
-        <child link="table_top" />
-        <axis xyz="0 0 0" />
-    </joint>
+  <xacro:property name="t_width" value="1.05"/>
+  <xacro:property name="t_height" value="0.8"/>
+  <xacro:property name="t_thickness" value="0.03"/>
+ 
+  <xacro:property name="rim_height" value="0.015"/>
+  <xacro:property name="rim_thickness" value="0.005"/>
 
 
-    <!-- Add some handy co-ordinate frames -->
+	<link name="table_top">
+		<inertial>
+			<origin xyz="2.18575157973078E-16 0.0165 -1.11022302462516E-16" rpy="0 0 0" />
+			<mass value="27.72" />
+			<inertia ixx="1.48091559" ixy="-4.70197740328915E-35" ixz="1.33744867033177E-16" iyy="4.025175" iyz="0" izz="2.54929059" />
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<mesh filename="package://jaco_on_table/meshes/objects/table_top.STL" />
+			</geometry>
+			<material name="">
+				<color rgba="1 1 1 1" />
+			</material>
+		</visual>
+		<visual>
+			<origin xyz="0 ${t_thickness+rim_height/2} ${-t_height/2+rim_thickness/2}" rpy="0 0 0" />
+			<geometry>
+				<box size="${t_width} ${rim_height} ${rim_thickness}"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.8 0.8 1 1" />
+			</material>
+		</visual>
+		<visual>
+			<origin xyz="${t_width/2-rim_thickness/2} ${t_thickness+rim_height/2} 0" rpy="0 0 0" />
+			<geometry>
+				<box size="${rim_thickness} ${rim_height} ${t_height}"/>
+			</geometry>
+			<material name="">
+				<color rgba="0.8 0.8 1 1" />
+			</material>
+		</visual>
 
-    <link name="tabletop_ontop"/>
-    <joint name="table_tabletop_totop" type="fixed">
-        <origin xyz="0.0 0.033 0" rpy="-1.57079632679 0 0" />
-        <parent link="table_top" />
-        <child link="tabletop_ontop" />
-        <axis xyz="0 0 0" />
-    </joint>
+		<collision>
+			<origin xyz="0 ${t_thickness+rim_height/2} ${-t_height/2+rim_thickness/2}" rpy="0 0 0" />
+			<geometry>
+				<box size="${t_width} ${rim_height} ${rim_thickness}"/>
+			</geometry>
+		</collision>
+		<collision>
+			<origin xyz="${t_width/2-rim_thickness/2} ${t_thickness+rim_height/2} 0" rpy="0 0 0" />
+			<geometry>
+				<box size="${rim_thickness} ${rim_height} ${t_height}"/>
+			</geometry>
+		</collision>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<mesh filename="package://jaco_on_table/meshes/objects/table_top.STL" />
+			</geometry>
+		</collision>
+	</link>
+	<joint name="j1" type="fixed">
+		<origin xyz="0.0185115091791201 -0.175991980646074 0.397575968372377" rpy="1.5707963267949 0 0" />
+		<parent link="table_base" />
+		<child link="table_top" />
+		<axis xyz="0 0 0" />
+	</joint>
 
-    <link name="tabletop_corner"/>
-    <joint name="set_tabletop_relto_corner" type="fixed">
-        <origin xyz="0.42 0.3 0" rpy="0 0 -0.76" /> <!-- exact 45 degrees of -0.785398163397458 does not match the real table -->
-        <parent link="tabletop_ontop"/>
-        <child link="tabletop_corner"/>
-    </joint>
 
+	<!-- Add some handy co-ordinate frames -->
+
+	<link name="tabletop_ontop"/>
+	<joint name="table_tabletop_totop" type="fixed">
+		<origin xyz="0.0 0.033 0" rpy="-1.57079632679 0 0" />
+		<parent link="table_top" />
+		<child link="tabletop_ontop" />
+		<axis xyz="0 0 0" />
+	</joint>
+
+	<link name="tabletop_corner"/>
+	<joint name="set_tabletop_relto_corner" type="fixed">
+		<origin xyz="0.42 0.3 0" rpy="0 0 -0.76" /> <!-- exact 45 degrees of -0.785398163397458 does not match the real table -->
+		<parent link="tabletop_ontop"/>
+		<child link="tabletop_corner"/>
+	</joint>
 </root>
 
 

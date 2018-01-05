@@ -12,18 +12,6 @@
     <group name="Arm">
         <chain base_link="jaco_0_baseA" tip_link="jaco_6_hand_limb" />
     </group>
-    <group name="Hand">
-        <link name="jaco_6_hand_limb" />
-        <link name="jaco_8_finger_index" />
-        <link name="jaco_9_finger_index_tip" />
-        <link name="jaco_8_finger_thumb" />
-        <link name="jaco_9_finger_thumb_tip" />
-        <link name="jaco_8_finger_pinkie" />
-        <link name="jaco_9_finger_pinkie_tip" />
-        <link name="jaco_7_finger_mount_index" />
-        <link name="jaco_7_finger_mount_pinkie" />
-        <link name="jaco_7_finger_mount_thumb" />
-    </group>
     <group name="All">
         <link name="jaco_0_baseA" />
         <link name="jaco_0_baseB_limb" />
@@ -52,7 +40,6 @@
     </group>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="Wrist" parent_link="jaco_6_hand_limb" group="Arm" />
-    <end_effector name="Fingers" parent_link="jaco_6_hand_limb" group="Hand" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="jaco_0_baseA" link2="jaco_0_baseB_limb" reason="Adjacent" />
     <disable_collisions link1="jaco_0_baseA" link2="jaco_1_shoulder_limb" reason="Never" />
@@ -80,7 +67,6 @@
     <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_ring_2" reason="Adjacent" />
     <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_ring_3" reason="Never" />
     <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_ring_4" reason="Never" />
-    <disable_collisions link1="jaco_1_shoulder_limb" link2="jaco_ring_5" reason="Never" />
     <disable_collisions link1="jaco_1_shoulder_limb" link2="table_base" reason="Never" />
     <disable_collisions link1="jaco_1_shoulder_limb" link2="table_top" reason="Never" />
     <disable_collisions link1="jaco_2_upperarm_limb" link2="jaco_3_forearm_limb" reason="Adjacent" />
@@ -120,7 +106,6 @@
     <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_9_finger_index_tip" reason="Never" />
     <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_9_finger_pinkie_tip" reason="Never" />
     <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_9_finger_thumb_tip" reason="Never" />
-    <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_ring_1" reason="Never" />
     <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_ring_2" reason="Never" />
     <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_ring_3" reason="Never" />
     <disable_collisions link1="jaco_4_upperwrist_limb" link2="jaco_ring_4" reason="Default" />

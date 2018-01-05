@@ -2,7 +2,10 @@ moveit_setup_assistant_config:
   URDF:
     package: jaco_on_table
     relative_path: urdf/jaco_on_table_robot.urdf
+    use_jade_xacro: true
   SRDF:
     relative_path: config/JacoOnTable.srdf
   CONFIG:
-    generated_timestamp: 1464363434
+    author_name: Jennifer Buehler
+    author_email: jennifer.e.buehler@gmail.com
+    generated_timestamp: 1515180223
