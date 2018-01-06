@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns:xacro="http://ros.org/wiki/xacro">
-
-	<xacro:macro name="default_material">
-	  <mu1>0.9</mu1>
-	  <mu2>0.9</mu2>
-		  <kp>1000000.0</kp>
-		  <kd>1.0</kd>
-	  <dynamics damping="0.7" friction="100.0" />
-	</xacro:macro>
-
+	<xacro:include filename="$(find jaco_on_table)/urdf/objects/table_properties.xacro" />
 	<gazebo reference="table_base">
 		<material>Gazebo/FlatBlack</material>
 	</gazebo>
 	<gazebo reference="table_top">
 		<material>Gazebo/White</material>
 	</gazebo>
-	
-	<xacro:property name="table_width" value="0.8" />
-	<xacro:property name="table_length" value="1.05" />
-	
 	
 	<link name="table_base">
 		<inertial>
@@ -42,16 +30,7 @@
 			</geometry>
 		</collision>
 	</link>
-
 	
-  <xacro:property name="t_width" value="1.05"/>
-  <xacro:property name="t_height" value="0.8"/>
-  <xacro:property name="t_thickness" value="0.03"/>
- 
-  <xacro:property name="rim_height" value="0.015"/>
-  <xacro:property name="rim_thickness" value="0.005"/>
-
-
 	<link name="table_top">
 		<inertial>
 			<origin xyz="2.18575157973078E-16 0.0165 -1.11022302462516E-16" rpy="0 0 0" />

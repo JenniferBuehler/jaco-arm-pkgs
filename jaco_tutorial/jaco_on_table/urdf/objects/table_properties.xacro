@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<root xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:property name="t_width" value="1.05"/>
+  <xacro:property name="t_height" value="0.8"/>
+  <xacro:property name="t_thickness" value="0.03"/>
+  <xacro:property name="rim_height" value="0.015"/>
+  <xacro:property name="rim_thickness" value="0.005"/>
+</root>

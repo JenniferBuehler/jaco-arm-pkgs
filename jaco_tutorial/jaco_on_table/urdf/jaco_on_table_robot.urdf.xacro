@@ -7,8 +7,8 @@
 -->
 	<link name="world"/>
 	<xacro:include filename="$(find jaco_on_table)/urdf/jaco_on_table.urdf.xacro" />
-    <xacro:jaco_on_table parent="world">
-        <origin xyz="0 0 0" rpy="0 0 0" />
-    </xacro:jaco_on_table>
+  <xacro:jaco_on_table parent="world">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:jaco_on_table>
 </robot>
 
