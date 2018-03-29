@@ -1,133 +1,133 @@
 <launch>
-    # Uses $(find jaco_description)/launch/jaco_gazebo.launch to launch
-    # the jaco arm on the table. For description of arguments please
-    # refer to this launch file.
+  # Uses $(find jaco_description)/launch/jaco_gazebo.launch to launch
+  # the jaco arm on the table. For description of arguments please
+  # refer to this launch file.
 
-    # the robot's xacro file
-	<arg name="robot_xacro" default="$(find jaco_on_table)/urdf/jaco_on_table_robot_gazebo_ctrl.urdf.xacro"/>
+  # the robot's xacro file
+  <arg name="robot_xacro" default="$(find jaco_on_table)/urdf/jaco_on_table_robot_gazebo_ctrl.urdf.xacro"/>
 
-    # Load the grasp fix plugin for gazebo?
-    <arg name="load_grasp_fix" default="false"/>
+  # Load the grasp fix plugin for gazebo?
+  <arg name="load_grasp_fix" default="false"/>
 
-    # Specify a name for the robot
-	<arg name="robot_name" default="jaco_on_table"/>
+  # Specify a name for the robot
+  <arg name="robot_name" default="jaco_on_table"/>
 
-    <arg name="x" default="0"/>
-    <arg name="y" default="0"/>
-    <arg name="z" default="0"/>
-    
-    <arg name="gazebo_world_file" default="worlds/empty.world"/>
-
-    # set to true if the gazebo_state_plugin/gazebo_object_info world plugin should be loaded
-    <arg name="load_gazebo_objects_plugin" default="true"/>
-    
-    # set to true if the gazebo_state_plugin/gazebo_map_publisher world plugin should be loaded
-    <arg name="load_gazebo_map_plugin" default="false"/>
-
-    <arg name="load_joint_state_publisher" default="false"/>
-	<arg name="joint_state_publisher_topic" default="jaco/joint_control"/>
-	
-    <arg name="load_robot_state_publisher" default="true"/>
-	<arg name="joint_states_topic" default="jaco/joint_state"/>
-	
-    # load the world plugin loader (in package gazebo_world_plugin_loader) which launches several
-    # world plugins according to the specification in the ROS parameters. Note that you will
-    # have to load those parameters on the ROS parameter server BEFORE gazebo gets launched. 
-    <arg name="load_world_plugins" default="true"/>
-
-    # set to true if a Joint::SetVelocity() is to be used instead of
-    # Joint::SetForce(). Note that this will require loading different PID values.
-    # At the moment, Joint::SetForce() doesn't work well in Indigo, so it defaults
-    # to true. Also in Jade, SetForce() doesn't work great, the target velocity values
-    # are not as stable - tried it with a variety of PID values.
-    <arg name="gazebo_use_set_velocity" default="true"/>
-    <param name="jaco/gazebo_use_set_velocity" value="$(arg gazebo_use_set_velocity)"/>
-   
-    # internally used to switch between cofing files for local implementation 
-    <arg if="$(arg gazebo_use_set_velocity)" name="local_controller_config_file" default="$(find jaco_gazebo)/config/JacoControlLocalImpl.SetVelocity.yaml"/>
-    <arg unless="$(arg gazebo_use_set_velocity)" name="local_controller_config_file" default="$(find jaco_gazebo)/config/JacoControlLocalImpl.yaml"/>
-    
-    <arg name="load_ros_controllers" default="false"/>
-    <arg if="$(arg load_ros_controllers)" name="controller_config_file" default="$(find jaco_gazebo)/config/JacoControl.yaml"/>
-    <arg unless="$(arg load_ros_controllers)" name="controller_config_file" default="$(arg local_controller_config_file)"/>
-
-    # A position controller is always loaded, but you may choose to additionally also load a velocity controller.
-    # Exception: when load_ros_controllers=true, only a position OR a velocity controller is loaded (both not supported by DefaultRobotHWSim)
-    # so in this case if load_velocity_controller is true, the position controller is *not* loaded.
-    <arg name="load_velocity_controller" default="true"/>
-   
-    # Need to load the URDF "transmission" tags only if using ROS controllers, but it doesn't harm
-    # to load them as well when not using the local joint controller implementation.
-    <arg if="$(arg load_velocity_controller)" name="transmission_vel" value="true"/>
-    <arg unless="$(arg load_velocity_controller)" name="transmission_vel" value="false"/>
-    <arg if="$(arg load_velocity_controller)" name="transmission_pos" value="false"/>
-    <arg unless="$(arg load_velocity_controller)" name="transmission_pos" value="true"/>
-
-	# if the xacro file (robot_xacro) needs additional arguments to xacro.py, put them in here.
-	<arg name="xacro_arguments" default="sensor_on_table:=false 
-        use_ros_control:=$(arg load_ros_controllers) 
-        load_grasp_fix:=$(arg load_grasp_fix) 
-        add_transmission_pos:=$(arg transmission_pos)
-        add_transmission_vel:=$(arg transmission_vel)
-        trajectory_param_namespace:=jaco_trajectory
-        robot_components_namespace:=jaco"/>
-
-	#####################################
-	# Load robot_description on parameter server
-	#####################################
-	<param name="robot_description" command="$(find xacro)/xacro --inorder '$(arg robot_xacro)' $(arg xacro_arguments)"/>
-
-	#####################################
-    # Joint trajectory server parameters
-	#####################################
-    <rosparam file="$(find jaco_gazebo)/config/JointTrajectoryParams.yaml" command="load" ns=""/>
-
-    ########################################
-    # Load arm joint and gripper joint names
-    ########################################
-    <arg name="names_config_file" default="$(find jaco_joints)/config/JacoJoints.yaml"/>
-    <include file="$(find jaco_joints)/launch/init_jaco_joints.launch">
-        <arg name="names_config_file" default="$(arg names_config_file)"/>
-    </include>
-
-	#####################################
-	# Load gazebo 
-	#####################################
-	<include file="$(find jaco_description)/launch/jaco_gazebo.launch">
-        <arg name="robot_name" value="$(arg robot_name)"/>
-        <arg name="x" value="$(arg x)"/>
-        <arg name="y" value="$(arg y)"/>
-        <arg name="z" value="$(arg z)"/>
-        <arg name="gazebo_world_file" value="$(arg gazebo_world_file)"/>
-        <arg name="load_joint_state_publisher" value="$(arg load_joint_state_publisher)"/>
-        <arg name="joint_state_publisher_topic" value="$(arg joint_state_publisher_topic)"/>
-        <arg name="load_robot_state_publisher" value="$(arg load_robot_state_publisher)"/>
-        <arg name="joint_states_topic" value="$(arg joint_states_topic)"/>
-        <arg if="$(arg load_world_plugins)" name="extra_gazebo_args" value="-s libgazebo_world_plugin_loader.so"/>
-	</include>
-
-	#####################################
-	# Load controllers and/or control parameters 
-	#####################################
-    <include if="$(arg load_ros_controllers)" file="$(find jaco_gazebo)/launch/jaco_control.launch">
-        <arg name="config_file" value="$(arg controller_config_file)"/>
-        <arg name="load_joint_state_controller" value="true"/>
-        <arg name="load_controllers" value="true"/>
-        <arg if="$(arg load_velocity_controller)" name="load_position_controllers" value="false"/>
-        <arg unless="$(arg load_velocity_controller)" name="load_position_controllers" value="true"/>
-        <arg if="$(arg load_velocity_controller)" name="load_velocity_controllers" value="true"/>
-        <arg unless="$(arg load_velocity_controller)" name="load_velocity_controllers" value="false"/>
-    </include>
-    <include unless="$(arg load_ros_controllers)" file="$(find jaco_gazebo)/launch/jaco_control.launch">
-        <arg name="config_file" value="$(arg controller_config_file)"/>
-        <arg name="load_joint_state_controller" value="false"/>
-        <arg name="load_controllers" value="false"/>
-        <arg name="load_position_controllers" value="true"/>
-        <arg name="load_velocity_controllers" value="$(arg load_velocity_controller)"/>
-    </include>
+  <arg name="x" default="0"/>
+  <arg name="y" default="0"/>
+  <arg name="z" default="0"/>
   
-    # Load joint controller configurations from YAML file to parameter server. In case
-    # ROS controllers are used, this is done by the jaco_control.launch file.
-    <rosparam unless="$(arg load_ros_controllers)" file="$(arg controller_config_file)" command="load"/>
+  <arg name="gazebo_world_file" default="worlds/empty.world"/>
+
+  # set to true if the gazebo_state_plugin/gazebo_object_info world plugin should be loaded
+  <arg name="load_gazebo_objects_plugin" default="true"/>
+  
+  # set to true if the gazebo_state_plugin/gazebo_map_publisher world plugin should be loaded
+  <arg name="load_gazebo_map_plugin" default="false"/>
+
+  <arg name="load_joint_state_publisher" default="false"/>
+  <arg name="joint_state_publisher_topic" default="jaco/joint_control"/>
+
+  <arg name="load_robot_state_publisher" default="true"/>
+  <arg name="joint_states_topic" default="jaco/joint_state"/>
+
+  # load the world plugin loader (in package gazebo_world_plugin_loader) which launches several
+  # world plugins according to the specification in the ROS parameters. Note that you will
+  # have to load those parameters on the ROS parameter server BEFORE gazebo gets launched. 
+  <arg name="load_world_plugins" default="true"/>
+
+  # set to true if a Joint::SetVelocity() is to be used instead of
+  # Joint::SetForce(). Note that this will require loading different PID values.
+  # At the moment, Joint::SetForce() doesn't work well in Indigo, so it defaults
+  # to true. Also in Jade, SetForce() doesn't work great, the target velocity values
+  # are not as stable - tried it with a variety of PID values.
+  <arg name="gazebo_use_set_velocity" default="true"/>
+  <param name="jaco/gazebo_use_set_velocity" value="$(arg gazebo_use_set_velocity)"/>
+ 
+  # internally used to switch between cofing files for local implementation 
+  <arg if="$(arg gazebo_use_set_velocity)" name="local_controller_config_file" default="$(find jaco_gazebo)/config/JacoControlLocalImpl.SetVelocity.yaml"/>
+  <arg unless="$(arg gazebo_use_set_velocity)" name="local_controller_config_file" default="$(find jaco_gazebo)/config/JacoControlLocalImpl.yaml"/>
+  
+  <arg name="load_ros_controllers" default="false"/>
+  <arg if="$(arg load_ros_controllers)" name="controller_config_file" default="$(find jaco_gazebo)/config/JacoControl.yaml"/>
+  <arg unless="$(arg load_ros_controllers)" name="controller_config_file" default="$(arg local_controller_config_file)"/>
+
+  # A position controller is always loaded, but you may choose to additionally also load a velocity controller.
+  # Exception: when load_ros_controllers=true, only a position OR a velocity controller is loaded (both not supported by DefaultRobotHWSim)
+  # so in this case if load_velocity_controller is true, the position controller is *not* loaded.
+  <arg name="load_velocity_controller" default="true"/>
+ 
+  # Need to load the URDF "transmission" tags only if using ROS controllers, but it doesn't harm
+  # to load them as well when not using the local joint controller implementation.
+  <arg if="$(arg load_velocity_controller)" name="transmission_vel" value="true"/>
+  <arg unless="$(arg load_velocity_controller)" name="transmission_vel" value="false"/>
+  <arg if="$(arg load_velocity_controller)" name="transmission_pos" value="false"/>
+  <arg unless="$(arg load_velocity_controller)" name="transmission_pos" value="true"/>
+
+  # if the xacro file (robot_xacro) needs additional arguments to xacro.py, put them in here.
+  <arg name="xacro_arguments" default="sensor_on_table:=false 
+    use_ros_control:=$(arg load_ros_controllers) 
+    load_grasp_fix:=$(arg load_grasp_fix) 
+    add_transmission_pos:=$(arg transmission_pos)
+    add_transmission_vel:=$(arg transmission_vel)
+    trajectory_param_namespace:=jaco_trajectory
+    robot_components_namespace:=jaco"/>
+
+  #####################################
+  # Load robot_description on parameter server
+  #####################################
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(arg robot_xacro)' $(arg xacro_arguments)"/>
+
+  #####################################
+  # Joint trajectory server parameters
+  #####################################
+  <rosparam file="$(find jaco_gazebo)/config/JointTrajectoryParams.yaml" command="load" ns=""/>
+
+  ########################################
+  # Load arm joint and gripper joint names
+  ########################################
+  <arg name="names_config_file" default="$(find jaco_joints)/config/JacoJoints.yaml"/>
+  <include file="$(find jaco_joints)/launch/init_jaco_joints.launch">
+    <arg name="names_config_file" default="$(arg names_config_file)"/>
+  </include>
+
+  #####################################
+  # Load gazebo 
+  #####################################
+  <include file="$(find jaco_description)/launch/jaco_gazebo.launch">
+    <arg name="robot_name" value="$(arg robot_name)"/>
+    <arg name="x" value="$(arg x)"/>
+    <arg name="y" value="$(arg y)"/>
+    <arg name="z" value="$(arg z)"/>
+    <arg name="gazebo_world_file" value="$(arg gazebo_world_file)"/>
+    <arg name="load_joint_state_publisher" value="$(arg load_joint_state_publisher)"/>
+    <arg name="joint_state_publisher_topic" value="$(arg joint_state_publisher_topic)"/>
+    <arg name="load_robot_state_publisher" value="$(arg load_robot_state_publisher)"/>
+    <arg name="joint_states_topic" value="$(arg joint_states_topic)"/>
+    <arg if="$(arg load_world_plugins)" name="extra_gazebo_args" value="-s libgazebo_world_plugin_loader.so"/>
+  </include>
+
+  #####################################
+  # Load controllers and/or control parameters 
+  #####################################
+  <include if="$(arg load_ros_controllers)" file="$(find jaco_gazebo)/launch/jaco_control.launch">
+    <arg name="config_file" value="$(arg controller_config_file)"/>
+    <arg name="load_joint_state_controller" value="true"/>
+    <arg name="load_controllers" value="true"/>
+    <arg if="$(arg load_velocity_controller)" name="load_position_controllers" value="false"/>
+    <arg unless="$(arg load_velocity_controller)" name="load_position_controllers" value="true"/>
+    <arg if="$(arg load_velocity_controller)" name="load_velocity_controllers" value="true"/>
+    <arg unless="$(arg load_velocity_controller)" name="load_velocity_controllers" value="false"/>
+  </include>
+  <include unless="$(arg load_ros_controllers)" file="$(find jaco_gazebo)/launch/jaco_control.launch">
+    <arg name="config_file" value="$(arg controller_config_file)"/>
+    <arg name="load_joint_state_controller" value="false"/>
+    <arg name="load_controllers" value="false"/>
+    <arg name="load_position_controllers" value="true"/>
+    <arg name="load_velocity_controllers" value="$(arg load_velocity_controller)"/>
+  </include>
+
+  # Load joint controller configurations from YAML file to parameter server. In case
+  # ROS controllers are used, this is done by the jaco_control.launch file.
+  <rosparam unless="$(arg load_ros_controllers)" file="$(arg controller_config_file)" command="load"/>
 
 </launch>

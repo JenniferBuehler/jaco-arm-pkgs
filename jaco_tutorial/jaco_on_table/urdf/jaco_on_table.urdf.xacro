@@ -17,39 +17,39 @@
   <xacro:arg name="add_transmission_pos" default="false"/>
   <xacro:arg name="add_transmission_vel" default="false"/>
 
-	<joint name="base_to_jaco_on_table" type="fixed">
-		<xacro:insert_block name="origin" />
-		<parent link="${parent}" />
-		<child link="robot_base" />
-	</joint>
+  <joint name="base_to_jaco_on_table" type="fixed">
+    <xacro:insert_block name="origin" />
+    <parent link="${parent}" />
+    <child link="robot_base" />
+  </joint>
 
-	<link name="robot_base">
-		<static>false</static>
-	</link>
+  <link name="robot_base">
+    <static>false</static>
+  </link>
 
-	<xacro:include filename="$(find jaco_on_table)/urdf/objects/table.xacro" />
-	<joint name="table_to_arm" type="fixed">
-		<origin xyz="0.40488474042 0.27988474042 0.3" rpy="0 0 -0.785398163397458" />
-		<parent link="robot_base"/>
-		<child link="table_base"/>
-	</joint>
+  <xacro:include filename="$(find jaco_on_table)/urdf/objects/table.xacro" />
+  <joint name="table_to_arm" type="fixed">
+    <origin xyz="0.40488474042 0.27988474042 0.3" rpy="0 0 -0.785398163397458" />
+    <parent link="robot_base"/>
+    <child link="table_base"/>
+  </joint>
 
   <xacro:arm_stand_link link_name="arm_stand"/>
 
-	<joint name="j2b" type="fixed">
-		<origin xyz="0 -0.035 0" rpy="-1.57079632679 -3.14159265358979 0" /> <!-- set the arm "inside" the table for now because of the rim along the real table. creating a bit of a buffer zone so moveit trajectories are within safe distance of the table edges. -->
-		<parent link="tabletop_corner" />
-		<child link="arm_stand" />
-		<axis xyz="0 0 0" />
-	</joint>
+  <joint name="j2b" type="fixed">
+    <origin xyz="0 -0.035 0" rpy="-1.57079632679 -3.14159265358979 0" /> <!-- set the arm "inside" the table for now because of the rim along the real table. creating a bit of a buffer zone so moveit trajectories are within safe distance of the table edges. -->
+    <parent link="tabletop_corner" />
+    <child link="arm_stand" />
+    <axis xyz="0 0 0" />
+  </joint>
 
-	
-	<!-- Add the JACO arm to the given parent link with the given transforms -->
+  
+  <!-- Add the JACO arm to the given parent link with the given transforms -->
   <xacro:jaco_arm parent="arm_stand" mass_divider="2" finger_mass_divider="1">
     <origin xyz="-0.000482247085224208 0.08 -0.000503436190578577" rpy="1.57079632679 0 3.14159265359" />
     <xacro:arg name="add_transmission_pos" default="$(arg add_transmission_pos)"/>
     <xacro:arg name="add_transmission_vel" default="$(arg add_transmission_vel)"/>
-	</xacro:jaco_arm>
+  </xacro:jaco_arm>
 
 
   <!-- Optional: Add the Xtion to the table to observe the real arm -->
