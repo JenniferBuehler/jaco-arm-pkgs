@@ -27,8 +27,9 @@
   <build_depend>jaco_description</build_depend>
   <run_depend>jaco_description</run_depend>
   <build_depend>xacro</build_depend>
-  
-  <run_depend>common_sensors</run_depend> 
+
+  <!-- Required to load up the jaco in the tutorial with the Xtion -->
+  <!--run_depend>common_sensors</run_depend-->> 
   
   <run_depend>xacro</run_depend>
   <run_depend>jaco_description</run_depend>

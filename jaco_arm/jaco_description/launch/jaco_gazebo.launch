@@ -27,8 +27,8 @@
   ##############################################
 
   # The robot name to use in the gazebo world 
-	<arg name="robot_name"/>
-	
+  <arg name="robot_name"/>
+  
   # The x position where to spawn the robot in the world
   <arg name="x" default="0"/>
 
@@ -37,31 +37,31 @@
 
   # The z position where to spawn the robot in the world
   <arg name="z" default="0"/>
-	
+  
   # Specify a world file if you want to load another world than the empty world
   <arg name="gazebo_world_file" default="worlds/empty.world"/>
  
-	# set to true if you want to load the GUI to set the joint angles.
+  # set to true if you want to load the GUI to set the joint angles.
   # You may also choose the topic onto which the joint states are published
   # with joint_state_publisher_topic
-	<arg name="load_joint_state_publisher" default="false"/>
+  <arg name="load_joint_state_publisher" default="false"/>
 
-	# The topic onto which the joint state publisher (if loaded by
+  # The topic onto which the joint state publisher (if loaded by
   # arg load_joint_state_publisher) publishes the joint states.
   # The joint state publisher can be used to control the joints with the
   # graphical interface.
-	<arg name="joint_state_publisher_topic" default="jaco/joint_control"/>
+  <arg name="joint_state_publisher_topic" default="jaco/joint_control"/>
 
   # set true if a robot_state_publisher should be launched to
   # publish tf messages which are being published as JointState messages
   # in the topic specified in argument joint_states_topic.
-	<arg name="load_robot_state_publisher" default="false"/>
+  <arg name="load_robot_state_publisher" default="false"/>
 
-	# This is the topic robot_state_publisher subscribes to in order to
+  # This is the topic robot_state_publisher subscribes to in order to
   # receive JointState messages which it then publishes as tf messages.
   # It is also the topic onto which the joint state messages are published
   # by the robot.
-	<arg name="joint_states_topic" default="jaco/joint_state"/>
+  <arg name="joint_states_topic" default="jaco/joint_state"/>
 
   # Prefix name in URDF
   <arg name="jaco_prefix_name" default="jaco"/>
@@ -75,7 +75,7 @@
   # with such limits where lower_limit is greater than higher_limit.
   <arg name="preserve_original_angles" default="$(arg jaco_prefix_name)_arm_1_joint, $(arg jaco_prefix_name)_arm_2_joint"/>
 
-  # set the joint state topic such that any subscribers can read it from parameter	
+  # set the joint state topic such that any subscribers can read it from parameter  
   <param name="joint_state_control_topic" value="$(arg joint_state_publisher_topic)"/>
 
   # Parameter required for gazebo_joint_control/GazeboJointStatePublisher.
@@ -100,61 +100,61 @@
   # Important: should not forget to also set
   # required plugin ROS parameters, if needed.
   ##############################################
-  <arg name="extra_gazebo_args" default=""/>	
+  <arg name="extra_gazebo_args" default=""/>  
 
-	###############################################
-	# launch gazebo 
-	###############################################
-	<include file="$(find gazebo_ros)/launch/empty_world.launch">
-		<arg name="world_name" value="$(arg gazebo_world_file)"/> 
-		<arg name="paused" value="false"/>
-		<arg name="verbose" value="false"/>
-		<arg name="use_sim_time" value="true"/>
-		<arg name="gui" value="true"/>
-		<arg name="headless" value="false"/>
-		<arg name="debug" value="false"/>
-    <arg name="extra_gazebo_args" value="$(arg extra_gazebo_args)"/>	
-	</include>
+  ###############################################
+  # launch gazebo 
+  ###############################################
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg gazebo_world_file)"/> 
+    <arg name="paused" value="false"/>
+    <arg name="verbose" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+    <arg name="extra_gazebo_args" value="$(arg extra_gazebo_args)"/>  
+  </include>
 
 
-	###############################################
-	# spawn robot 
-	###############################################
-	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" 
+  ###############################################
+  # spawn robot 
+  ###############################################
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" 
     args="-param robot_description -urdf -x $(arg x) -y $(arg y) -z $(arg z) -model $(arg robot_name)"/>
 
   
-	###############################################
-	# Given the published joint states, publish tf for the robot links
-	# !!! Had some problems with /tf. Errors in the form
-	# "Could not find a connection between 'camera_depth_optical_frame' and '6_hand_limb' because they 
-	# are not part of the same tree. Tf has two or more unconnected trees."
-	# This happened always with camera_depth_optical_frame, but with different other links. 
-	# Starting only gazebo, but without any MoveIt!, a  
-	#  $ rosrun tf tf_echo camera_depth_optical_frame 6_hand_limb
-	# revealed sometimes the same error, sometimes it said camera_depth_optical_frame does not exist..... 
-	# However, a 
-	#  $ rosrun tf view_frames
-	# listening to tf for 5 seconds showed the right three.
-	# So it seems tf is not waited for long enough by MoveIt..
-	# Hence, the only solution now is to start gazebo first, wait until the first /tf transforms have
-	# come in, and then start MoveIt.
-	###############################################
-	<node if="$(arg load_robot_state_publisher)" name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen">
-		<remap from="joint_states" to="$(arg joint_states_topic)"/>
-		<param name="publish_frequency" type="double" value="100.0"/>
-	</node>
+  ###############################################
+  # Given the published joint states, publish tf for the robot links
+  # !!! Had some problems with /tf. Errors in the form
+  # "Could not find a connection between 'camera_depth_optical_frame' and '6_hand_limb' because they 
+  # are not part of the same tree. Tf has two or more unconnected trees."
+  # This happened always with camera_depth_optical_frame, but with different other links. 
+  # Starting only gazebo, but without any MoveIt!, a  
+  #  $ rosrun tf tf_echo camera_depth_optical_frame 6_hand_limb
+  # revealed sometimes the same error, sometimes it said camera_depth_optical_frame does not exist..... 
+  # However, a 
+  #  $ rosrun tf view_frames
+  # listening to tf for 5 seconds showed the right three.
+  # So it seems tf is not waited for long enough by MoveIt..
+  # Hence, the only solution now is to start gazebo first, wait until the first /tf transforms have
+  # come in, and then start MoveIt.
+  ###############################################
+  <node if="$(arg load_robot_state_publisher)" name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen">
+    <remap from="joint_states" to="$(arg joint_states_topic)"/>
+    <param name="publish_frequency" type="double" value="100.0"/>
+  </node>
 
 
   #############################################
-	# joint_state_publisher is the GUI to set the target joint angles. 
+  # joint_state_publisher is the GUI to set the target joint angles. 
   # It publishes to joint_states, which we will remap to joint_control
   #############################################
-	
+  
   <node if="$(arg load_joint_state_publisher)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-		<param name="use_gui" value="true" />
-		<param name="rate" value="10" />
-		<remap from="joint_states" to="$(arg joint_state_publisher_topic)" />
-	</node>
+    <param name="use_gui" value="true" />
+    <param name="rate" value="10" />
+    <remap from="joint_states" to="$(arg joint_state_publisher_topic)" />
+  </node>
 
 </launch>
