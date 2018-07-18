@@ -107,7 +107,8 @@ int main(int argc, char **argv)
 
     while (pub.getNumSubscribers() == 0)
     {
-        ROS_INFO("Waiting for subscribers...");
+        ROS_INFO_STREAM("SetJointStatePublisher: Waiting for subscribers to "
+                        << jointStatePublishTopic << "...");
         ros::Duration(1).sleep();
     }
 
@@ -125,7 +126,8 @@ int main(int argc, char **argv)
 
     while (pub.getNumSubscribers() == 0)
     {
-        ROS_INFO("Waiting for subscribers...");
+        ROS_INFO_STREAM("SetJointStatePublisher: Waiting for subscribers to "
+                        << jointStatePublishTopic << "...");
         ros::Duration(1).sleep();
     }
     pub.publish(newState);

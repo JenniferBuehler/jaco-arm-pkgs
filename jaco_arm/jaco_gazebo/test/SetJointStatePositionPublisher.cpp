@@ -105,7 +105,7 @@ int main(int argc, char **argv)
 
     while (pub.getNumSubscribers() == 0)
     {
-        ROS_INFO("Waiting for subscribers...");
+        ROS_INFO("SetJointStatePositionPublisher: waiting for subscribers...");
         ros::Duration(1).sleep();
     }
 
