@@ -26,10 +26,6 @@
 	# Load robot_description on parameter server
 	#####################################
 	<param name="robot_description" command="$(find xacro)/xacro --inorder '$(arg robot_xacro)' $(arg xacro_arguments)"/>
-	<!-- 
-      for indigo or ealier, use this instead:
-      <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_xacro)' $(arg xacro_arguments)"/>
-    -->
 
 	<include file="$(find jaco_description)/launch/jaco_gazebo.launch">
         <arg name="x" value="$(arg x)"/>
