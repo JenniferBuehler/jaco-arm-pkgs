@@ -7,7 +7,6 @@ project(jaco_gazebo)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   jaco_joints
-  gazebo_joint_control
 )
 
 ## System dependencies are found with CMake's conventions
@@ -24,15 +23,15 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #   INCLUDE_DIRS include
-   #LIBRARIES 
-   CATKIN_DEPENDS  gazebo_joint_control jaco_joints
+   #LIBRARIES
+   CATKIN_DEPENDS jaco_joints
    #   DEPENDS Boost
 )
 
 ###########
 ## Build ##
 ###########
-  
+
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
@@ -41,10 +40,10 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(test_joint_trajectory_client 
+add_executable(test_joint_trajectory_client
     test/SimpleJointTrajectoryClient.cpp
 )
-add_executable(test_set_joint_state_publisher_vel 
+add_executable(test_set_joint_state_publisher_vel
     test/SetJointStatePublisher.cpp
 )
 add_executable(test_set_joint_state_publisher_pos
@@ -57,19 +56,19 @@ add_dependencies(test_set_joint_state_publisher_pos ${${PROJECT_NAME}_EXPORTED_T
 
 set (DEP_LIBS
    ${catkin_LIBRARIES}
-   ${Boost_LIBRARIES}   
+   ${Boost_LIBRARIES}
 )
 
-target_link_libraries(test_joint_trajectory_client 
-    ${DEP_LIBS}   
+target_link_libraries(test_joint_trajectory_client
+    ${DEP_LIBS}
 )
 
-target_link_libraries(test_set_joint_state_publisher_vel 
-   ${DEP_LIBS}   
+target_link_libraries(test_set_joint_state_publisher_vel
+   ${DEP_LIBS}
 )
 
-target_link_libraries(test_set_joint_state_publisher_pos 
-   ${DEP_LIBS}   
+target_link_libraries(test_set_joint_state_publisher_pos
+   ${DEP_LIBS}
 )
 
 #############
@@ -81,7 +80,7 @@ install(DIRECTORY launch
   FILES_MATCHING PATTERN "*.launch"
 )
 
-install(DIRECTORY config 
+install(DIRECTORY config
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   FILES_MATCHING PATTERN "*.yaml"
 )
