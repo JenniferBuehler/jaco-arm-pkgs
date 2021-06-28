@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(jaco_on_table)
 
 find_package(catkin REQUIRED COMPONENTS
-  xacro
+  jaco_joints
 )
 
 ###################################
@@ -15,6 +15,32 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
+)
+
+#############
+# Build
+#############
+
+## Specify additional locations of header files
+## Your package locations should be listed before other locations
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
+
+add_executable(set_arm_to_cube src/SetArmToCubePose.cpp)
+add_executable(grasp_cube src/GraspCube.cpp)
+
+## Add cmake target dependencies of the executable
+## same as for the library above
+add_dependencies(set_arm_to_cube ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(grasp_cube ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+target_link_libraries(set_arm_to_cube
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(grasp_cube
+  ${catkin_LIBRARIES}
 )
 
 #############
@@ -36,3 +62,10 @@ install(DIRECTORY meshes
 install(DIRECTORY urdf 
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
+
+install(TARGETS set_arm_to_cube grasp_cube
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+

@@ -25,17 +25,18 @@
   <!-- Dependencies can be catkin packages or system dependencies -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>jaco_description</build_depend>
-  <run_depend>jaco_description</run_depend>
-  <build_depend>xacro</build_depend>
+  <build_depend>jaco_joints</build_depend>
+  <build_depend>roscpp</build_depend>
 
   <!-- Required to load up the jaco in the tutorial with the Xtion -->
   <run_depend>common_sensors</run_depend> 
   
+  <run_depend>jaco_description</run_depend>
   <run_depend>xacro</run_depend>
   <run_depend>jaco_description</run_depend>
-  <run_depend>jaco_joints</run_depend>
   <run_depend>jaco_gazebo</run_depend>
   <run_depend>gazebo_world_plugin_loader</run_depend>
+  <run_depend>gazebo_test_tools</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
